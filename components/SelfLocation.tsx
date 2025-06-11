@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { LocationData, LocationService } from '../services/LocationService';
 
-interface LocationData {
-  height: string;
-  latitude: string;
-  longitude: string;
-}
-
-export const MyLocation: React.FC = () => {
+export const SelfLocation: React.FC = () => {
   const [locationData, setLocationData] = useState<LocationData>({
     height: '',
     latitude: '',
     longitude: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSave = () => {
-    // TODO: Implement save functionality
-    console.log('Saving location data:', locationData);
+  const handleSave = async () => {
+    try {
+      setIsLoading(true);
+      await LocationService.saveLocation(locationData);
+      Alert.alert('הצלחה', 'המיקום נשמר בהצלחה');
+    } catch (error) {
+      Alert.alert('שגיאה', 'אירעה שגיאה בשמירת המיקום');
+      console.error('[SelfLocation] Error saving location:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -45,8 +49,16 @@ export const MyLocation: React.FC = () => {
           onChangeText={(text) => setLocationData({ ...locationData, longitude: text })}
         />
       </View>
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>שמירה</Text>
+      <TouchableOpacity 
+        style={[styles.saveButton, isLoading && styles.saveButtonDisabled]} 
+        onPress={handleSave}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.saveButtonText}>שמירה</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -85,6 +97,9 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
+  },
+  saveButtonDisabled: {
+    opacity: 0.7,
   },
   saveButtonText: {
     color: '#fff',

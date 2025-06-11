@@ -10,7 +10,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Clock',
+          title: 'Home',
         }}
       />
     </Tabs>

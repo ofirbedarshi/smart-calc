@@ -2,8 +2,8 @@ import { StorageService } from './StorageService';
 
 export interface LocationData {
   height: string;
-  latitude: string;
-  longitude: string;
+  northCoord: string;
+  eastCoord: string;
 }
 
 const STORAGE_KEY = 'user_location';

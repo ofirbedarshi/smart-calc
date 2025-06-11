@@ -1,8 +1,10 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { MyLocation } from '../../components/MyLocation';
 
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
+      <MyLocation />
       <View style={styles.content}>
         <Text style={styles.text}>Hello World</Text>
       </View>

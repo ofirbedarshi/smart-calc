@@ -1,3 +1,4 @@
+import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
 
@@ -6,11 +7,15 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarLabelPosition: 'below-icon',
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'מחשבון',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="calculator" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

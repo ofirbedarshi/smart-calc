@@ -1,0 +1,122 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Global Coding Rules for Cursor (React Native Project)
+📱 Platform: React Native
+🎯 Goal: Write clean, readable, structured code with smart separation of concerns and clear naming.
+🧠 Cursor Instructions: Follow the rules below when generating code.
+
+📁 1. Folder & File Naming Conventions
+UI components → PascalCase.js
+
+Logic, services, utilities → camelCase.js
+
+Hooks → useCamelCase.js
+
+Recommended folders:
+
+bash
+Copy
+Edit
+/components → UI only, dumb components
+/screens → Screen-level components with layout
+/hooks → Shared reusable logic
+/services → Business logic (if used in future)
+/utils → General-purpose helpers
+🧼 2. Code Style
+Use clear, self-explanatory names for all variables, functions, and components.
+
+Functions should have a single purpose. Keep them focused and short.
+
+Prefer const over let. Avoid var.
+
+Prefer arrow functions.
+
+Use object/array destructuring where applicable.
+
+Avoid magic numbers — give meaningful names to values.
+
+Keep each file short and focused. Extract if too large.
+
+⚛️ 3. UI Components
+Components should be small, dumb, and stateless if possible.
+
+Avoid embedding logic unrelated to display/UI.
+
+Accept props and render accordingly — no business logic inside.
+
+UI logic (e.g., show/hide, toggles, animations) can stay in the component or be abstracted to shared hooks.
+
+🧠 4. Logic Separation
+All business logic (e.g., calculations, state transformations) should be placed in:
+
+services/ if externalized
+
+custom hooks/ if UI-related but shared
+
+Components must not contain state logic that is shared across screens.
+
+If logic is reused — create a hook.
+
+♻️ 5. Reusability
+Reuse components or logic where appropriate — avoid copy-pasting.
+
+Extract shared logic into hooks/.
+
+Don't over-abstract prematurely — prefer "practical reuse" over "ideal reuse".
+
+🧪 6. Testing (Optional but Recommended)
+Write unit tests for:
+
+Shared hooks
+
+Services / pure functions (if added later)
+
+Use React Native Testing Library if needed
+
+Keep tests colocated or in /__tests__/ folders
+
+🐞 7. Loading and Error Handling
+For processes that require time (e.g., animations, async UI changes), show a loading state.
+
+If an error occurs during logic execution:
+
+Log an error message to console
+
+Include contextual details about what failed and where
+
+ts
+Copy
+Edit
+console.error('[updateProfile] Failed to update name', err)
+🧰 8. Tooling and Conventions
+Use ESLint and Prettier for code formatting.
+
+Prefer functional components only.
+
+Optional: Use absolute imports (e.g. @/components/MyButton)
+
+9. RTL & Hebrew Support
+All user-facing text content will be in Hebrew.
+
+All text elements (Text, TextInput, etc.) should be:
+
+Explicitly set to textAlign: 'right' if needed.
+
+Use writingDirection: 'rtl' where necessary (especially in custom styles).
+
+---
+
+No need for accessibility support at this stage.
+
+✅ Summary Principles
+Principle	Rule
+Naming	Clear, readable, descriptive names
+Separation of Concerns	UI <--> Logic clearly separated
+Component Simplicity	Small, dumb, reusable
+Reuse	Hooks and utilities over duplication
+File Organization	Consistent folder structure
+Error Handling	Log errors clearly, use simple loading states where relevant
+Testing	Focus on logic layers (if added)

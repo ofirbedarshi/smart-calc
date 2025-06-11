@@ -43,7 +43,6 @@ export const SelfLocation: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.heading}>מיקום עצמי</Text>
         <TouchableOpacity onPress={() => setIsEditing(!isEditing)}>
           <FontAwesome 
             name={isEditing ? "times" : "pencil"} 
@@ -51,6 +50,7 @@ export const SelfLocation: React.FC = () => {
             color="#007AFF" 
           />
         </TouchableOpacity>
+        <Text style={styles.heading}>{isEditing ? "ערוך מיקום עצמי" : "מיקום עצמי נוכחי"}</Text>
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />

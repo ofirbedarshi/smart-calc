@@ -36,14 +36,14 @@ export const SelfLocation: React.FC = () => {
         />
         <TextInput
           style={styles.input}
-          placeholder="קו רוחב"
+          placeholder="נ.צ צפוני"
           keyboardType="numeric"
           value={locationData.latitude}
           onChangeText={(text) => setLocationData({ ...locationData, latitude: text })}
         />
         <TextInput
           style={styles.input}
-          placeholder="קו אורך"
+          placeholder="נ.צ מזרחי"
           keyboardType="numeric"
           value={locationData.longitude}
           onChangeText={(text) => setLocationData({ ...locationData, longitude: text })}

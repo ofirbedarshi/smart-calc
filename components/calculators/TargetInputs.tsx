@@ -12,12 +12,14 @@ export const TargetInputs: React.FC<TargetInputsProps> = ({ fields }) => {
       {fields.map((field, index) => (
         <View key={index} style={styles.inputGroup}>
           <Text style={styles.inputLabel}>{field.label}</Text>
-          <TextInput
-            style={styles.input}
-            value={field.value}
-            onChangeText={field.onChange}
-            keyboardType={field.keyboardType || 'default'}
-          />
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              value={field.value}
+              onChangeText={field.onChange}
+              keyboardType={field.keyboardType || 'default'}
+            />
+          </View>
         </View>
       ))}
     </View>
@@ -26,24 +28,31 @@ export const TargetInputs: React.FC<TargetInputsProps> = ({ fields }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    gap: 16,
+    flexDirection: 'row-reverse',
+    flexWrap: 'wrap',
+    gap: 4,
+    justifyContent: 'flex-start',
   },
   inputGroup: {
-    gap: 4,
+    gap: 2,
+    marginLeft: 8,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#666',
     textAlign: 'right',
   },
+  inputWrapper: {
+    alignItems: 'flex-end',
+  },
   input: {
-    height: 48,
+    width: 110,
+    height: 36,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    fontSize: 16,
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    fontSize: 14,
     textAlign: 'right',
   },
 }); 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { DirectionSwitcher } from './DirectionSwitcher';
+import { DirectionSwitcher } from '../common/DirectionSwitcher';
 
 interface UnitConverterProps {
   unit1Name: string;
@@ -53,6 +53,8 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({
       <DirectionSwitcher
         isReversed={isReversed}
         onToggle={handleDirectionChange}
+        leftLabel={unit1Name}
+        rightLabel={unit2Name}
       />
 
       <View style={styles.inputContainer}>

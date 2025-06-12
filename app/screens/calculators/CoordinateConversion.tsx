@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
-import { DirectionSwitcher } from '../../../components/calculators/DirectionSwitcher';
 import { TargetInputs } from '../../../components/calculators/TargetInputs';
+import { DirectionSwitcher } from '../../../components/common/DirectionSwitcher';
 import { SelfLocation } from '../../../components/SelfLocation';
 import { ConversionResults as ConversionResultsType, CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { LocationData } from '../../../services/LocationService';
@@ -190,6 +190,8 @@ export default function CoordinateConversion() {
       <DirectionSwitcher
         isReversed={isReversed}
         onToggle={() => setIsReversed(!isReversed)}
+        leftLabel="נ.צ + גובה"
+        rightLabel="אזימוט + טווח + זהר"
       />
 
       <TargetInputs fields={getInputFields()} />

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LocationData } from '../services/LocationService';
 import { useLocationStore } from '../stores/locationStore';
+import { Modal } from './common/Modal';
 import { LocationEdit } from './location/LocationEdit';
 import { LocationView } from './location/LocationView';
 
@@ -43,26 +44,32 @@ export const SelfLocation: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => setIsEditing(!isEditing)}>
+        <TouchableOpacity onPress={() => setIsEditing(true)}>
           <FontAwesome 
-            name={isEditing ? "times" : "pencil"} 
+            name="pencil" 
             size={20} 
             color="#007AFF" 
           />
         </TouchableOpacity>
-        <Text style={styles.heading}>{isEditing ? "ערוך מיקום עצמי" : "מיקום עצמי נוכחי"}</Text>
+        <Text style={styles.heading}>מיקום עצמי</Text>
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color="#007AFF" style={styles.loader} />
-      ) : isEditing ? (
+      ) : (
+        <LocationView locationData={locationData} />
+      )}
+
+      <Modal
+        visible={isEditing}
+        onClose={() => setIsEditing(false)}
+        title="ערוך מיקום עצמי"
+      >
         <LocationEdit
           locationData={locationData}
           isLoading={isLoading}
           onSave={handleSave}
         />
-      ) : (
-        <LocationView locationData={locationData} />
-      )}
+      </Modal>
     </View>
   );
 };

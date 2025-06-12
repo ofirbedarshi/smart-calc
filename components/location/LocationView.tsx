@@ -19,17 +19,19 @@ export const LocationView: React.FC<LocationViewProps> = ({ locationData }) => {
 
   return (
     <View style={styles.viewContainer}>
-      <View style={styles.locationItem}>
-        <Text style={styles.locationLabel}>גובה</Text>
-        <Text style={styles.locationValue}>{locationData.height}</Text>
-      </View>
-      <View style={styles.locationItem}>
-        <Text style={styles.locationLabel}>נ.צ צפוני</Text>
-        <Text style={styles.locationValue}>{locationData.northCoord}</Text>
-      </View>
-      <View style={styles.locationItem}>
-        <Text style={styles.locationLabel}>נ.צ מזרחי</Text>
-        <Text style={styles.locationValue}>{locationData.eastCoord}</Text>
+      <View style={styles.locationRow}>
+        <View style={styles.locationItem}>
+          <Text style={styles.locationLabel}>גובה:</Text>
+          <Text style={styles.locationValue} numberOfLines={1}>{locationData.height}</Text>
+        </View>
+        <View style={styles.locationItem}>
+          <Text style={styles.locationLabel}>נ.צ צפוני:</Text>
+          <Text style={styles.locationValue} numberOfLines={1}>{locationData.northCoord}</Text>
+        </View>
+        <View style={styles.locationItem}>
+          <Text style={styles.locationLabel}>נ.צ מזרחי:</Text>
+          <Text style={styles.locationValue} numberOfLines={1}>{locationData.eastCoord}</Text>
+        </View>
       </View>
     </View>
   );
@@ -37,7 +39,7 @@ export const LocationView: React.FC<LocationViewProps> = ({ locationData }) => {
 
 const styles = StyleSheet.create({
   viewContainer: {
-    gap: 12,
+    paddingVertical: 8,
   },
   emptyContainer: {
     padding: 20,
@@ -49,13 +51,18 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
   },
+  locationRow: {
+    flexDirection: 'row-reverse',
+    flexWrap: 'wrap',
+    gap: 16,
+    justifyContent: 'flex-start',
+  },
   locationItem: {
     flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    gap: 4,
+    flexShrink: 1,
+    minWidth: 120,
   },
   locationLabel: {
     fontSize: 16,
@@ -65,5 +72,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+    flexShrink: 1,
   },
 }); 

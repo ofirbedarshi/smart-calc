@@ -74,33 +74,41 @@ export default function CoordinateConversion() {
       <SelfLocation />
       
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="שם מטרה"
-          value={targetName}
-          onChangeText={setTargetName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="נ.צ מזרחי"
-          value={eastCoord}
-          onChangeText={setEastCoord}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="נ.צ צפוני"
-          value={northCoord}
-          onChangeText={setNorthCoord}
-          keyboardType="numeric"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="גובה"
-          value={height}
-          onChangeText={setHeight}
-          keyboardType="numeric"
-        />
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>שם מטרה</Text>
+          <TextInput
+            style={styles.input}
+            value={targetName}
+            onChangeText={setTargetName}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>נ.צ מזרחי</Text>
+          <TextInput
+            style={styles.input}
+            value={eastCoord}
+            onChangeText={setEastCoord}
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>נ.צ צפוני</Text>
+          <TextInput
+            style={styles.input}
+            value={northCoord}
+            onChangeText={setNorthCoord}
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.inputLabel}>גובה</Text>
+          <TextInput
+            style={styles.input}
+            value={height}
+            onChangeText={setHeight}
+            keyboardType="numeric"
+          />
+        </View>
       </View>
 
       <TouchableOpacity 
@@ -145,7 +153,15 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     padding: 16,
-    gap: 12,
+    gap: 16,
+  },
+  inputGroup: {
+    gap: 4,
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'right',
   },
   input: {
     height: 48,

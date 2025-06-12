@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetCoordinates } from '../../../components/calculators/TargetCoordinates';
+import { Dropdown } from '../../../components/common/Dropdown';
 import { CalculatorField } from '../../../types/calculator';
 
 export default function BackAzimuth() {
+  // Direction state
+  const [direction, setDirection] = useState<'right' | 'left'>('right');
+
   // Target 1 states
   const [target1North, setTarget1North] = useState('');
   const [target1East, setTarget1East] = useState('');
@@ -124,12 +128,25 @@ export default function BackAzimuth() {
   const isCalculateDisabled = !target1North || !target1East || !target1Distance ||
     !target2North || !target2East || !target2Distance;
 
+  const directionOptions = [
+    { label: 'ימנית', value: 'right' },
+    { label: 'שמאלית', value: 'left' },
+  ];
+
   return (
     <ScrollView style={styles.container}>
       <TargetCoordinates
         title="מטרה 1"
         fields={getTarget1Fields()}
       />
+
+      <View style={styles.dropdownContainer}>
+        <Dropdown
+          options={directionOptions}
+          value={direction}
+          onChange={(value) => setDirection(value as 'right' | 'left')}
+        />
+      </View>
 
       <TargetCoordinates
         title="מטרה 2"
@@ -160,6 +177,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  dropdownContainer: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+    alignItems: 'flex-end',
   },
   calculateButton: {
     backgroundColor: '#007AFF',

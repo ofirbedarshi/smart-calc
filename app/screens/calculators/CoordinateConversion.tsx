@@ -1,44 +1,147 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { ConversionResults } from '../../../components/calculators/ConversionResults';
+import { DirectionSwitcher } from '../../../components/calculators/DirectionSwitcher';
+import { TargetInputs } from '../../../components/calculators/TargetInputs';
 import { SelfLocation } from '../../../components/SelfLocation';
-import { ConversionResults, CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
+import { ConversionResults as ConversionResultsType, CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { LocationData } from '../../../services/LocationService';
 import { useLocationStore } from '../../../stores/locationStore';
+import { CalculatorField } from '../../../types/calculator';
 
 export default function CoordinateConversion() {
   const { locationData: selfLocation } = useLocationStore();
+  const [isReversed, setIsReversed] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
+  
+  // Input states
   const [targetName, setTargetName] = useState('');
   const [eastCoord, setEastCoord] = useState('');
   const [northCoord, setNorthCoord] = useState('');
   const [height, setHeight] = useState('');
-    const [isCalculating, setIsCalculating] = useState(false);
-    
-    const emptyResults = {
-        azimuth: '',
-        distance: '',
-        elevation: '',
+  const [azimuth, setAzimuth] = useState('');
+  const [distance, setDistance] = useState('');
+  const [elevation, setElevation] = useState('');
+  
+  // Results state
+  const [results, setResults] = useState<ConversionResultsType>({
+    azimuth: '',
+    distance: '',
+    elevation: '',
+  });
+
+  // Reset results when inputs change
+  useEffect(() => {
+    setResults({
+      azimuth: '',
+      distance: '',
+      elevation: '',
+    });
+  }, [isReversed, eastCoord, northCoord, height, azimuth, distance, elevation]);
+
+  const getInputFields = (): CalculatorField[] => {
+    const commonFields: CalculatorField[] = [
+      {
+        label: 'שם מטרה',
+        value: targetName,
+        onChange: setTargetName,
+      },
+    ];
+
+    const coordinateFields: CalculatorField[] = [
+      {
+        label: 'נ.צ מזרחי',
+        value: eastCoord,
+        onChange: setEastCoord,
+        keyboardType: 'numeric',
+      },
+      {
+        label: 'נ.צ צפוני',
+        value: northCoord,
+        onChange: setNorthCoord,
+        keyboardType: 'numeric',
+      },
+      {
+        label: 'גובה',
+        value: height,
+        onChange: setHeight,
+        keyboardType: 'numeric',
+      },
+    ];
+
+    const azimuthFields: CalculatorField[] = [
+      {
+        label: 'אזימוט (מעלות)',
+        value: azimuth,
+        onChange: setAzimuth,
+        keyboardType: 'numeric',
+      },
+      {
+        label: 'טווח (מטרים)',
+        value: distance,
+        onChange: setDistance,
+        keyboardType: 'numeric',
+      },
+      {
+        label: 'זוהר (מעלות)',
+        value: elevation,
+        onChange: setElevation,
+        keyboardType: 'numeric',
+      },
+    ];
+
+    return [...commonFields, ...(isReversed ? azimuthFields : coordinateFields)];
+  };
+
+  const getResultFields = (): CalculatorField[] => {
+    if (isReversed) {
+      return [
+        {
+          label: 'נ.צ מזרחי',
+          value: results.eastCoord || '',
+        },
+        {
+          label: 'נ.צ צפוני',
+          value: results.northCoord || '',
+        },
+        {
+          label: 'גובה',
+          value: results.height || '',
+        },
+      ];
     }
-    const [results, setResults] = useState<ConversionResults>(emptyResults);
-    
-    useEffect(() => {
-        setResults(emptyResults);
-    }, [selfLocation, eastCoord, northCoord, height]);
-    
-    
+
+    return [
+      {
+        label: 'אזימוט (מעלות)',
+        value: results.azimuth,
+      },
+      {
+        label: 'טווח (מטרים)',
+        value: results.distance,
+      },
+      {
+        label: 'זוהר (מעלות)',
+        value: results.elevation,
+      },
+    ];
+  };
 
   const validateInputs = (): string | null => {
     if (!selfLocation.height || !selfLocation.northCoord || !selfLocation.eastCoord) {
       return 'חסר מיקום עצמי';
     }
-    if (!eastCoord) {
-      return 'חסר נ.צ מזרחי';
+
+    if (isReversed) {
+      if (!azimuth) return 'חסר אזימוט';
+      if (!distance) return 'חסר טווח';
+      if (!elevation) return 'חסר זוהר';
+    } else {
+      if (!eastCoord) return 'חסר נ.צ מזרחי';
+      if (!northCoord) return 'חסר נ.צ צפוני';
+      if (!height) return 'חסר גובה';
     }
-    if (!northCoord) {
-      return 'חסר נ.צ צפוני';
-    }
-    if (!height) {
-      return 'חסר גובה';
-    }
+
     return null;
   };
 
@@ -51,14 +154,24 @@ export default function CoordinateConversion() {
 
     try {
       setIsCalculating(true);
-      const targetLocation: LocationData = {
-        height,
-        northCoord,
-        eastCoord,
-      };
-
-      const calculationResults = CoordsConversionCalc.calc(selfLocation, targetLocation);
-      setResults(calculationResults);
+      
+      if (isReversed) {
+        const targetData = {
+          azimuth,
+          distance,
+          elevation,
+        };
+        const calculationResults = CoordsConversionCalc.calcReverse(selfLocation, targetData);
+        setResults(calculationResults);
+      } else {
+        const targetLocation: LocationData = {
+          height,
+          northCoord,
+          eastCoord,
+        };
+        const calculationResults = CoordsConversionCalc.calc(selfLocation, targetLocation);
+        setResults(calculationResults);
+      }
     } catch (error) {
       Alert.alert('שגיאה', 'אירעה שגיאה בחישוב הקואורדינטות');
       console.error('[CoordinateConversion] Calculation error:', error);
@@ -67,49 +180,19 @@ export default function CoordinateConversion() {
     }
   };
 
-  const isCalculateDisabled = !eastCoord || !northCoord || !height || !selfLocation.height || !selfLocation.northCoord || !selfLocation.eastCoord;
+  const isCalculateDisabled = !selfLocation.height || !selfLocation.northCoord || !selfLocation.eastCoord ||
+    (isReversed ? (!azimuth || !distance || !elevation) : (!eastCoord || !northCoord || !height));
 
   return (
     <ScrollView style={styles.container}>
       <SelfLocation />
       
-      <View style={styles.inputContainer}>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>שם מטרה</Text>
-          <TextInput
-            style={styles.input}
-            value={targetName}
-            onChangeText={setTargetName}
-          />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>נ.צ מזרחי</Text>
-          <TextInput
-            style={styles.input}
-            value={eastCoord}
-            onChangeText={setEastCoord}
-            keyboardType="numeric"
-          />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>נ.צ צפוני</Text>
-          <TextInput
-            style={styles.input}
-            value={northCoord}
-            onChangeText={setNorthCoord}
-            keyboardType="numeric"
-          />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.inputLabel}>גובה</Text>
-          <TextInput
-            style={styles.input}
-            value={height}
-            onChangeText={setHeight}
-            keyboardType="numeric"
-          />
-        </View>
-      </View>
+      <DirectionSwitcher
+        isReversed={isReversed}
+        onToggle={() => setIsReversed(!isReversed)}
+      />
+
+      <TargetInputs fields={getInputFields()} />
 
       <TouchableOpacity 
         style={[styles.calculateButton, isCalculateDisabled && styles.calculateButtonDisabled]} 
@@ -123,21 +206,10 @@ export default function CoordinateConversion() {
         )}
       </TouchableOpacity>
 
-      <View style={styles.resultsContainer}>
-        <Text style={styles.resultsHeader}>תוצאות המרה</Text>
-        <View style={styles.resultItem}>
-          <Text style={styles.resultLabel}>אזימוט (מעלות)</Text>
-          <Text style={styles.resultValue}>{results.azimuth}</Text>
-        </View>
-        <View style={styles.resultItem}>
-          <Text style={styles.resultLabel}>טווח (מטרים)</Text>
-          <Text style={styles.resultValue}>{results.distance}</Text>
-        </View>
-        <View style={styles.resultItem}>
-          <Text style={styles.resultLabel}>זוהר (מעלות)</Text>
-          <Text style={styles.resultValue}>{results.elevation}</Text>
-        </View>
-      </View>
+      <ConversionResults
+        title="תוצאות המרה"
+        fields={getResultFields()}
+      />
 
       <TouchableOpacity style={styles.saveButton}>
         <Text style={styles.saveButtonText}>שמירה</Text>
@@ -150,27 +222,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  inputContainer: {
-    padding: 16,
-    gap: 16,
-  },
-  inputGroup: {
-    gap: 4,
-  },
-  inputLabel: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'right',
-  },
-  input: {
-    height: 48,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    textAlign: 'right',
   },
   calculateButton: {
     backgroundColor: '#007AFF',
@@ -186,37 +237,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  resultsContainer: {
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-    margin: 16,
-    borderRadius: 8,
-  },
-  resultsHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'right',
-  },
-  resultItem: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  resultLabel: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'right',
-  },
-  resultValue: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'left',
   },
   saveButton: {
     backgroundColor: '#34C759',

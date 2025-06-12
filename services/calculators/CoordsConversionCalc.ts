@@ -4,52 +4,91 @@ export interface ConversionResults {
   azimuth: string;
   distance: string;
   elevation: string;
+  eastCoord?: string;
+  northCoord?: string;
+  height?: string;
 }
 
 export class CoordsConversionCalc {
-  private static parseAndValidateLocation(location: LocationData): { east: number; north: number; alt: number } {
-    const { height, northCoord, eastCoord } = location;
-    
-    if (!height || !northCoord || !eastCoord) {
+  static calc(source: LocationData, target: LocationData): ConversionResults {
+    const sourceCoords = this.parseAndValidateLocation(source);
+    const targetCoords = this.parseAndValidateLocation(target);
+
+    const dx = targetCoords.eastCoord - sourceCoords.eastCoord;
+    const dy = targetCoords.northCoord - sourceCoords.northCoord;
+    const dz = targetCoords.height - sourceCoords.height;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const azimuth = this.calculateAzimuth(dx, dy);
+    const elevation = this.calculateElevation(distance, dz);
+
+    return {
+      azimuth: azimuth.toFixed(2),
+      distance: distance.toFixed(2),
+      elevation: elevation.toFixed(2),
+    };
+  }
+
+  static calcReverse(source: LocationData, target: { azimuth: string; distance: string; elevation: string }): ConversionResults {
+    const sourceCoords = this.parseAndValidateLocation(source);
+    const targetValues = this.parseAndValidateTarget(target);
+
+    const azimuthRad = (targetValues.azimuth * Math.PI) / 180;
+    const elevationRad = (targetValues.elevation * Math.PI) / 180;
+
+    const horizontalDistance = targetValues.distance * Math.cos(elevationRad);
+    const verticalDistance = targetValues.distance * Math.sin(elevationRad);
+
+    const dx = horizontalDistance * Math.sin(azimuthRad);
+    const dy = horizontalDistance * Math.cos(azimuthRad);
+
+    const targetEastCoord = sourceCoords.eastCoord + dx;
+    const targetNorthCoord = sourceCoords.northCoord + dy;
+    const targetHeight = sourceCoords.height + verticalDistance;
+
+    return {
+      azimuth: target.azimuth,
+      distance: target.distance,
+      elevation: target.elevation,
+      eastCoord: targetEastCoord.toFixed(2),
+      northCoord: targetNorthCoord.toFixed(2),
+      height: targetHeight.toFixed(2),
+    };
+  }
+
+  private static parseAndValidateLocation(location: LocationData) {
+    if (!location.height || !location.northCoord || !location.eastCoord) {
       throw new Error('Missing location data');
     }
 
-    const east = parseFloat(eastCoord);
-    const north = parseFloat(northCoord);
-    const alt = parseFloat(height);
-
-    if (isNaN(east) || isNaN(north) || isNaN(alt)) {
-      throw new Error('Invalid coordinate format');
-    }
-
-    return { east, north, alt };
+    return {
+      height: parseFloat(location.height),
+      northCoord: parseFloat(location.northCoord),
+      eastCoord: parseFloat(location.eastCoord),
+    };
   }
 
-  static calc(currentLocation: LocationData, targetLocation: LocationData): ConversionResults {
-    const current = this.parseAndValidateLocation(currentLocation);
-    const target = this.parseAndValidateLocation(targetLocation);
-
-    const dx = target.east - current.east;
-    const dy = target.north - current.north;
-    const dz = target.alt - current.alt;
-
-    // טווח אווירי
-    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-    // אזימוט במעלות
-    let azimuthRad = Math.atan2(dx, dy);
-    let azimuthDeg = azimuthRad * (180 / Math.PI);
-    if (azimuthDeg < 0) azimuthDeg += 360;
-
-    // זווית הגבהה (זוהר)
-    const horizontalDistance = Math.sqrt(dx * dx + dy * dy);
-    const elevationRad = Math.atan2(dz, horizontalDistance);
-    const elevationDeg = elevationRad * (180 / Math.PI);
+  private static parseAndValidateTarget(target: { azimuth: string; distance: string; elevation: string }) {
+    if (!target.azimuth || !target.distance || !target.elevation) {
+      throw new Error('Missing target data');
+    }
 
     return {
-      azimuth: azimuthDeg.toString(),
-      distance: distance.toString(),
-      elevation: elevationDeg.toString()
+      azimuth: parseFloat(target.azimuth),
+      distance: parseFloat(target.distance),
+      elevation: parseFloat(target.elevation),
     };
+  }
+
+  private static calculateAzimuth(dx: number, dy: number): number {
+    let azimuth = (Math.atan2(dx, dy) * 180) / Math.PI;
+    if (azimuth < 0) {
+      azimuth += 360;
+    }
+    return azimuth;
+  }
+
+  private static calculateElevation(distance: number, dz: number): number {
+    return (Math.atan2(dz, distance) * 180) / Math.PI;
   }
 } 

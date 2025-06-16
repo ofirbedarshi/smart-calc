@@ -7,71 +7,47 @@ interface LocationViewProps {
 }
 
 export const LocationView: React.FC<LocationViewProps> = ({ locationData }) => {
-  const isLocationComplete = locationData.height && locationData.northCoord && locationData.eastCoord;
-
-  if (!isLocationComplete) {
+  if (!locationData.northCoord || !locationData.eastCoord || !locationData.height) {
     return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>מיקום לא ידוע</Text>
+      <View style={styles.container}>
+        <Text style={styles.unknownText}>מיקום לא ידוע</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.viewContainer}>
-      <View style={styles.locationRow}>
-        <View style={styles.locationItem}>
-          <Text style={styles.locationLabel}>גובה:</Text>
-          <Text style={styles.locationValue} numberOfLines={1}>{locationData.height}</Text>
-        </View>
-        <View style={styles.locationItem}>
-          <Text style={styles.locationLabel}>נ.צ צפוני:</Text>
-          <Text style={styles.locationValue} numberOfLines={1}>{locationData.northCoord}</Text>
-        </View>
-        <View style={styles.locationItem}>
-          <Text style={styles.locationLabel}>נ.צ מזרחי:</Text>
-          <Text style={styles.locationValue} numberOfLines={1}>{locationData.eastCoord}</Text>
-        </View>
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.locationText}>
+        <Text style={styles.identifier}>גו'</Text>
+        <Text style={styles.value}>{locationData.height}</Text>
+        <Text style={styles.identifier}>/צפ'</Text>
+        <Text style={styles.value}>{locationData.northCoord}</Text>
+        <Text style={styles.identifier}>/מז'</Text>
+        <Text style={styles.value}>{locationData.eastCoord}</Text>
+      </Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  viewContainer: {
-    paddingVertical: 8,
+  container: {
+    padding: 8,
   },
-  emptyContainer: {
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyText: {
+  locationText: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    textAlign: 'right',
   },
-  locationRow: {
-    flexDirection: 'row-reverse',
-    flexWrap: 'wrap',
-    gap: 16,
-    justifyContent: 'flex-start',
-  },
-  locationItem: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    gap: 4,
-    flexShrink: 1,
-    minWidth: 120,
-  },
-  locationLabel: {
-    fontSize: 16,
+  identifier: {
     color: '#666',
   },
-  locationValue: {
-    fontSize: 16,
+  value: {
+    color: '#000',
     fontWeight: 'bold',
-    color: '#333',
-    flexShrink: 1,
+  },
+  unknownText: {
+    fontSize: 16,
+    color: '#666',
+    fontStyle: 'italic',
+    textAlign: 'right',
   },
 }); 

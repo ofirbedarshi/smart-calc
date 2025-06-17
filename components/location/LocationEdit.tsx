@@ -1,7 +1,6 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LocationData } from '../../services/LocationService';
 import { BaseInput } from '../common/BaseInput';
 import PrefixInput from '../common/PrefixInput';
@@ -136,15 +135,15 @@ export const LocationEdit: React.FC<LocationEditProps> = ({
         )}
       />
 
-      <Button
-        mode="contained"
-        onPress={handleSubmit(onSubmit)}
-        disabled={isLoading}
-        style={styles.saveButton}
-        loading={isLoading}
-      >
-        שמירה
-      </Button>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={[styles.saveButton, isLoading && styles.saveButtonDisabled]} 
+          onPress={handleSubmit(onSubmit)}
+          disabled={isLoading}
+        >
+          <Text style={styles.saveButtonText}>שמירה</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -154,7 +153,22 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 16,
   },
-  saveButton: {
+  buttonContainer: {
     marginTop: 8,
+  },
+  saveButton: {
+    backgroundColor: '#34C759',
+    margin: 16,
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  saveButtonDisabled: {
+    opacity: 0.5,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 }); 

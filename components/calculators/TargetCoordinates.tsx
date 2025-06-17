@@ -46,7 +46,7 @@ export const TargetCoordinates: React.FC<TargetCoordinatesProps> = ({
 
         {onElevationChange && (
           <BaseInput
-            label="זוה״ר (מעלות) (אופציונלי)"
+            label="זוהר (אופציונלי)"
             value={elevation || ''}
             onChange={onElevationChange}
             type="number"

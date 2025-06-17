@@ -16,7 +16,6 @@ export default function CoordinateConversion() {
   const [isCalculating, setIsCalculating] = useState(false);
   
   // Input states
-  const [targetName, setTargetName] = useState('');
   const [eastCoord, setEastCoord] = useState('');
   const [northCoord, setNorthCoord] = useState('');
   const [height, setHeight] = useState('');
@@ -41,13 +40,6 @@ export default function CoordinateConversion() {
   }, [isReversed, eastCoord, northCoord, height, azimuth, distance, elevation]);
 
   const getInputFields = (): CalculatorField[] => {
-    const commonFields: CalculatorField[] = [
-      {
-        label: 'שם מטרה',
-        value: targetName,
-        onChange: setTargetName,
-      },
-    ];
 
     const coordinateFields: CalculatorField[] = [
       {
@@ -92,7 +84,7 @@ export default function CoordinateConversion() {
       },
     ];
 
-    return [...commonFields, ...(isReversed ? azimuthFields : coordinateFields)];
+    return [...(isReversed ? azimuthFields : coordinateFields)];
   };
 
   const getResultFields = (): CalculatorField[] => {

@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { DatePicker } from '../../../components/common/DatePicker';
 import { Dropdown } from '../../../components/common/Dropdown';
 import PrefixInput from '../../../components/common/PrefixInput';
 import { EditableData } from '../../../components/EditableData';
@@ -222,7 +223,13 @@ export default function TargetDetails() {
           value={targetFields.date}
           onChange={(value) => handleFieldChange('date', value)}
           editMode={isEditMode}
-          placeholder="הזן תאריך"
+          editComponent={
+            <DatePicker
+              value={targetFields.date}
+              onChange={(value) => handleFieldChange('date', value)}
+              placeholder="הזן תאריך"
+            />
+          }
         />
         <EditableData
           label="הערות"

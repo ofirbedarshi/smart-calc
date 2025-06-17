@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetInputs } from '../../../components/calculators/TargetInputs';
+import Button from '../../../components/common/Button';
 import { DirectionSwitcher } from '../../../components/common/DirectionSwitcher';
 import { SelfLocation } from '../../../components/SelfLocation';
 import { ConversionResults as ConversionResultsType, CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
@@ -196,26 +197,23 @@ export default function CoordinateConversion() {
 
       <TargetInputs fields={getInputFields()} />
 
-      <TouchableOpacity 
-        style={[styles.calculateButton, isCalculateDisabled && styles.calculateButtonDisabled]} 
+      <Button
+        title="חישוב קוארדינטות"
         onPress={handleCalculate}
         disabled={isCalculateDisabled || isCalculating}
-      >
-        {isCalculating ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.calculateButtonText}>חישוב קוארדינטות</Text>
-        )}
-      </TouchableOpacity>
+        theme="primary"
+      />
 
       <ConversionResults
         title="תוצאות המרה"
         fields={getResultFields()}
       />
 
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>שמירה</Text>
-      </TouchableOpacity>
+      <Button
+        title="שמירה"
+        onPress={() => {}}
+        theme="success"
+      />
     </ScrollView>
   );
 }
@@ -224,32 +222,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  calculateButton: {
-    backgroundColor: '#007AFF',
-    margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  calculateButtonDisabled: {
-    opacity: 0.5,
-  },
-  calculateButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  saveButton: {
-    backgroundColor: '#34C759',
-    margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 }); 

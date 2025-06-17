@@ -1,19 +1,46 @@
 import { useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
+import { useLocationStore } from '../../../stores/locationStore';
 
 interface TargetData {
   northCoord: string;
   eastCoord: string;
   height: string;
+}
+
+interface CalculatedData {
+  azimuth: string;
   distance: string;
   elevation: string;
-  azimuth: string;
 }
 
 export default function TargetDetails() {
   const params = useLocalSearchParams();
   const target = JSON.parse(params.target as string) as TargetData;
+  const { locationData: selfLocation } = useLocationStore();
+  const [calculatedData, setCalculatedData] = useState<CalculatedData>({
+    azimuth: '',
+    distance: '',
+    elevation: '',
+  });
+
+  useEffect(() => {
+    if (selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord) {
+      const targetLocation = {
+        height: target.height,
+        northCoord: target.northCoord,
+        eastCoord: target.eastCoord,
+      };
+      const results = CoordsConversionCalc.calc(selfLocation, targetLocation);
+      setCalculatedData({
+        azimuth: results.azimuth,
+        distance: results.distance,
+        elevation: results.elevation,
+      });
+    }
+  }, [target, selfLocation]);
 
   return (
     <ScrollView style={styles.container}>
@@ -33,15 +60,15 @@ export default function TargetDetails() {
         </View>
         <View style={styles.field}>
           <Text style={styles.label}>טווח:</Text>
-          <Text style={styles.value}>{target.distance}</Text>
+          <Text style={styles.value}>{calculatedData.distance}</Text>
         </View>
         <View style={styles.field}>
           <Text style={styles.label}>זוהר:</Text>
-          <Text style={styles.value}>{target.elevation}</Text>
+          <Text style={styles.value}>{calculatedData.elevation}</Text>
         </View>
         <View style={styles.field}>
           <Text style={styles.label}>אזימוט:</Text>
-          <Text style={styles.value}>{target.azimuth}</Text>
+          <Text style={styles.value}>{calculatedData.azimuth}</Text>
         </View>
       </View>
     </ScrollView>

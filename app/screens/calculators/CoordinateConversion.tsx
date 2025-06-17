@@ -156,9 +156,6 @@ export default function CoordinateConversion() {
       northCoord: isReversed ? results.northCoord : coordsData.northCoord,
       eastCoord: isReversed ? results.eastCoord : coordsData.eastCoord,
       height: isReversed ? results.height : coordsData.height,
-      distance: isReversed ? distance : results.distance,
-      elevation: isReversed ? elevation : results.elevation,
-      azimuth: isReversed ? azimuth : results.azimuth,
     };
 
     router.push({

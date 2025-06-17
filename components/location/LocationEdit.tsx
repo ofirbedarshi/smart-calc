@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import { LocationData } from '../../services/LocationService';
+import { BaseInput } from '../common/BaseInput';
+import PrefixInput from '../common/PrefixInput';
 
 interface LocationEditProps {
   locationData: LocationData;
@@ -8,95 +12,149 @@ interface LocationEditProps {
   onSave: (data: LocationData) => void;
 }
 
+interface FormData {
+  eastCoord: string;
+  northCoord: string;
+  height: string;
+}
+
 export const LocationEdit: React.FC<LocationEditProps> = ({
   locationData,
   isLoading,
   onSave,
 }) => {
-  const [editData, setEditData] = useState<LocationData>(locationData);
+  const { control, handleSubmit, formState: { errors }, setError, clearErrors } = useForm<FormData>({
+    defaultValues: {
+      eastCoord: locationData.eastCoord,
+      northCoord: locationData.northCoord,
+      height: locationData.height,
+    },
+  });
 
-  useEffect(() => {
-    setEditData(locationData);
-  }, [locationData]);
+  const onSubmit = (data: FormData) => {
+    onSave({
+      ...locationData,
+      ...data,
+    });
+  };
+
+  const validateEastCoord = (value: string) => {
+    if (!value) return 'נ.צ מזרחי הוא שדה חובה';
+    if (!/^\d{6}$/.test(value)) return 'נ.צ מזרחי חייב להכיל 6 ספרות';
+    return true;
+  };
+
+  const validateNorthCoord = (value: string) => {
+    if (!value) return 'נ.צ צפוני הוא שדה חובה';
+    if (!/^\d{7}$/.test(value)) return 'נ.צ צפוני חייב להכיל 7 ספרות';
+    return true;
+  };
+
+  const validateHeight = (value: string) => {
+    if (!value) return 'גובה הוא שדה חובה';
+    if (!/^\d+(\.\d+)?$/.test(value)) return 'גובה חייב להיות מספר';
+    return true;
+  };
 
   return (
-    <View style={styles.inputContainer}>
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>גובה</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={editData.height}
-          onChangeText={(text) => setEditData({ ...editData, height: text })}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>נ.צ צפוני</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={editData.northCoord}
-          onChangeText={(text) => setEditData({ ...editData, northCoord: text })}
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.inputLabel}>נ.צ מזרחי</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={editData.eastCoord}
-          onChangeText={(text) => setEditData({ ...editData, eastCoord: text })}
-        />
-      </View>
-      <TouchableOpacity 
-        style={[styles.saveButton, isLoading && styles.saveButtonDisabled]} 
-        onPress={() => onSave(editData)}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.saveButtonText}>שמירה</Text>
+    <View style={styles.container}>
+      <Controller
+        name="eastCoord"
+        control={control}
+        rules={{ validate: validateEastCoord }}
+        render={({ field: { onChange, value, onBlur } }) => (
+          <BaseInput
+            label="נ.צ מזרחי"
+            value={value}
+            onChange={onChange}
+            onBlur={() => {
+              onBlur();
+              if (errors.eastCoord) {
+                const result = validateEastCoord(value);
+                if (result === true) {
+                  clearErrors('eastCoord');
+                }
+              }
+            }}
+            type="number"
+            maxLength={6}
+            placeholder="הזן נ.צ מזרחי"
+            error={errors.eastCoord?.message}
+          />
         )}
-      </TouchableOpacity>
+      />
+
+      <Controller
+        name="northCoord"
+        control={control}
+        rules={{ validate: validateNorthCoord }}
+        render={({ field: { onChange, value, onBlur } }) => (
+          <PrefixInput
+            label="נ.צ צפוני"
+            value={value}
+            onChange={onChange}
+            onBlur={() => {
+              onBlur();
+              if (errors.northCoord) {
+                const result = validateNorthCoord(value);
+                if (result === true) {
+                  clearErrors('northCoord');
+                }
+              }
+            }}
+            type="number"
+            maxLength={7}
+            prefixLength={1}
+            placeholder="הזן נ.צ צפוני"
+            error={errors.northCoord?.message}
+          />
+        )}
+      />
+
+      <Controller
+        name="height"
+        control={control}
+        rules={{ validate: validateHeight }}
+        render={({ field: { onChange, value, onBlur } }) => (
+          <BaseInput
+            label="גובה"
+            value={value}
+            onChange={onChange}
+            onBlur={() => {
+              onBlur();
+              if (errors.height) {
+                const result = validateHeight(value);
+                if (result === true) {
+                  clearErrors('height');
+                }
+              }
+            }}
+            type="number"
+            placeholder="הזן גובה"
+            error={errors.height?.message}
+          />
+        )}
+      />
+
+      <Button
+        mode="contained"
+        onPress={handleSubmit(onSubmit)}
+        disabled={isLoading}
+        style={styles.saveButton}
+        loading={isLoading}
+      >
+        שמירה
+      </Button>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  container: {
     gap: 16,
-  },
-  inputGroup: {
-    gap: 4,
-  },
-  inputLabel: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'right',
-  },
-  input: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    textAlign: 'right',
-    fontSize: 16,
+    padding: 16,
   },
   saveButton: {
-    backgroundColor: '#007AFF',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
     marginTop: 8,
-  },
-  saveButtonDisabled: {
-    opacity: 0.7,
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 }); 

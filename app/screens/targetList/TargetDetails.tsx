@@ -5,6 +5,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { DatePicker } from '../../../components/common/DatePicker';
 import { Dropdown } from '../../../components/common/Dropdown';
 import PrefixInput from '../../../components/common/PrefixInput';
+import { TimePicker } from '../../../components/common/TimePicker';
 import { EditableData } from '../../../components/EditableData';
 import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { useLocationStore } from '../../../stores/locationStore';
@@ -201,7 +202,13 @@ export default function TargetDetails() {
         value={targetFields.time}
         onChange={(value) => handleFieldChange('time', value)}
         editMode={isEditMode}
-        placeholder="הזן שעה"
+        editComponent={
+          <TimePicker
+            value={targetFields.time}
+            onChange={(value) => handleFieldChange('time', value)}
+            placeholder="הזן שעה"
+          />
+        }
       />
       <EditableData
         label="חימוש"

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { DatePicker } from '../../../components/common/DatePicker';
 import { Dropdown } from '../../../components/common/Dropdown';
 import PrefixInput from '../../../components/common/PrefixInput';
@@ -99,147 +99,155 @@ export default function TargetDetails() {
     { label: 'לא', value: 'לא' },
   ];
 
-  return (
-    <ScrollView style={styles.container}>
-      <View style={styles.section}>
-        <View style={styles.headerActions}>
-          <TouchableOpacity
-            onPress={() => setIsEditMode(!isEditMode)}
-            style={styles.iconButton}
-          >
-            <Ionicons
-              name={isEditMode ? 'close' : 'pencil'}
-              size={20}
-              color={isEditMode ? '#FF3B30' : '#007AFF'}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <EditableData
-          label="שם מטרה"
-          value={targetFields.name}
-          onChange={(value) => handleFieldChange('name', value)}
-          editMode={isEditMode}
-          placeholder="הזן שם מטרה"
-        />
-        <EditableData
-          label="תיאור"
-          value={targetFields.description}
-          onChange={(value) => handleFieldChange('description', value)}
-          editMode={isEditMode}
-          placeholder="הזן תיאור"
-        />
-        <EditableData
-          label="נ.צ צפוני"
-          value={targetFields.northCoord}
-          onChange={(value) => handleFieldChange('northCoord', value)}
-          editMode={isEditMode}
-          editComponent={
-            <PrefixInput
-              value={targetFields.northCoord}
-              onChange={(value) => handleFieldChange('northCoord', value)}
-              prefixLength={1}
-              type="number"
-              placeholder="הזן נ.צ צפוני"
-            />
-          }
-        />
-        <EditableData
-          label="נ.צ מזרחי"
-          value={targetFields.eastCoord}
-          onChange={(value) => handleFieldChange('eastCoord', value)}
-          editMode={isEditMode}
-          type="number"
-          placeholder="הזן נ.צ מזרחי"
-        />
-        <EditableData
-          label="גובה"
-          value={targetFields.height}
-          onChange={(value) => handleFieldChange('height', value)}
-          editMode={isEditMode}
-          type="number"
-          placeholder="הזן גובה"
-        />
-        <EditableData
-          label="אזימוט"
-          value={targetFields.azimuth}
-          onChange={(value) => handleFieldChange('azimuth', value)}
-          editMode={isEditMode}
-          type="number"
-          placeholder="הזן אזימוט"
-        />
-        <EditableData
-          label="טווח"
-          value={targetFields.distance}
-          onChange={(value) => handleFieldChange('distance', value)}
-          editMode={isEditMode}
-          type="number"
-          placeholder="הזן טווח"
-        />
-        <EditableData
-          label="זוהר"
-          value={targetFields.elevation}
-          onChange={(value) => handleFieldChange('elevation', value)}
-          editMode={isEditMode}
-          type="number"
-          placeholder="הזן זוהר"
-        />
-        <EditableData
-          label="האם נתקפה"
-          value={targetFields.isAttacked}
-          onChange={(value) => handleFieldChange('isAttacked', value)}
-          editMode={isEditMode}
-          editComponent={
-            <Dropdown
-              options={yesNoOptions}
-              value={targetFields.isAttacked}
-              onChange={(value) => handleFieldChange('isAttacked', value)}
-            />
-          }
-        />
-        <EditableData
-          label="שעה"
-          value={targetFields.time}
-          onChange={(value) => handleFieldChange('time', value)}
-          editMode={isEditMode}
-          placeholder="הזן שעה"
-        />
-        <EditableData
-          label="חימוש"
-          value={targetFields.ammunition}
-          onChange={(value) => handleFieldChange('ammunition', value)}
-          editMode={isEditMode}
-          placeholder="הזן חימוש"
-        />
-        <EditableData
-          label="חוליה"
-          value={targetFields.team}
-          onChange={(value) => handleFieldChange('team', value)}
-          editMode={isEditMode}
-          placeholder="הזן חוליה"
-        />
-        <EditableData
-          label="תאריך"
-          value={targetFields.date}
-          onChange={(value) => handleFieldChange('date', value)}
-          editMode={isEditMode}
-          editComponent={
-            <DatePicker
-              value={targetFields.date}
-              onChange={(value) => handleFieldChange('date', value)}
-              placeholder="הזן תאריך"
-            />
-          }
-        />
-        <EditableData
-          label="הערות"
-          value={targetFields.notes}
-          onChange={(value) => handleFieldChange('notes', value)}
-          editMode={isEditMode}
-          placeholder="הזן הערות"
-        />
+  const renderItem = () => (
+    <View style={styles.section}>
+      <View style={styles.headerActions}>
+        <TouchableOpacity
+          onPress={() => setIsEditMode(!isEditMode)}
+          style={styles.iconButton}
+        >
+          <Ionicons
+            name={isEditMode ? 'close' : 'pencil'}
+            size={20}
+            color={isEditMode ? '#FF3B30' : '#007AFF'}
+          />
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+
+      <EditableData
+        label="שם מטרה"
+        value={targetFields.name}
+        onChange={(value) => handleFieldChange('name', value)}
+        editMode={isEditMode}
+        placeholder="הזן שם מטרה"
+      />
+      <EditableData
+        label="תיאור"
+        value={targetFields.description}
+        onChange={(value) => handleFieldChange('description', value)}
+        editMode={isEditMode}
+        placeholder="הזן תיאור"
+      />
+      <EditableData
+        label="נ.צ צפוני"
+        value={targetFields.northCoord}
+        onChange={(value) => handleFieldChange('northCoord', value)}
+        editMode={isEditMode}
+        editComponent={
+          <PrefixInput
+            value={targetFields.northCoord}
+            onChange={(value) => handleFieldChange('northCoord', value)}
+            prefixLength={1}
+            type="number"
+            placeholder="הזן נ.צ צפוני"
+          />
+        }
+      />
+      <EditableData
+        label="נ.צ מזרחי"
+        value={targetFields.eastCoord}
+        onChange={(value) => handleFieldChange('eastCoord', value)}
+        editMode={isEditMode}
+        type="number"
+        placeholder="הזן נ.צ מזרחי"
+      />
+      <EditableData
+        label="גובה"
+        value={targetFields.height}
+        onChange={(value) => handleFieldChange('height', value)}
+        editMode={isEditMode}
+        type="number"
+        placeholder="הזן גובה"
+      />
+      <EditableData
+        label="אזימוט"
+        value={targetFields.azimuth}
+        onChange={(value) => handleFieldChange('azimuth', value)}
+        editMode={isEditMode}
+        type="number"
+        placeholder="הזן אזימוט"
+      />
+      <EditableData
+        label="טווח"
+        value={targetFields.distance}
+        onChange={(value) => handleFieldChange('distance', value)}
+        editMode={isEditMode}
+        type="number"
+        placeholder="הזן טווח"
+      />
+      <EditableData
+        label="זוהר"
+        value={targetFields.elevation}
+        onChange={(value) => handleFieldChange('elevation', value)}
+        editMode={isEditMode}
+        type="number"
+        placeholder="הזן זוהר"
+      />
+      <EditableData
+        label="האם נתקפה"
+        value={targetFields.isAttacked}
+        onChange={(value) => handleFieldChange('isAttacked', value)}
+        editMode={isEditMode}
+        editComponent={
+          <Dropdown
+            options={yesNoOptions}
+            value={targetFields.isAttacked}
+            onChange={(value) => handleFieldChange('isAttacked', value)}
+          />
+        }
+      />
+      <EditableData
+        label="שעה"
+        value={targetFields.time}
+        onChange={(value) => handleFieldChange('time', value)}
+        editMode={isEditMode}
+        placeholder="הזן שעה"
+      />
+      <EditableData
+        label="חימוש"
+        value={targetFields.ammunition}
+        onChange={(value) => handleFieldChange('ammunition', value)}
+        editMode={isEditMode}
+        placeholder="הזן חימוש"
+      />
+      <EditableData
+        label="חוליה"
+        value={targetFields.team}
+        onChange={(value) => handleFieldChange('team', value)}
+        editMode={isEditMode}
+        placeholder="הזן חוליה"
+      />
+      <EditableData
+        label="תאריך"
+        value={targetFields.date}
+        onChange={(value) => handleFieldChange('date', value)}
+        editMode={isEditMode}
+        editComponent={
+          <DatePicker
+            value={targetFields.date}
+            onChange={(value) => handleFieldChange('date', value)}
+            placeholder="הזן תאריך"
+          />
+        }
+      />
+      <EditableData
+        label="הערות"
+        value={targetFields.notes}
+        onChange={(value) => handleFieldChange('notes', value)}
+        editMode={isEditMode}
+        placeholder="הזן הערות"
+      />
+    </View>
+  );
+
+  return (
+    <FlatList
+      data={[1]} // We only need one item
+      renderItem={renderItem}
+      keyExtractor={() => '1'}
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    />
   );
 }
 
@@ -248,24 +256,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  contentContainer: {
+    flexGrow: 1,
+  },
   section: {
     backgroundColor: '#fff',
-    borderRadius: 8,
-    margin: 8,
+    borderRadius: 12,
     padding: 16,
+    margin: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   headerActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 8,
     marginBottom: 16,
   },
   iconButton: {

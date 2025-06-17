@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 interface DropdownOption {
   label: string;
@@ -13,76 +14,61 @@ interface DropdownProps {
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const selectedOption = options.find(opt => opt.value === value);
+  const [open, setOpen] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.button}
-        onPress={() => setIsOpen(!isOpen)}
-      >
-        <Text style={styles.buttonText}>
-          {selectedOption?.label}
-        </Text>
-      </TouchableOpacity>
-      {isOpen && (
-        <View style={styles.menu}>
-          {options.map((option) => (
-            <TouchableOpacity 
-              key={option.value}
-              style={styles.item}
-              onPress={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-            >
-              <Text style={styles.itemText}>{option.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-    </View>
+    <DropDownPicker
+      open={open}
+      value={value}
+      items={options}
+      setOpen={setOpen}
+      setValue={(callback) => {
+        const newValue = typeof callback === 'function' ? callback(value) : callback;
+        onChange(newValue);
+      }}
+      style={styles.dropdown}
+      textStyle={styles.dropdownText}
+      dropDownContainerStyle={styles.dropdownContainer}
+      listItemContainerStyle={styles.listItemContainer}
+      selectedItemContainerStyle={styles.selectedItemContainer}
+      selectedItemLabelStyle={styles.selectedItemLabel}
+      placeholder="בחר..."
+      placeholderStyle={styles.placeholder}
+      zIndex={3000}
+      zIndexInverse={1000}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: 100,
-  },
-  button: {
+  dropdown: {
     backgroundColor: '#fff',
-    borderWidth: 1,
     borderColor: '#ccc',
+    borderWidth: 1,
     borderRadius: 6,
-    padding: 8,
-    alignItems: 'center',
+    minHeight: 40,
   },
-  buttonText: {
+  dropdownText: {
     fontSize: 14,
     color: '#333',
+    textAlign: 'right',
   },
-  menu: {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
+  dropdownContainer: {
     backgroundColor: '#fff',
-    borderWidth: 1,
     borderColor: '#ccc',
+    borderWidth: 1,
     borderRadius: 6,
-    marginTop: 4,
-    width: '100%',
-    zIndex: 1000,
   },
-  item: {
-    padding: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+  listItemContainer: {
+    height: 40,
   },
-  itemText: {
-    fontSize: 14,
-    color: '#333',
-    textAlign: 'center',
+  selectedItemContainer: {
+    backgroundColor: '#007AFF',
+  },
+  selectedItemLabel: {
+    color: '#fff',
+  },
+  placeholder: {
+    color: '#666',
   },
 }); 

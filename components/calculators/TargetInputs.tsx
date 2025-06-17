@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { CalculatorField } from '../../../types/calculator';
+import { StyleSheet, Text, View } from 'react-native';
+import { CalculatorField } from '../../types/calculator';
+import { BaseInput } from '../common/BaseInput';
+import PrefixInput from '../common/PrefixInput';
 
 interface TargetInputsProps {
   fields: CalculatorField[];
@@ -13,12 +15,20 @@ export const TargetInputs: React.FC<TargetInputsProps> = ({ fields }) => {
         <View key={index} style={styles.inputGroup}>
           <Text style={styles.inputLabel}>{field.label}</Text>
           <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.input}
-              value={field.value}
-              onChangeText={field.onChange}
-              keyboardType={field.keyboardType || 'default'}
-            />
+            {field.prefixLength ? (
+              <PrefixInput
+                value={field.value}
+                onChange={field.onChange || (() => {})}
+                type={field.keyboardType === 'numeric' ? 'number' : 'text'}
+                prefixLength={field.prefixLength}
+              />
+            ) : (
+              <BaseInput
+                value={field.value}
+                onChange={field.onChange || (() => {})}
+                type={field.keyboardType === 'numeric' ? 'number' : 'text'}
+              />
+            )}
           </View>
         </View>
       ))}
@@ -44,15 +54,5 @@ const styles = StyleSheet.create({
   },
   inputWrapper: {
     alignItems: 'flex-end',
-  },
-  input: {
-    width: 110,
-    height: 36,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    paddingHorizontal: 12,
-    fontSize: 14,
-    textAlign: 'right',
   },
 }); 

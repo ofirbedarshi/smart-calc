@@ -61,6 +61,7 @@ export default function CoordinateConversion() {
         value: northCoord,
         onChange: setNorthCoord,
         keyboardType: 'numeric',
+        prefixLength: 1,
       },
       {
         label: 'גובה',

@@ -3,13 +3,12 @@ import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetCoordinates } from '../../../components/calculators/TargetCoordinates';
 import Button from '../../../components/common/Button';
+import { CoordsData } from '../../../components/common/CoordsInput';
 import { Dropdown } from '../../../components/common/Dropdown';
 import { BackAzimuthCalc } from '../../../services/calculators/BackAzimuthCalc';
-import { CalculatorField } from '../../../types/calculator';
 
 type TargetData = {
-  northCoord: string;
-  eastCoord: string;
+  coords: CoordsData;
   distance: string;
   elevation: string;
   height: string;
@@ -17,16 +16,22 @@ type TargetData = {
 
 export default function BackAzimuth() {
   const [target1, setTarget1] = useState<TargetData>({
-    northCoord: '',
-    eastCoord: '',
+    coords: {
+      northCoord: '',
+      eastCoord: '',
+      height: '',
+    },
     distance: '',
     elevation: '',
     height: '',
   });
 
   const [target2, setTarget2] = useState<TargetData>({
-    northCoord: '',
-    eastCoord: '',
+    coords: {
+      northCoord: '',
+      eastCoord: '',
+      height: '',
+    },
     distance: '',
     elevation: '',
     height: '',
@@ -35,82 +40,27 @@ export default function BackAzimuth() {
   const [direction, setDirection] = useState<'right' | 'left'>('right');
   const [results, setResults] = useState({ northCoord: '', eastCoord: '' });
 
-  const handleTargetChange = (targetNumber: 1 | 2, field: keyof TargetData, value: string) => {
-    if (targetNumber === 1) {
-      setTarget1(prev => ({ ...prev, [field]: value }));
-    } else {
-      setTarget2(prev => ({ ...prev, [field]: value }));
-    }
+  const handleTarget1CoordsChange = (coords: CoordsData) => {
+    setTarget1(prev => ({ ...prev, coords }));
     setResults({ northCoord: '', eastCoord: '' });
   };
 
-  const getTarget1Fields = (): CalculatorField[] => [
-    {
-      label: 'נ.צ צפוני',
-      value: target1.northCoord,
-      onChange: (value) => handleTargetChange(1, 'northCoord', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'נ.צ מזרחי',
-      value: target1.eastCoord,
-      onChange: (value) => handleTargetChange(1, 'eastCoord', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'טווח',
-      value: target1.distance,
-      onChange: (value) => handleTargetChange(1, 'distance', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'זוה״ר (מעלות) (אופציונלי)',
-      value: target1.elevation,
-      onChange: (value) => handleTargetChange(1, 'elevation', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'גובה (מטרים) (אופציונלי)',
-      value: target1.height,
-      onChange: (value) => handleTargetChange(1, 'height', value),
-      keyboardType: 'numeric',
-    },
-  ];
+  const handleTarget2CoordsChange = (coords: CoordsData) => {
+    setTarget2(prev => ({ ...prev, coords }));
+    setResults({ northCoord: '', eastCoord: '' });
+  };
 
-  const getTarget2Fields = (): CalculatorField[] => [
-    {
-      label: 'נ.צ צפוני',
-      value: target2.northCoord,
-      onChange: (value) => handleTargetChange(2, 'northCoord', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'נ.צ מזרחי',
-      value: target2.eastCoord,
-      onChange: (value) => handleTargetChange(2, 'eastCoord', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'טווח',
-      value: target2.distance,
-      onChange: (value) => handleTargetChange(2, 'distance', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'זוה״ר (מעלות) (אופציונלי)',
-      value: target2.elevation,
-      onChange: (value) => handleTargetChange(2, 'elevation', value),
-      keyboardType: 'numeric',
-    },
-    {
-      label: 'גובה (מטרים) (אופציונלי)',
-      value: target2.height,
-      onChange: (value) => handleTargetChange(2, 'height', value),
-      keyboardType: 'numeric',
-    },
-  ];
+  const handleTarget1FieldChange = (field: keyof Omit<TargetData, 'coords'>, value: string) => {
+    setTarget1(prev => ({ ...prev, [field]: value }));
+    setResults({ northCoord: '', eastCoord: '' });
+  };
 
-  const getResultFields = (): CalculatorField[] => [
+  const handleTarget2FieldChange = (field: keyof Omit<TargetData, 'coords'>, value: string) => {
+    setTarget2(prev => ({ ...prev, [field]: value }));
+    setResults({ northCoord: '', eastCoord: '' });
+  };
+
+  const getResultFields = () => [
     {
       label: 'נ.צ צפוני',
       value: results.northCoord,
@@ -122,10 +72,10 @@ export default function BackAzimuth() {
   ];
 
   const validateInputs = (): string | null => {
-    if (!target1.northCoord || !target1.eastCoord || !target1.distance) {
+    if (!target1.coords.northCoord || !target1.coords.eastCoord || !target1.distance) {
       return 'חסרים נתונים במטרה 1';
     }
-    if (!target2.northCoord || !target2.eastCoord || !target2.distance) {
+    if (!target2.coords.northCoord || !target2.coords.eastCoord || !target2.distance) {
       return 'חסרים נתונים במטרה 2';
     }
     return null;
@@ -139,16 +89,16 @@ export default function BackAzimuth() {
     }
 
     const target1Data = {
-      northCoord: parseFloat(target1.northCoord),
-      eastCoord: parseFloat(target1.eastCoord),
+      northCoord: parseFloat(target1.coords.northCoord),
+      eastCoord: parseFloat(target1.coords.eastCoord),
       distance: parseFloat(target1.distance),
       elevation: target1.elevation ? parseFloat(target1.elevation) : undefined,
       height: target1.height ? parseFloat(target1.height) : undefined,
     };
 
     const target2Data = {
-      northCoord: parseFloat(target2.northCoord),
-      eastCoord: parseFloat(target2.eastCoord),
+      northCoord: parseFloat(target2.coords.northCoord),
+      eastCoord: parseFloat(target2.coords.eastCoord),
       distance: parseFloat(target2.distance),
       elevation: target2.elevation ? parseFloat(target2.elevation) : undefined,
       height: target2.height ? parseFloat(target2.height) : undefined,
@@ -158,8 +108,8 @@ export default function BackAzimuth() {
     setResults(result);
   };
 
-  const isCalculateDisabled = !target1.northCoord || !target1.eastCoord || !target1.distance ||
-    !target2.northCoord || !target2.eastCoord || !target2.distance;
+  const isCalculateDisabled = !target1.coords.northCoord || !target1.coords.eastCoord || !target1.distance ||
+    !target2.coords.northCoord || !target2.coords.eastCoord || !target2.distance;
 
   const directionOptions = [
     { label: 'ימנית', value: 'right' },
@@ -170,7 +120,14 @@ export default function BackAzimuth() {
     <ScrollView style={styles.container}>
       <TargetCoordinates
         title="מטרה 1"
-        fields={getTarget1Fields()}
+        coordsData={target1.coords}
+        onCoordsChange={handleTarget1CoordsChange}
+        distance={target1.distance}
+        onDistanceChange={(value) => handleTarget1FieldChange('distance', value)}
+        elevation={target1.elevation}
+        onElevationChange={(value) => handleTarget1FieldChange('elevation', value)}
+        height={target1.height}
+        onHeightChange={(value) => handleTarget1FieldChange('height', value)}
       />
 
       <View style={styles.dropdownContainer}>
@@ -186,7 +143,14 @@ export default function BackAzimuth() {
 
       <TargetCoordinates
         title="מטרה 2"
-        fields={getTarget2Fields()}
+        coordsData={target2.coords}
+        onCoordsChange={handleTarget2CoordsChange}
+        distance={target2.distance}
+        onDistanceChange={(value) => handleTarget2FieldChange('distance', value)}
+        elevation={target2.elevation}
+        onElevationChange={(value) => handleTarget2FieldChange('elevation', value)}
+        height={target2.height}
+        onHeightChange={(value) => handleTarget2FieldChange('height', value)}
       />
 
       <Button

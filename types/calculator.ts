@@ -3,6 +3,7 @@ export interface CalculatorField {
   value: string;
   onChange?: (value: string) => void;
   keyboardType?: 'numeric' | 'default';
+  prefixLength?: number;
 }
 
 export interface CalculatorResults {

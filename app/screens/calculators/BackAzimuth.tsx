@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetCoordinates } from '../../../components/calculators/TargetCoordinates';
+import Button from '../../../components/common/Button';
 import { Dropdown } from '../../../components/common/Dropdown';
 import { BackAzimuthCalc } from '../../../services/calculators/BackAzimuthCalc';
 import { CalculatorField } from '../../../types/calculator';
@@ -188,22 +189,23 @@ export default function BackAzimuth() {
         fields={getTarget2Fields()}
       />
 
-      <TouchableOpacity 
-        style={[styles.calculateButton, isCalculateDisabled && styles.calculateButtonDisabled]} 
+      <Button
+        title="חישוב נ.צ עצמי"
         onPress={handleCalculate}
         disabled={isCalculateDisabled}
-      >
-        <Text style={styles.calculateButtonText}>חישוב נ.צ עצמי</Text>
-      </TouchableOpacity>
+        theme="primary"
+      />
 
       <ConversionResults
         title="תוצאות חישוב"
         fields={getResultFields()}
       />
 
-      <TouchableOpacity style={styles.saveButton}>
-        <Text style={styles.saveButtonText}>שמירה</Text>
-      </TouchableOpacity>
+      <Button
+        title="שמירה"
+        onPress={() => {}}
+        theme="success"
+      />
     </ScrollView>
   );
 }
@@ -217,32 +219,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 8,
     alignItems: 'flex-end',
-  },
-  calculateButton: {
-    backgroundColor: '#007AFF',
-    margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  calculateButtonDisabled: {
-    opacity: 0.5,
-  },
-  calculateButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  saveButton: {
-    backgroundColor: '#34C759',
-    margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 }); 

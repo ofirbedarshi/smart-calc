@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetInputs } from '../../../components/calculators/TargetInputs';
+import Button from '../../../components/common/Button';
 import { EfficiencyCalc } from '../../../services/calculators/EfficiencyCalc';
 import { CalculatorField } from '../../../types/calculator';
 
@@ -57,13 +58,12 @@ export default function EfficiencyCalculation() {
 
       <TargetInputs fields={getInputFields()} />
 
-      <TouchableOpacity 
-        style={[styles.calculateButton, isCalculateDisabled && styles.calculateButtonDisabled]} 
+      <Button
+        title="חישוב"
         onPress={handleCalculate}
         disabled={isCalculateDisabled}
-      >
-        <Text style={styles.calculateButtonText}>חישוב</Text>
-      </TouchableOpacity>
+        theme="primary"
+      />
 
       <ConversionResults
         title="תוצאות חישוב"
@@ -83,20 +83,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 16,
-  },
-  calculateButton: {
-    backgroundColor: '#007AFF',
-    margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  calculateButtonDisabled: {
-    opacity: 0.5,
-  },
-  calculateButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 }); 

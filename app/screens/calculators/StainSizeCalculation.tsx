@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetInputs } from '../../../components/calculators/TargetInputs';
+import Button from '../../../components/common/Button';
 import { Dropdown } from '../../../components/common/Dropdown';
 import { StainSizeCalc } from '../../../services/calculators/StainSizeCalc';
 import { CalculatorField } from '../../../types/calculator';
@@ -88,13 +89,12 @@ export default function StainSizeCalculation() {
 
       <TargetInputs fields={getInputFields()} />
 
-      <TouchableOpacity 
-        style={[styles.calculateButton, isCalculateDisabled && styles.calculateButtonDisabled]} 
+      <Button
+        title="חישוב"
         onPress={handleCalculate}
         disabled={isCalculateDisabled}
-      >
-        <Text style={styles.calculateButtonText}>חישוב</Text>
-      </TouchableOpacity>
+        theme="primary"
+      />
 
       <ConversionResults
         title="תוצאות חישוב"
@@ -119,20 +119,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 8,
     alignItems: 'flex-end',
-  },
-  calculateButton: {
-    backgroundColor: '#007AFF',
-    margin: 16,
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  calculateButtonDisabled: {
-    opacity: 0.5,
-  },
-  calculateButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 }); 

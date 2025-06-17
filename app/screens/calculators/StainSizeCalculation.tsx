@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
-import { TargetInputs } from '../../../components/calculators/TargetInputs';
 import Button from '../../../components/common/Button';
 import { Dropdown } from '../../../components/common/Dropdown';
+import { GroupInput } from '../../../components/common/GroupInput';
 import { StainSizeCalc } from '../../../services/calculators/StainSizeCalc';
 import { CalculatorField } from '../../../types/calculator';
 
@@ -87,7 +87,7 @@ export default function StainSizeCalculation() {
         />
       </View>
 
-      <TargetInputs fields={getInputFields()} />
+      <GroupInput fields={getInputFields()} />
 
       <Button
         title="חישוב"

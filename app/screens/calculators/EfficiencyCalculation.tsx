@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
-import { TargetInputs } from '../../../components/calculators/TargetInputs';
 import Button from '../../../components/common/Button';
+import { GroupInput } from '../../../components/common/GroupInput';
 import { EfficiencyCalc } from '../../../services/calculators/EfficiencyCalc';
 import { CalculatorField } from '../../../types/calculator';
 
@@ -56,7 +56,7 @@ export default function EfficiencyCalculation() {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>חישוב יעילות</Text>
 
-      <TargetInputs fields={getInputFields()} />
+      <GroupInput fields={getInputFields()} />
 
       <Button
         title="חישוב"

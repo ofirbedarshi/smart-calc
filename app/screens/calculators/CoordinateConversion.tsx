@@ -1,9 +1,11 @@
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
-import { TargetInputs } from '../../../components/calculators/TargetInputs';
 import Button from '../../../components/common/Button';
+import { CoordsData, CoordsInput } from '../../../components/common/CoordsInput';
 import { DirectionSwitcher } from '../../../components/common/DirectionSwitcher';
+import { GroupInput } from '../../../components/common/GroupInput';
 import { SelfLocation } from '../../../components/SelfLocation';
 import { ConversionResults as ConversionResultsType, CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { LocationData } from '../../../services/LocationService';
@@ -16,9 +18,11 @@ export default function CoordinateConversion() {
   const [isCalculating, setIsCalculating] = useState(false);
   
   // Input states
-  const [eastCoord, setEastCoord] = useState('');
-  const [northCoord, setNorthCoord] = useState('');
-  const [height, setHeight] = useState('');
+  const [coordsData, setCoordsData] = useState<CoordsData>({
+    northCoord: '',
+    eastCoord: '',
+    height: '',
+  });
   const [azimuth, setAzimuth] = useState('');
   const [distance, setDistance] = useState('');
   const [elevation, setElevation] = useState('');
@@ -37,55 +41,28 @@ export default function CoordinateConversion() {
       distance: '',
       elevation: '',
     });
-  }, [isReversed, eastCoord, northCoord, height, azimuth, distance, elevation]);
+  }, [isReversed, coordsData, azimuth, distance, elevation]);
 
-  const getInputFields = (): CalculatorField[] => {
-
-    const coordinateFields: CalculatorField[] = [
-      {
-        label: 'נ.צ מזרחי',
-        value: eastCoord,
-        onChange: setEastCoord,
-        keyboardType: 'numeric',
-      },
-      {
-        label: 'נ.צ צפוני',
-        value: northCoord,
-        onChange: setNorthCoord,
-        keyboardType: 'numeric',
-        prefixLength: 1,
-      },
-      {
-        label: 'גובה',
-        value: height,
-        onChange: setHeight,
-        keyboardType: 'numeric',
-      },
-    ];
-
-    const azimuthFields: CalculatorField[] = [
-      {
-        label: 'אזימוט (אלפיות)',
-        value: azimuth,
-        onChange: setAzimuth,
-        keyboardType: 'numeric',
-      },
-      {
-        label: 'טווח (מטרים)',
-        value: distance,
-        onChange: setDistance,
-        keyboardType: 'numeric',
-      },
-      {
-        label: 'זוהר',
-        value: elevation,
-        onChange: setElevation,
-        keyboardType: 'numeric',
-      },
-    ];
-
-    return [...(isReversed ? azimuthFields : coordinateFields)];
-  };
+  const getAzimuthFields = () => [
+    {
+      label: 'אזימוט (אלפיות)',
+      value: azimuth,
+      onChange: setAzimuth,
+      keyboardType: 'numeric' as const,
+    },
+    {
+      label: 'טווח (מטרים)',
+      value: distance,
+      onChange: setDistance,
+      keyboardType: 'numeric' as const,
+    },
+    {
+      label: 'זוהר',
+      value: elevation,
+      onChange: setElevation,
+      keyboardType: 'numeric' as const,
+    },
+  ];
 
   const getResultFields = (): CalculatorField[] => {
     if (isReversed) {
@@ -131,9 +108,9 @@ export default function CoordinateConversion() {
       if (!distance) return 'חסר טווח';
       if (!elevation) return 'חסר זוהר';
     } else {
-      if (!eastCoord) return 'חסר נ.צ מזרחי';
-      if (!northCoord) return 'חסר נ.צ צפוני';
-      if (!height) return 'חסר גובה';
+      if (!coordsData.eastCoord) return 'חסר נ.צ מזרחי';
+      if (!coordsData.northCoord) return 'חסר נ.צ צפוני';
+      if (!coordsData.height) return 'חסר גובה';
     }
 
     return null;
@@ -159,9 +136,9 @@ export default function CoordinateConversion() {
         setResults(calculationResults);
       } else {
         const targetLocation: LocationData = {
-          height,
-          northCoord,
-          eastCoord,
+          height: coordsData.height,
+          northCoord: coordsData.northCoord,
+          eastCoord: coordsData.eastCoord,
         };
         const calculationResults = CoordsConversionCalc.calc(selfLocation, targetLocation);
         setResults(calculationResults);
@@ -174,8 +151,30 @@ export default function CoordinateConversion() {
     }
   };
 
+  const handleSave = () => {
+    const target = {
+      northCoord: isReversed ? results.northCoord : coordsData.northCoord,
+      eastCoord: isReversed ? results.eastCoord : coordsData.eastCoord,
+      height: isReversed ? results.height : coordsData.height,
+      distance: isReversed ? distance : results.distance,
+      elevation: isReversed ? elevation : results.elevation,
+      azimuth: isReversed ? azimuth : results.azimuth,
+    };
+
+    router.push({
+      pathname: '/screens/targetList/TargetDetails',
+      params: {
+        target: JSON.stringify(target),
+      },
+    });
+  };
+
   const isCalculateDisabled = !selfLocation.height || !selfLocation.northCoord || !selfLocation.eastCoord ||
-    (isReversed ? (!azimuth || !distance || !elevation) : (!eastCoord || !northCoord || !height));
+    (isReversed ? (!azimuth || !distance || !elevation) : (!coordsData.eastCoord || !coordsData.northCoord || !coordsData.height));
+
+  const hasResults = isReversed ? 
+    (results.northCoord && results.eastCoord) : 
+    (results.azimuth && results.distance);
 
   return (
     <ScrollView style={styles.container}>
@@ -188,7 +187,14 @@ export default function CoordinateConversion() {
         rightLabel="אזימוט + טווח + זהר"
       />
 
-      <TargetInputs fields={getInputFields()} />
+      {isReversed ? (
+        <GroupInput fields={getAzimuthFields()} />
+      ) : (
+        <CoordsInput
+          initialData={coordsData}
+          onChange={setCoordsData}
+        />
+      )}
 
       <Button
         title="חישוב קוארדינטות"
@@ -204,7 +210,8 @@ export default function CoordinateConversion() {
 
       <Button
         title="שמירה"
-        onPress={() => {}}
+        onPress={handleSave}
+        disabled={!hasResults}
         theme="success"
       />
     </ScrollView>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BaseInput, InputType } from './BaseInput';
 
 interface PrefixInputProps {
@@ -27,12 +27,6 @@ const PrefixInput: React.FC<PrefixInputProps> = ({
   // Hold the prefix in state, defaulting to the first prefixLength characters of value
   const [prefix, setPrefix] = useState<string>(value.slice(0, prefixLength) || '3');
 
-  // Update prefix from value if it changes externally
-  useEffect(() => {
-    const newPrefix = value.slice(0, prefixLength) || '3';
-    setPrefix(newPrefix);
-  }, [value, prefixLength]);
-
   // Extract main value (everything after the prefix)
   const mainValue = value.slice(prefix.length);
 
@@ -42,9 +36,8 @@ const PrefixInput: React.FC<PrefixInputProps> = ({
 
   // Handle prefix change
   const handlePrefixChange = (newPrefix: string) => {
-    const fallbackPrefix = newPrefix || '3';
-    setPrefix(fallbackPrefix);
-    onChange(fallbackPrefix + mainValue);
+    setPrefix(newPrefix);
+    onChange(newPrefix + mainValue);
   };
 
   // Handle main value change

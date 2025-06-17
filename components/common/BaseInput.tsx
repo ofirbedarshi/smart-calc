@@ -51,7 +51,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
       <View style={[styles.inputContainer, error && styles.inputError]}>
         {type === 'number' ? (
           <>
-            {prefix && (
+            {(prefix || maxPrefixLength) && (
               <>
                 <TextInput
                   style={styles.prefixInput}

@@ -14,17 +14,19 @@ export const EditableData: React.FC<EditableDataProps> = ({
 }) => {
   return (
     <View style={styles.container}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <View style={styles.valueContainer}>
-        {editMode ? (
-          <BaseInput
-            label=""
-            value={value}
-            {...props}
-          />
-        ) : (
-          <Text style={styles.value}>{value || 'אין ערך'}</Text>
-        )}
+      <View style={styles.row}>
+        <View style={styles.valueContainer}>
+          {editMode ? (
+            <BaseInput
+              label=""
+              value={value}
+              {...props}
+            />
+          ) : (
+            <Text style={styles.value}>{value || 'אין ערך'}</Text>
+          )}
+        </View>
+        {label && <Text style={styles.label}>{label}</Text>}
       </View>
     </View>
   );
@@ -34,19 +36,26 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   label: {
     fontSize: 14,
     color: '#666',
-    marginBottom: 4,
     textAlign: 'right',
+    flex: 1,
+    marginLeft: 8,
   },
   valueContainer: {
-    minHeight: 40, // Match BaseInput height
+    minHeight: 40,
     justifyContent: 'center',
+    flex: 2,
   },
   value: {
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'right',
+    textAlign: 'left',
   },
 }); 

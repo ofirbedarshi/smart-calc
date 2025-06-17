@@ -1,8 +1,8 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { EditableData } from '../../../components/EditableData';
-import Button from '../../../components/common/Button';
 import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { useLocationStore } from '../../../stores/locationStore';
 
@@ -98,22 +98,20 @@ export default function TargetDetails() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Button
-          onPress={() => setIsEditMode(!isEditMode)}
-          title={isEditMode ? 'סגור' : 'ערוך'}
-          theme="primary"
-        />
-        {isEditMode && (
-          <Button
-            onPress={handleSave}
-            title="שמור"
-            theme="success"
-          />
-        )}
-      </View>
-
       <View style={styles.section}>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            onPress={() => setIsEditMode(!isEditMode)}
+            style={styles.iconButton}
+          >
+            <Ionicons
+              name={isEditMode ? 'close' : 'pencil'}
+              size={20}
+              color={isEditMode ? '#FF3B30' : '#007AFF'}
+            />
+          </TouchableOpacity>
+        </View>
+
         <EditableData
           label="שם מטרה"
           value={targetFields.name}
@@ -228,14 +226,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
   section: {
     backgroundColor: '#fff',
     borderRadius: 8,
@@ -249,5 +239,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 8,
+    marginBottom: 16,
+  },
+  iconButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }); 

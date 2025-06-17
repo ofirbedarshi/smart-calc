@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import PrefixInput from '../../../components/common/PrefixInput';
 import { EditableData } from '../../../components/EditableData';
 import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { useLocationStore } from '../../../stores/locationStore';
@@ -131,8 +132,15 @@ export default function TargetDetails() {
           value={targetFields.northCoord}
           onChange={(value) => handleFieldChange('northCoord', value)}
           editMode={isEditMode}
-          type="number"
-          placeholder="הזן נ.צ צפוני"
+          editComponent={
+            <PrefixInput
+              value={targetFields.northCoord}
+              onChange={(value) => handleFieldChange('northCoord', value)}
+              prefixLength={1}
+              type="number"
+              placeholder="הזן נ.צ צפוני"
+            />
+          }
         />
         <EditableData
           label="נ.צ מזרחי"

@@ -4,12 +4,14 @@ import { BaseInput, BaseInputProps } from './common/BaseInput';
 
 interface EditableDataProps extends BaseInputProps {
   editMode: boolean;
+  editComponent?: React.ReactNode;
 }
 
 export const EditableData: React.FC<EditableDataProps> = ({
   editMode,
   label,
   value,
+  editComponent,
   ...props
 }) => {
   return (
@@ -17,11 +19,13 @@ export const EditableData: React.FC<EditableDataProps> = ({
       <View style={styles.row}>
         <View style={styles.valueContainer}>
           {editMode ? (
-            <BaseInput
-              label=""
-              value={value}
-              {...props}
-            />
+            editComponent || (
+              <BaseInput
+                label=""
+                value={value}
+                {...props}
+              />
+            )
           ) : (
             <Text style={styles.value}>{value || 'אין ערך'}</Text>
           )}

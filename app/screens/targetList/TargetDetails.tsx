@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Dropdown } from '../../../components/common/Dropdown';
 import PrefixInput from '../../../components/common/PrefixInput';
 import { EditableData } from '../../../components/EditableData';
 import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
@@ -71,11 +72,6 @@ export default function TargetDetails() {
         eastCoord: target.eastCoord,
       };
       const results = CoordsConversionCalc.calc(selfLocation, targetLocation);
-      setCalculatedData({
-        azimuth: results.azimuth,
-        distance: results.distance,
-        elevation: results.elevation,
-      });
       setTargetFields(prev => ({
         ...prev,
         azimuth: results.azimuth,
@@ -83,7 +79,7 @@ export default function TargetDetails() {
         elevation: results.elevation,
       }));
     }
-  }, [target, selfLocation]);
+  }, [target.northCoord, target.eastCoord, target.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
 
   const handleFieldChange = (field: keyof TargetFields, value: string) => {
     setTargetFields(prev => ({
@@ -96,6 +92,11 @@ export default function TargetDetails() {
     // TODO: Implement save functionality
     setIsEditMode(false);
   };
+
+  const yesNoOptions = [
+    { label: 'כן', value: 'כן' },
+    { label: 'לא', value: 'לא' },
+  ];
 
   return (
     <ScrollView style={styles.container}>
@@ -187,7 +188,13 @@ export default function TargetDetails() {
           value={targetFields.isAttacked}
           onChange={(value) => handleFieldChange('isAttacked', value)}
           editMode={isEditMode}
-          placeholder="הזן סטטוס תקיפה"
+          editComponent={
+            <Dropdown
+              options={yesNoOptions}
+              value={targetFields.isAttacked}
+              onChange={(value) => handleFieldChange('isAttacked', value)}
+            />
+          }
         />
         <EditableData
           label="שעה"

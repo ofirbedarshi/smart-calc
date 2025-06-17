@@ -71,7 +71,7 @@ export default function CoordinateConversion() {
 
     const azimuthFields: CalculatorField[] = [
       {
-        label: 'אזימוט (מעלות)',
+        label: 'אזימוט (אלפיות)',
         value: azimuth,
         onChange: setAzimuth,
         keyboardType: 'numeric',
@@ -83,7 +83,7 @@ export default function CoordinateConversion() {
         keyboardType: 'numeric',
       },
       {
-        label: 'זוהר (מעלות)',
+        label: 'זוהר',
         value: elevation,
         onChange: setElevation,
         keyboardType: 'numeric',
@@ -113,7 +113,7 @@ export default function CoordinateConversion() {
 
     return [
       {
-        label: 'אזימוט (מעלות)',
+        label: 'אזימוט (אלפיות)',
         value: results.azimuth,
       },
       {
@@ -121,7 +121,7 @@ export default function CoordinateConversion() {
         value: results.distance,
       },
       {
-        label: 'זוהר (מעלות)',
+        label: 'זוהר',
         value: results.elevation,
       },
     ];

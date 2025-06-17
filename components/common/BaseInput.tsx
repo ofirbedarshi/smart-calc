@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 export type InputType = 'text' | 'number';
 
-interface BaseInputProps {
+export interface BaseInputProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;

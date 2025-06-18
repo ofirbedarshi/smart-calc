@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import Button from '../../../components/common/Button';
 import { DatePicker } from '../../../components/common/DatePicker';
 import { Dropdown } from '../../../components/common/Dropdown';
 import PrefixInput from '../../../components/common/PrefixInput';
@@ -9,6 +10,7 @@ import { TimePicker } from '../../../components/common/TimePicker';
 import { EditableData } from '../../../components/EditableData';
 import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { useLocationStore } from '../../../stores/locationStore';
+import { useTargetStore } from '../../../stores/targetStore';
 
 interface TargetData {
   northCoord: string;
@@ -43,6 +45,7 @@ export default function TargetDetails() {
   const params = useLocalSearchParams();
   const target = JSON.parse(params.target as string) as TargetData;
   const { locationData: selfLocation } = useLocationStore();
+  const { addTarget, loading, error } = useTargetStore();
   const [isEditMode, setIsEditMode] = useState(false);
   const [calculatedData, setCalculatedData] = useState<CalculatedData>({
     azimuth: '',
@@ -65,6 +68,7 @@ export default function TargetDetails() {
     date: '',
     notes: '',
   });
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     if (selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord) {
@@ -90,9 +94,17 @@ export default function TargetDetails() {
     }));
   };
 
-  const handleSave = () => {
-    // TODO: Implement save functionality
-    setIsEditMode(false);
+  const handleSave = async () => {
+    try {
+      await addTarget({
+        ...targetFields,
+        // id and createdAt will be added by the service
+      });
+      Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
+      setIsEditMode(false);
+    } catch (e) {
+      Alert.alert('שגיאה', 'אירעה שגיאה בשמירה, נסה שוב');
+    }
   };
 
   const yesNoOptions = [
@@ -248,13 +260,22 @@ export default function TargetDetails() {
   );
 
   return (
-    <FlatList
-      data={[1]} // We only need one item
-      renderItem={renderItem}
-      keyExtractor={() => '1'}
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    />
+    <>
+      <FlatList
+        data={[1]} // We only need one item
+        renderItem={renderItem}
+        keyExtractor={() => '1'}
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      />
+      <View style={styles.saveContainer}>
+        <Button
+          title="שמור"
+          onPress={handleSave}
+          disabled={loading}
+        />
+      </View>
+    </>
   );
 }
 
@@ -292,5 +313,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  saveContainer: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#eee',
+  },
+  feedback: {
+    color: 'green',
+    textAlign: 'center',
+    marginTop: 8,
+    fontSize: 16,
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 8,
+    fontSize: 16,
   },
 }); 

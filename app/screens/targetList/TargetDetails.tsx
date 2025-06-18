@@ -75,9 +75,7 @@ export default function TargetDetails() {
 
   const handleSave = async () => {
     try {
-      await addTarget({
-        ...targetFields,
-      });
+      await addTarget(targetFields);
       Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
       setIsEditMode(false);
     } catch (e) {

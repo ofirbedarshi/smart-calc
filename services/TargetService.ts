@@ -9,9 +9,6 @@ export interface TargetFields {
   northCoord: string;
   eastCoord: string;
   height: string;
-  azimuth: string;
-  distance: string;
-  elevation: string;
   isAttacked: string;
   time: string;
   ammunition: string;

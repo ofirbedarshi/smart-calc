@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'react-native-uuid';
 
 export interface TargetFields {
   id?: string;
@@ -32,7 +32,7 @@ export const TargetService = {
 
   async addTarget(target: Omit<TargetFields, 'id' | 'createdAt'>): Promise<{newTarget: TargetFields, newTargets: TargetFields[]}> {
     try {
-      const newTargetId = uuidv4();
+      const newTargetId = uuid.v4() as string;
       const newTarget: TargetFields = {
         ...target,
         id: newTargetId,

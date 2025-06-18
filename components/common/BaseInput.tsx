@@ -48,16 +48,87 @@ export const BaseInput: React.FC<BaseInputProps> = ({
       {label && (
         <Text style={[styles.label, error && styles.labelError]}>{label}</Text>
       )}
-      <View style={[styles.inputContainer, error && styles.inputError, disabled && styles.inputDisabledContainer]}>
-        {type === 'number' ? (
-          disabled ? (
-            <View style={styles.disabledRow}>
+      {disabled ? (
+        <View pointerEvents="none" style={[styles.inputContainer, error && styles.inputError, disabled && styles.inputDisabledContainer]}>
+          {type === 'number' ? (
+            <>
               {(prefix || maxPrefixLength) && (
-                <Text style={[styles.prefixInput, styles.disabledText, styles.disabledNumberText]}>{prefix}</Text>
+                <>
+                  <TextInput
+                    style={[
+                      styles.prefixInput,
+                      styles.inputDisabled,
+                    ]}
+                    value={prefix}
+                    onChangeText={onPrefixChange}
+                    maxLength={maxPrefixLength}
+                    keyboardType="numeric"
+                    textAlign="center"
+                    editable={false}
+                    placeholderTextColor="#bbb"
+                  />
+                  <View style={styles.separator} />
+                </>
               )}
-              <Text style={[styles.mainInput, styles.disabledText, styles.disabledNumberText]}>{value || ''}</Text>
-            </View>
+              <TextInput
+                style={[
+                  styles.mainInput,
+                  styles.inputDisabled,
+                ]}
+                value={value}
+                onChangeText={handleInputChange}
+                keyboardType="numeric"
+                maxLength={maxLength}
+                placeholder={placeholder}
+                placeholderTextColor="#bbb"
+                editable={false}
+                textAlign="left"
+                onBlur={onBlur}
+                onFocus={onFocus}
+              />
+            </>
           ) : (
+            <>
+              <TextInput
+                style={[
+                  styles.mainInput,
+                  styles.inputDisabled,
+                ]}
+                value={value}
+                onChangeText={handleInputChange}
+                keyboardType="default"
+                maxLength={maxLength}
+                placeholder={placeholder}
+                placeholderTextColor="#bbb"
+                editable={false}
+                textAlign="right"
+                onBlur={onBlur}
+                onFocus={onFocus}
+              />
+              {prefix && (
+                <>
+                  <TextInput
+                    style={[
+                      styles.prefixInput,
+                      styles.inputDisabled,
+                    ]}
+                    value={prefix}
+                    onChangeText={onPrefixChange}
+                    maxLength={maxPrefixLength}
+                    keyboardType="default"
+                    textAlign="center"
+                    editable={false}
+                    placeholderTextColor="#bbb"
+                  />
+                  <View style={styles.separator} />
+                </>
+              )}
+            </>
+          )}
+        </View>
+      ) : (
+        <View style={[styles.inputContainer, error && styles.inputError]}>
+          {type === 'number' ? (
             <>
               {(prefix || maxPrefixLength) && (
                 <>
@@ -83,20 +154,11 @@ export const BaseInput: React.FC<BaseInputProps> = ({
                 placeholder={placeholder}
                 placeholderTextColor="#bbb"
                 editable={!disabled}
-                textAlign="right"
+                textAlign="left"
                 onBlur={onBlur}
                 onFocus={onFocus}
               />
             </>
-          )
-        ) : (
-          disabled ? (
-            <View style={styles.disabledRow}>
-              <Text style={[styles.mainInput, styles.disabledText, styles.disabledTextAlignRight]}>{value || ''}</Text>
-              {prefix && (
-                <Text style={[styles.prefixInput, styles.disabledText, styles.disabledTextAlignRight]}>{prefix}</Text>
-              )}
-            </View>
           ) : (
             <>
               <TextInput
@@ -128,9 +190,9 @@ export const BaseInput: React.FC<BaseInputProps> = ({
                 </>
               )}
             </>
-          )
-        )}
-      </View>
+          )}
+        </View>
+      )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
@@ -186,30 +248,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     borderColor: '#eee',
   },
-  disabledRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    height: 40,
-    paddingHorizontal: 0,
-  },
-  disabledText: {
-    color: '#aaa',
+  inputDisabled: {
     backgroundColor: '#eee',
-    fontSize: 16,
-    flex: 1,
-    height: 40,
-    paddingVertical: 0,
-    paddingHorizontal: 12,
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    includeFontPadding: false,
-  },
-  disabledNumberText: {
-    textAlign: 'left',
-  },
-  disabledTextAlignRight: {
-    textAlign: 'right',
+    color: '#aaa',
   },
 }); 

@@ -18,12 +18,6 @@ interface TargetData {
   height: string;
 }
 
-interface CalculatedData {
-  azimuth: string;
-  distance: string;
-  elevation: string;
-}
-
 interface TargetFields {
   name: string;
   description: string;
@@ -45,13 +39,8 @@ export default function TargetDetails() {
   const params = useLocalSearchParams();
   const target = JSON.parse(params.target as string) as TargetData;
   const { locationData: selfLocation } = useLocationStore();
-  const { addTarget, loading, error } = useTargetStore();
+  const { addTarget, loading } = useTargetStore();
   const [isEditMode, setIsEditMode] = useState(false);
-  const [calculatedData, setCalculatedData] = useState<CalculatedData>({
-    azimuth: '',
-    distance: '',
-    elevation: '',
-  });
   const [targetFields, setTargetFields] = useState<TargetFields>({
     name: '',
     description: '',
@@ -68,7 +57,6 @@ export default function TargetDetails() {
     date: '',
     notes: '',
   });
-  const [feedback, setFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     if (selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord) {
@@ -98,7 +86,6 @@ export default function TargetDetails() {
     try {
       await addTarget({
         ...targetFields,
-        // id and createdAt will be added by the service
       });
       Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
       setIsEditMode(false);
@@ -126,30 +113,29 @@ export default function TargetDetails() {
           />
         </TouchableOpacity>
       </View>
-
       <EditableData
         label="שם מטרה"
         value={targetFields.name}
-        onChange={(value) => handleFieldChange('name', value)}
+        onChange={value => handleFieldChange('name', value)}
         editMode={isEditMode}
         placeholder="הזן שם מטרה"
       />
       <EditableData
         label="תיאור"
         value={targetFields.description}
-        onChange={(value) => handleFieldChange('description', value)}
+        onChange={value => handleFieldChange('description', value)}
         editMode={isEditMode}
         placeholder="הזן תיאור"
       />
       <EditableData
         label="נ.צ צפוני"
         value={targetFields.northCoord}
-        onChange={(value) => handleFieldChange('northCoord', value)}
+        onChange={value => handleFieldChange('northCoord', value)}
         editMode={isEditMode}
         editComponent={
           <PrefixInput
             value={targetFields.northCoord}
-            onChange={(value) => handleFieldChange('northCoord', value)}
+            onChange={value => handleFieldChange('northCoord', value)}
             prefixLength={1}
             type="number"
             placeholder="הזן נ.צ צפוני"
@@ -159,7 +145,7 @@ export default function TargetDetails() {
       <EditableData
         label="נ.צ מזרחי"
         value={targetFields.eastCoord}
-        onChange={(value) => handleFieldChange('eastCoord', value)}
+        onChange={value => handleFieldChange('eastCoord', value)}
         editMode={isEditMode}
         type="number"
         placeholder="הזן נ.צ מזרחי"
@@ -167,7 +153,7 @@ export default function TargetDetails() {
       <EditableData
         label="גובה"
         value={targetFields.height}
-        onChange={(value) => handleFieldChange('height', value)}
+        onChange={value => handleFieldChange('height', value)}
         editMode={isEditMode}
         type="number"
         placeholder="הזן גובה"
@@ -175,7 +161,7 @@ export default function TargetDetails() {
       <EditableData
         label="אזימוט"
         value={targetFields.azimuth}
-        onChange={(value) => handleFieldChange('azimuth', value)}
+        onChange={value => handleFieldChange('azimuth', value)}
         editMode={isEditMode}
         type="number"
         placeholder="הזן אזימוט"
@@ -183,7 +169,7 @@ export default function TargetDetails() {
       <EditableData
         label="טווח"
         value={targetFields.distance}
-        onChange={(value) => handleFieldChange('distance', value)}
+        onChange={value => handleFieldChange('distance', value)}
         editMode={isEditMode}
         type="number"
         placeholder="הזן טווח"
@@ -191,7 +177,7 @@ export default function TargetDetails() {
       <EditableData
         label="זוהר"
         value={targetFields.elevation}
-        onChange={(value) => handleFieldChange('elevation', value)}
+        onChange={value => handleFieldChange('elevation', value)}
         editMode={isEditMode}
         type="number"
         placeholder="הזן זוהר"
@@ -199,25 +185,25 @@ export default function TargetDetails() {
       <EditableData
         label="האם נתקפה"
         value={targetFields.isAttacked}
-        onChange={(value) => handleFieldChange('isAttacked', value)}
+        onChange={value => handleFieldChange('isAttacked', value)}
         editMode={isEditMode}
         editComponent={
           <Dropdown
             options={yesNoOptions}
             value={targetFields.isAttacked}
-            onChange={(value) => handleFieldChange('isAttacked', value)}
+            onChange={value => handleFieldChange('isAttacked', value)}
           />
         }
       />
       <EditableData
         label="שעה"
         value={targetFields.time}
-        onChange={(value) => handleFieldChange('time', value)}
+        onChange={value => handleFieldChange('time', value)}
         editMode={isEditMode}
         editComponent={
           <TimePicker
             value={targetFields.time}
-            onChange={(value) => handleFieldChange('time', value)}
+            onChange={value => handleFieldChange('time', value)}
             placeholder="הזן שעה"
           />
         }
@@ -225,26 +211,26 @@ export default function TargetDetails() {
       <EditableData
         label="חימוש"
         value={targetFields.ammunition}
-        onChange={(value) => handleFieldChange('ammunition', value)}
+        onChange={value => handleFieldChange('ammunition', value)}
         editMode={isEditMode}
         placeholder="הזן חימוש"
       />
       <EditableData
         label="חוליה"
         value={targetFields.team}
-        onChange={(value) => handleFieldChange('team', value)}
+        onChange={value => handleFieldChange('team', value)}
         editMode={isEditMode}
         placeholder="הזן חוליה"
       />
       <EditableData
         label="תאריך"
         value={targetFields.date}
-        onChange={(value) => handleFieldChange('date', value)}
+        onChange={value => handleFieldChange('date', value)}
         editMode={isEditMode}
         editComponent={
           <DatePicker
             value={targetFields.date}
-            onChange={(value) => handleFieldChange('date', value)}
+            onChange={value => handleFieldChange('date', value)}
             placeholder="הזן תאריך"
           />
         }
@@ -252,7 +238,7 @@ export default function TargetDetails() {
       <EditableData
         label="הערות"
         value={targetFields.notes}
-        onChange={(value) => handleFieldChange('notes', value)}
+        onChange={value => handleFieldChange('notes', value)}
         editMode={isEditMode}
         placeholder="הזן הערות"
       />
@@ -262,7 +248,7 @@ export default function TargetDetails() {
   return (
     <>
       <FlatList
-        data={[1]} // We only need one item
+        data={[1]}
         renderItem={renderItem}
         keyExtractor={() => '1'}
         style={styles.container}
@@ -319,17 +305,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderColor: '#eee',
-  },
-  feedback: {
-    color: 'green',
-    textAlign: 'center',
-    marginTop: 8,
-    fontSize: 16,
-  },
-  error: {
-    color: 'red',
-    textAlign: 'center',
-    marginTop: 8,
-    fontSize: 16,
   },
 }); 

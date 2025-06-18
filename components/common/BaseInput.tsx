@@ -43,155 +43,89 @@ export const BaseInput: React.FC<BaseInputProps> = ({
     }
   };
 
+  // Compute shared props for main and prefix inputs
+  const mainInputProps = {
+    style: [
+      styles.mainInput,
+      disabled && styles.inputDisabled,
+    ],
+    value,
+    onChangeText: handleInputChange,
+    maxLength,
+    placeholder,
+    placeholderTextColor: '#bbb',
+    editable: !disabled,
+    onBlur,
+    onFocus,
+  };
+
+  const prefixInputProps = {
+    style: [
+      styles.prefixInput,
+      disabled && styles.inputDisabled,
+    ],
+    value: prefix,
+    onChangeText: onPrefixChange,
+    maxLength: maxPrefixLength,
+    placeholderTextColor: '#bbb',
+    editable: !disabled,
+  };
+
+  const inputRow = (
+    <View style={[
+      styles.inputContainer,
+      error && styles.inputError,
+      disabled && styles.inputDisabledContainer,
+    ]}>
+      {type === 'number' ? (
+        <>
+          {(prefix || maxPrefixLength) && (
+            <>
+              <TextInput
+                {...prefixInputProps}
+                keyboardType="numeric"
+                textAlign="center"
+              />
+              <View style={styles.separator} />
+            </>
+          )}
+          <TextInput
+            {...mainInputProps}
+            keyboardType="numeric"
+            textAlign="left"
+          />
+        </>
+      ) : (
+        <>
+          <TextInput
+            {...mainInputProps}
+            keyboardType="default"
+            textAlign="right"
+          />
+          {prefix && (
+            <>
+              <TextInput
+                {...prefixInputProps}
+                keyboardType="default"
+                textAlign="center"
+              />
+              <View style={styles.separator} />
+            </>
+          )}
+        </>
+      )}
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       {label && (
         <Text style={[styles.label, error && styles.labelError]}>{label}</Text>
       )}
       {disabled ? (
-        <View pointerEvents="none" style={[styles.inputContainer, error && styles.inputError, disabled && styles.inputDisabledContainer]}>
-          {type === 'number' ? (
-            <>
-              {(prefix || maxPrefixLength) && (
-                <>
-                  <TextInput
-                    style={[
-                      styles.prefixInput,
-                      styles.inputDisabled,
-                    ]}
-                    value={prefix}
-                    onChangeText={onPrefixChange}
-                    maxLength={maxPrefixLength}
-                    keyboardType="numeric"
-                    textAlign="center"
-                    editable={false}
-                    placeholderTextColor="#bbb"
-                  />
-                  <View style={styles.separator} />
-                </>
-              )}
-              <TextInput
-                style={[
-                  styles.mainInput,
-                  styles.inputDisabled,
-                ]}
-                value={value}
-                onChangeText={handleInputChange}
-                keyboardType="numeric"
-                maxLength={maxLength}
-                placeholder={placeholder}
-                placeholderTextColor="#bbb"
-                editable={false}
-                textAlign="left"
-                onBlur={onBlur}
-                onFocus={onFocus}
-              />
-            </>
-          ) : (
-            <>
-              <TextInput
-                style={[
-                  styles.mainInput,
-                  styles.inputDisabled,
-                ]}
-                value={value}
-                onChangeText={handleInputChange}
-                keyboardType="default"
-                maxLength={maxLength}
-                placeholder={placeholder}
-                placeholderTextColor="#bbb"
-                editable={false}
-                textAlign="right"
-                onBlur={onBlur}
-                onFocus={onFocus}
-              />
-              {prefix && (
-                <>
-                  <TextInput
-                    style={[
-                      styles.prefixInput,
-                      styles.inputDisabled,
-                    ]}
-                    value={prefix}
-                    onChangeText={onPrefixChange}
-                    maxLength={maxPrefixLength}
-                    keyboardType="default"
-                    textAlign="center"
-                    editable={false}
-                    placeholderTextColor="#bbb"
-                  />
-                  <View style={styles.separator} />
-                </>
-              )}
-            </>
-          )}
-        </View>
+        <View pointerEvents="none">{inputRow}</View>
       ) : (
-        <View style={[styles.inputContainer, error && styles.inputError]}>
-          {type === 'number' ? (
-            <>
-              {(prefix || maxPrefixLength) && (
-                <>
-                  <TextInput
-                    style={styles.prefixInput}
-                    value={prefix}
-                    onChangeText={onPrefixChange}
-                    maxLength={maxPrefixLength}
-                    keyboardType="numeric"
-                    textAlign="center"
-                    editable={!disabled}
-                    placeholderTextColor="#bbb"
-                  />
-                  <View style={styles.separator} />
-                </>
-              )}
-              <TextInput
-                style={styles.mainInput}
-                value={value}
-                onChangeText={handleInputChange}
-                keyboardType="numeric"
-                maxLength={maxLength}
-                placeholder={placeholder}
-                placeholderTextColor="#bbb"
-                editable={!disabled}
-                textAlign="left"
-                onBlur={onBlur}
-                onFocus={onFocus}
-              />
-            </>
-          ) : (
-            <>
-              <TextInput
-                style={styles.mainInput}
-                value={value}
-                onChangeText={handleInputChange}
-                keyboardType="default"
-                maxLength={maxLength}
-                placeholder={placeholder}
-                placeholderTextColor="#bbb"
-                editable={!disabled}
-                textAlign="right"
-                onBlur={onBlur}
-                onFocus={onFocus}
-              />
-              {prefix && (
-                <>
-                  <TextInput
-                    style={styles.prefixInput}
-                    value={prefix}
-                    onChangeText={onPrefixChange}
-                    maxLength={maxPrefixLength}
-                    keyboardType="default"
-                    textAlign="center"
-                    editable={!disabled}
-                    placeholderTextColor="#bbb"
-                  />
-                  <View style={styles.separator} />
-                </>
-              )}
-            </>
-          )}
-        </View>
+        inputRow
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>

@@ -9,8 +9,14 @@ interface TargetItemListProps {
 
 const TargetItemList: React.FC<TargetItemListProps> = ({ target }) => {
   const router = useRouter();
+
   const handlePress = () => {
-    router.push(`/TargetsList/TargetDetails?target=${encodeURIComponent(JSON.stringify(target))}`);
+    router.push({
+      pathname: '/screens/targetList/TargetDetails',
+      params: {
+        target: JSON.stringify(target),
+      },
+    });
   };
   return (
     <TouchableOpacity style={styles.card} onPress={handlePress} activeOpacity={0.8}>

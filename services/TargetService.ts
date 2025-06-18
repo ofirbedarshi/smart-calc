@@ -2,8 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface TargetFields {
-  id: string;
-  createdAt: number;
+  id?: string;
+  createdAt?: number;
   name: string;
   description: string;
   northCoord: string;
@@ -30,17 +30,18 @@ export const TargetService = {
     }
   },
 
-  async addTarget(target: Omit<TargetFields, 'id' | 'createdAt'>): Promise<TargetFields[]> {
+  async addTarget(target: Omit<TargetFields, 'id' | 'createdAt'>): Promise<{newTarget: TargetFields, newTargets: TargetFields[]}> {
     try {
+      const newTargetId = uuidv4();
       const newTarget: TargetFields = {
         ...target,
-        id: uuidv4(),
+        id: newTargetId,
         createdAt: Date.now(),
       };
       const targets = await this.getTargets();
       const updated = [newTarget, ...targets];
       await AsyncStorage.setItem(TARGETS_KEY, JSON.stringify(updated));
-      return updated;
+      return {newTarget, newTargets: updated};
     } catch (err) {
       console.error('[TargetService] Failed to add target', err);
       throw err;

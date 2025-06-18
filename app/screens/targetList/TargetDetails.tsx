@@ -9,48 +9,31 @@ import PrefixInput from '../../../components/common/PrefixInput';
 import { TimePicker } from '../../../components/common/TimePicker';
 import { EditableData } from '../../../components/EditableData';
 import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
+import { TargetFields } from '../../../services/TargetService';
 import { useLocationStore } from '../../../stores/locationStore';
 import { useTargetStore } from '../../../stores/targetStore';
 
-interface TargetData {
-  northCoord: string;
-  eastCoord: string;
-  height: string;
-}
-
-interface TargetFields {
-  name: string;
-  description: string;
-  northCoord: string;
-  eastCoord: string;
-  height: string;
-  isAttacked: string;
-  time: string;
-  ammunition: string;
-  team: string;
-  date: string;
-  notes: string;
-}
-
 export default function TargetDetails() {
-  const params = useLocalSearchParams();
-  const target = JSON.parse(params.target as string) as TargetData;
-  const { locationData: selfLocation, loadLocation } = useLocationStore();
-  const { addTarget, loading } = useTargetStore();
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [targetFields, setTargetFields] = useState<TargetFields>({
-    name: '',
-    description: '',
-    northCoord: target.northCoord,
-    eastCoord: target.eastCoord,
-    height: target.height,
-    isAttacked: '',
-    time: '',
-    ammunition: '',
-    team: '',
-    date: '',
-    notes: '',
-  });
+    const params = useLocalSearchParams();
+    const target = JSON.parse(params.target as string) as TargetFields;
+    const { locationData: selfLocation, loadLocation } = useLocationStore();
+    const { addTarget, updateTarget, loading } = useTargetStore();
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [targetFields, setTargetFields] = useState<TargetFields>({
+        ...{
+        name: '',
+        description: '',
+        northCoord: '',
+        eastCoord: '',
+        height: '',
+        isAttacked: '',
+        time: '',
+        ammunition: '',
+        team: '',
+        date: '',
+        notes: '',
+    }, ...target,
+    });
 
   // Compute azimuth, distance, elevation live
   const hasCoords = selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord && targetFields.height && targetFields.northCoord && targetFields.eastCoord;
@@ -64,7 +47,7 @@ export default function TargetDetails() {
 
   useEffect(() => {
     if (!hasCoords) loadLocation();
-  }, [targetFields.northCoord, targetFields.eastCoord, targetFields.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
+  }, [hasCoords,loadLocation, targetFields.northCoord, targetFields.eastCoord, targetFields.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
 
   const handleFieldChange = (field: keyof TargetFields, value: string) => {
     setTargetFields(prev => ({
@@ -74,10 +57,15 @@ export default function TargetDetails() {
   };
 
   const handleSave = async () => {
-    try {
-      await addTarget(targetFields);
-      Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
-      setIsEditMode(false);
+      try {
+        if (targetFields.id) {
+            await updateTarget(targetFields.id, targetFields);
+        } else {
+            const newTarget = await addTarget(targetFields);
+            setTargetFields(newTarget);
+            Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
+            setIsEditMode(false);
+        }
     } catch (e) {
       Alert.alert('שגיאה', 'אירעה שגיאה בשמירה, נסה שוב');
     }

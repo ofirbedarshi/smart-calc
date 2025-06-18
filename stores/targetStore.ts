@@ -6,7 +6,7 @@ interface TargetStoreState {
   loading: boolean;
   error: string | null;
   loadTargets: () => Promise<void>;
-  addTarget: (target: Omit<TargetFields, 'id' | 'createdAt'>) => Promise<void>;
+  addTarget: (target: TargetFields) => Promise<TargetFields>;
   updateTarget: (id: string, updates: Partial<TargetFields>) => Promise<void>;
   deleteTarget: (id: string) => Promise<void>;
 }
@@ -29,10 +29,12 @@ export const useTargetStore = create<TargetStoreState>((set) => ({
   addTarget: async (target) => {
     set({ loading: true, error: null });
     try {
-      const targets = await TargetService.addTarget(target);
-      set({ targets, loading: false });
+      const {newTarget, newTargets} = await TargetService.addTarget(target);
+      set({ targets: newTargets, loading: false });
+      return newTarget;
     } catch (err) {
       set({ error: 'שגיאה בשמירת מטרה', loading: false });
+      throw err;
     }
   },
 

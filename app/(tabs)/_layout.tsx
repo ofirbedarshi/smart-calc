@@ -10,6 +10,15 @@ export default function TabLayout() {
         tabBarLabelPosition: 'below-icon',
       }}>
       <Tabs.Screen
+        name="TargetsList"
+        options={{
+          title: 'בנק מטרות',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="map-marker" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: 'מחשבון',

@@ -206,7 +206,7 @@ export default function CoordinateConversion() {
       />
 
       <Button
-        title="שמירה"
+        title="הוסף מטרה"
         onPress={handleSave}
         disabled={!hasResults}
         theme="success"

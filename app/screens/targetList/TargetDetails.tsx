@@ -24,9 +24,6 @@ interface TargetFields {
   northCoord: string;
   eastCoord: string;
   height: string;
-  azimuth: string;
-  distance: string;
-  elevation: string;
   isAttacked: string;
   time: string;
   ammunition: string;
@@ -47,9 +44,6 @@ export default function TargetDetails() {
     northCoord: target.northCoord,
     eastCoord: target.eastCoord,
     height: target.height,
-    azimuth: '',
-    distance: '',
-    elevation: '',
     isAttacked: '',
     time: '',
     ammunition: '',
@@ -58,44 +52,20 @@ export default function TargetDetails() {
     notes: '',
   });
 
-    useEffect(() => {
-    if (selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord) {
-      const targetLocation = {
-        height: target.height,
-        northCoord: target.northCoord,
-        eastCoord: target.eastCoord,
-      };
-        const results = CoordsConversionCalc.calc(selfLocation, targetLocation);
-        console.log('results', results);
-      setTargetFields(prev => ({
-        ...prev,
-        azimuth: results.azimuth,
-        distance: results.distance,
-        elevation: results.elevation,
-      }));
-    } else {
-      loadLocation();
-    }
-  }, [target.northCoord, target.eastCoord, target.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
+  // Compute azimuth, distance, elevation live
+  const hasCoords = selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord && targetFields.height && targetFields.northCoord && targetFields.eastCoord;
+  const computed = hasCoords
+    ? CoordsConversionCalc.calc(selfLocation, {
+        height: targetFields.height,
+        northCoord: targetFields.northCoord,
+        eastCoord: targetFields.eastCoord,
+      })
+    : { azimuth: '', distance: '', elevation: '' };
 
-  const calculateCoords = () => {
-    if (selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord) {
-      const targetLocation = {
-        height: target.height,
-        northCoord: target.northCoord,
-        eastCoord: target.eastCoord,
-      };
-      const results = CoordsConversionCalc.calc(selfLocation, targetLocation);
-      console.log('results', results);
-      setTargetFields(prev => ({
-        ...prev,
-        azimuth: results.azimuth,
-        distance: results.distance,
-        elevation: results.elevation,
-      }));
-    }
-  };
-    
+  useEffect(() => {
+    if (!hasCoords) loadLocation();
+  }, [targetFields.northCoord, targetFields.eastCoord, targetFields.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
+
   const handleFieldChange = (field: keyof TargetFields, value: string) => {
     setTargetFields(prev => ({
       ...prev,
@@ -181,8 +151,8 @@ export default function TargetDetails() {
       />
       <EditableData
         label="אזימוט"
-        value={targetFields.azimuth}
-        onChange={value => handleFieldChange('azimuth', value)}
+        value={computed.azimuth}
+        onChange={() => {}}
         editMode={isEditMode}
         type="number"
         placeholder="הזן אזימוט"
@@ -190,8 +160,8 @@ export default function TargetDetails() {
       />
       <EditableData
         label="טווח"
-        value={targetFields.distance}
-        onChange={value => handleFieldChange('distance', value)}
+        value={computed.distance}
+        onChange={() => {}}
         editMode={isEditMode}
         type="number"
         placeholder="הזן טווח"
@@ -199,8 +169,8 @@ export default function TargetDetails() {
       />
       <EditableData
         label="זוהר"
-        value={targetFields.elevation}
-        onChange={value => handleFieldChange('elevation', value)}
+        value={computed.elevation}
+        onChange={() => {}}
         editMode={isEditMode}
         type="number"
         placeholder="הזן זוהר"

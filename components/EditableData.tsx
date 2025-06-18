@@ -5,6 +5,7 @@ import { BaseInput, BaseInputProps } from './common/BaseInput';
 interface EditableDataProps extends BaseInputProps {
   editMode: boolean;
   editComponent?: React.ReactNode;
+  disabled?: boolean;
 }
 
 export const EditableData: React.FC<EditableDataProps> = ({
@@ -12,6 +13,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
   label,
   value,
   editComponent,
+  disabled = false,
   ...props
 }) => {
   return (
@@ -19,11 +21,16 @@ export const EditableData: React.FC<EditableDataProps> = ({
       <View style={styles.row}>
         <View style={styles.valueContainer}>
           {editMode ? (
-            editComponent || (
+            editComponent ? (
+              React.isValidElement(editComponent)
+                ? React.cloneElement(editComponent, { disabled })
+                : editComponent
+            ) : (
               <BaseInput
                 label=""
                 value={value}
                 {...props}
+                disabled={disabled}
               />
             )
           ) : (

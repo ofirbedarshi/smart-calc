@@ -38,7 +38,7 @@ interface TargetFields {
 export default function TargetDetails() {
   const params = useLocalSearchParams();
   const target = JSON.parse(params.target as string) as TargetData;
-  const { locationData: selfLocation } = useLocationStore();
+  const { locationData: selfLocation, loadLocation } = useLocationStore();
   const { addTarget, loading } = useTargetStore();
   const [isEditMode, setIsEditMode] = useState(false);
   const [targetFields, setTargetFields] = useState<TargetFields>({
@@ -58,7 +58,27 @@ export default function TargetDetails() {
     notes: '',
   });
 
-  useEffect(() => {
+    useEffect(() => {
+    if (selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord) {
+      const targetLocation = {
+        height: target.height,
+        northCoord: target.northCoord,
+        eastCoord: target.eastCoord,
+      };
+        const results = CoordsConversionCalc.calc(selfLocation, targetLocation);
+        console.log('results', results);
+      setTargetFields(prev => ({
+        ...prev,
+        azimuth: results.azimuth,
+        distance: results.distance,
+        elevation: results.elevation,
+      }));
+    } else {
+      loadLocation();
+    }
+  }, [target.northCoord, target.eastCoord, target.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
+
+  const calculateCoords = () => {
     if (selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord) {
       const targetLocation = {
         height: target.height,
@@ -66,6 +86,7 @@ export default function TargetDetails() {
         eastCoord: target.eastCoord,
       };
       const results = CoordsConversionCalc.calc(selfLocation, targetLocation);
+      console.log('results', results);
       setTargetFields(prev => ({
         ...prev,
         azimuth: results.azimuth,
@@ -73,8 +94,8 @@ export default function TargetDetails() {
         elevation: results.elevation,
       }));
     }
-  }, [target.northCoord, target.eastCoord, target.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
-
+  };
+    
   const handleFieldChange = (field: keyof TargetFields, value: string) => {
     setTargetFields(prev => ({
       ...prev,
@@ -165,6 +186,7 @@ export default function TargetDetails() {
         editMode={isEditMode}
         type="number"
         placeholder="הזן אזימוט"
+        disabled={true}
       />
       <EditableData
         label="טווח"
@@ -173,6 +195,7 @@ export default function TargetDetails() {
         editMode={isEditMode}
         type="number"
         placeholder="הזן טווח"
+        disabled={true}
       />
       <EditableData
         label="זוהר"
@@ -181,6 +204,7 @@ export default function TargetDetails() {
         editMode={isEditMode}
         type="number"
         placeholder="הזן זוהר"
+        disabled={true}
       />
       <EditableData
         label="האם נתקפה"

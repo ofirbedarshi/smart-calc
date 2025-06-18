@@ -48,67 +48,87 @@ export const BaseInput: React.FC<BaseInputProps> = ({
       {label && (
         <Text style={[styles.label, error && styles.labelError]}>{label}</Text>
       )}
-      <View style={[styles.inputContainer, error && styles.inputError]}>
+      <View style={[styles.inputContainer, error && styles.inputError, disabled && styles.inputDisabledContainer]}>
         {type === 'number' ? (
-          <>
-            {(prefix || maxPrefixLength) && (
-              <>
-                <TextInput
-                  style={styles.prefixInput}
-                  value={prefix}
-                  onChangeText={onPrefixChange}
-                  maxLength={maxPrefixLength}
-                  keyboardType="numeric"
-                  textAlign="center"
-                  editable={!disabled}
-                />
-                <View style={styles.separator} />
-              </>
-            )}
-            <TextInput
-              style={styles.mainInput}
-              value={value}
-              onChangeText={handleInputChange}
-              keyboardType="numeric"
-              maxLength={maxLength}
-              placeholder={placeholder}
-              placeholderTextColor="#999"
-              editable={!disabled}
-              textAlign="right"
-              onBlur={onBlur}
-              onFocus={onFocus}
-            />
-          </>
+          disabled ? (
+            <View style={styles.disabledRow}>
+              {(prefix || maxPrefixLength) && (
+                <Text style={[styles.prefixInput, styles.disabledText]}>{prefix}</Text>
+              )}
+              <Text style={[styles.mainInput, styles.disabledText]}>{value || ''}</Text>
+            </View>
+          ) : (
+            <>
+              {(prefix || maxPrefixLength) && (
+                <>
+                  <TextInput
+                    style={styles.prefixInput}
+                    value={prefix}
+                    onChangeText={onPrefixChange}
+                    maxLength={maxPrefixLength}
+                    keyboardType="numeric"
+                    textAlign="center"
+                    editable={!disabled}
+                    placeholderTextColor="#bbb"
+                  />
+                  <View style={styles.separator} />
+                </>
+              )}
+              <TextInput
+                style={styles.mainInput}
+                value={value}
+                onChangeText={handleInputChange}
+                keyboardType="numeric"
+                maxLength={maxLength}
+                placeholder={placeholder}
+                placeholderTextColor="#bbb"
+                editable={!disabled}
+                textAlign="right"
+                onBlur={onBlur}
+                onFocus={onFocus}
+              />
+            </>
+          )
         ) : (
-          <>
-            <TextInput
-              style={styles.mainInput}
-              value={value}
-              onChangeText={handleInputChange}
-              keyboardType="default"
-              maxLength={maxLength}
-              placeholder={placeholder}
-              placeholderTextColor="#999"
-              editable={!disabled}
-              textAlign="right"
-              onBlur={onBlur}
-              onFocus={onFocus}
-            />
-            {prefix && (
-              <>
-                <TextInput
-                  style={styles.prefixInput}
-                  value={prefix}
-                  onChangeText={onPrefixChange}
-                  maxLength={maxPrefixLength}
-                  keyboardType="default"
-                  textAlign="center"
-                  editable={!disabled}
-                />
-                <View style={styles.separator} />
-              </>
-            )}
-          </>
+          disabled ? (
+            <View style={styles.disabledRow}>
+              <Text style={[styles.mainInput, styles.disabledText]}>{value || ''}</Text>
+              {prefix && (
+                <Text style={[styles.prefixInput, styles.disabledText]}>{prefix}</Text>
+              )}
+            </View>
+          ) : (
+            <>
+              <TextInput
+                style={styles.mainInput}
+                value={value}
+                onChangeText={handleInputChange}
+                keyboardType="default"
+                maxLength={maxLength}
+                placeholder={placeholder}
+                placeholderTextColor="#bbb"
+                editable={!disabled}
+                textAlign="right"
+                onBlur={onBlur}
+                onFocus={onFocus}
+              />
+              {prefix && (
+                <>
+                  <TextInput
+                    style={styles.prefixInput}
+                    value={prefix}
+                    onChangeText={onPrefixChange}
+                    maxLength={maxPrefixLength}
+                    keyboardType="default"
+                    textAlign="center"
+                    editable={!disabled}
+                    placeholderTextColor="#bbb"
+                  />
+                  <View style={styles.separator} />
+                </>
+              )}
+            </>
+          )
         )}
       </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
@@ -161,5 +181,24 @@ const styles = StyleSheet.create({
     color: '#ff3b30',
     fontSize: 12,
     textAlign: 'right',
+  },
+  inputDisabledContainer: {
+    backgroundColor: '#eee',
+    borderColor: '#eee',
+  },
+  disabledRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    minHeight: 40,
+    paddingHorizontal: 12,
+  },
+  disabledText: {
+    color: '#aaa',
+    backgroundColor: '#eee',
+    fontSize: 16,
+    textAlign: 'right',
+    flex: 1,
+    paddingVertical: 10,
   },
 }); 

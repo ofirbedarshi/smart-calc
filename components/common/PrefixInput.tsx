@@ -22,6 +22,7 @@ const PrefixInput: React.FC<PrefixInputProps> = ({
   prefixLength,
   type = 'text',
   maxLength,
+  disabled = false,
   ...rest
 }) => {
   // Hold the prefix in state, defaulting to the first prefixLength characters of value
@@ -61,6 +62,7 @@ const PrefixInput: React.FC<PrefixInputProps> = ({
       type={type}
       maxLength={mainMaxLength}
       maxPrefixLength={prefixLength}
+      disabled={disabled}
     />
   );
 };

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import TargetItemList from '../../../components/targetList/TargetItemList';
 import { useTargetStore } from '../../../stores/targetStore';
+import TargetItemList from './TargetItemList';
 
 export default function TargetsList() {
   const { targets, loadTargets } = useTargetStore();

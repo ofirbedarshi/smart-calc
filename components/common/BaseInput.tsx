@@ -53,9 +53,9 @@ export const BaseInput: React.FC<BaseInputProps> = ({
           disabled ? (
             <View style={styles.disabledRow}>
               {(prefix || maxPrefixLength) && (
-                <Text style={[styles.prefixInput, styles.disabledText]}>{prefix}</Text>
+                <Text style={[styles.prefixInput, styles.disabledText, styles.disabledNumberText]}>{prefix}</Text>
               )}
-              <Text style={[styles.mainInput, styles.disabledText]}>{value || ''}</Text>
+              <Text style={[styles.mainInput, styles.disabledText, styles.disabledNumberText]}>{value || ''}</Text>
             </View>
           ) : (
             <>
@@ -92,9 +92,9 @@ export const BaseInput: React.FC<BaseInputProps> = ({
         ) : (
           disabled ? (
             <View style={styles.disabledRow}>
-              <Text style={[styles.mainInput, styles.disabledText]}>{value || ''}</Text>
+              <Text style={[styles.mainInput, styles.disabledText, styles.disabledTextAlignRight]}>{value || ''}</Text>
               {prefix && (
-                <Text style={[styles.prefixInput, styles.disabledText]}>{prefix}</Text>
+                <Text style={[styles.prefixInput, styles.disabledText, styles.disabledTextAlignRight]}>{prefix}</Text>
               )}
             </View>
           ) : (
@@ -189,16 +189,27 @@ const styles = StyleSheet.create({
   disabledRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
-    minHeight: 40,
-    paddingHorizontal: 12,
+    height: 40,
+    paddingHorizontal: 0,
   },
   disabledText: {
     color: '#aaa',
     backgroundColor: '#eee',
     fontSize: 16,
-    textAlign: 'right',
     flex: 1,
-    paddingVertical: 10,
+    height: 40,
+    paddingVertical: 0,
+    paddingHorizontal: 12,
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  disabledNumberText: {
+    textAlign: 'left',
+  },
+  disabledTextAlignRight: {
+    textAlign: 'right',
   },
 }); 

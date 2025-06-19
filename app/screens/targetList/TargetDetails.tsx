@@ -88,6 +88,7 @@ export default function TargetDetails() {
     try {
       if (!targetFields.id) return;
       await deleteTarget(targetFields.id);
+      Alert.alert('מחיקה', 'המטרה נמחקה בהצלחה');
       router.push('/TargetsList');
     } catch (e) {
       console.log(e);

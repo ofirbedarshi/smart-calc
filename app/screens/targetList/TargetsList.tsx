@@ -53,6 +53,7 @@ export default function TargetsList() {
     }
     setSelectedTargetsIds([]);
     setShowCheckboxes(false);
+    Alert.alert('מחיקה', 'המטרות נמחקו בהצלחה');
   };
 
   const sortedTargets = [...searchResults]

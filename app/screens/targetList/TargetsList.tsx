@@ -1,16 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import TargetItemList from '../../../components/targetList/TargetItemList';
 import { useTargetStore } from '../../../stores/targetStore';
 
 export default function TargetsList() {
   const { targets, loadTargets } = useTargetStore();
+  const [showCheckboxes, setShowCheckboxes] = useState(true);
+  const [selectedTargetsIds, setSelectedTargetsIds] = useState<string[]>([]);
 
   useEffect(() => {
     loadTargets();
   }, [loadTargets]);
 
-  const sortedTargets = [...targets].sort((a, b) => b.createdAt - a.createdAt);
+  const sortedTargets = [...targets]
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+    .map(target => ({
+      target,
+      isMarked: selectedTargetsIds.includes(target.id || ''),
+    }));
+
+  const handleLongPress = (id: string) => {
+    setShowCheckboxes(true);
+    setSelectedTargetsIds([id]);
+  };
+
+  const handleMark = (id: string) => {
+    setSelectedTargetsIds(prev =>
+      prev.includes(id) ? prev.filter(selectedId => selectedId !== id) : [...prev, id]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -19,8 +37,16 @@ export default function TargetsList() {
       ) : (
         <FlatList
           data={sortedTargets}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => <TargetItemList target={item} onLongPress={() => console.log("long press")} />}
+          keyExtractor={item => item.target.id || ''}
+          renderItem={({ item }) => (
+            <TargetItemList
+              target={item.target}
+              showCheckbox={showCheckboxes}
+              isMarked={item.isMarked}
+              onLongPress={() => handleLongPress(item.target.id || '')}
+              onMark={() => handleMark(item.target.id || '')}
+            />
+          )}
         />
       )}
     </View>

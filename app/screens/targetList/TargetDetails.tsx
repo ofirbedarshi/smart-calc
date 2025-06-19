@@ -83,6 +83,7 @@ export default function TargetDetails() {
             Alert.alert('מחיקה', 'המטרה נמחקה בהצלחה');
             router.push('/screens/targetList/TargetsList');
         } catch (e) {
+            console.log(e);
             Alert.alert('שגיאה', 'אירעה שגיאה במחיקה, נסה שוב');
         }
     };

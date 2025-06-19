@@ -120,3 +120,12 @@ Reuse	Hooks and utilities over duplication
 File Organization	Consistent folder structure
 Error Handling	Log errors clearly, use simple loading states where relevant
 Testing	Focus on logic layers (if added)
+
+
+In addition! more rules:
+1. I might change files manually from time to time so - 
+Every time you change a file, read it before! see its lastest version. Update your memory and then do what I asked you.
+2. if we create/add new UI for a page, you are welcome to create new component for it, if you think its a good idea that help us to make the code modulary and reusable and orginaized. If you see that the code become long, you also welcome to create new component to make the code simpler.
+3. If you think the component involve some general, or pure logic that can be seperated to ts file, please do it (if it has some meaning, not every little thing). I want to keep the component dumb as possible.
+
+

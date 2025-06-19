@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
-import Accordion from '../../../components/common/Accordion';
 import Button from '../../../components/common/Button';
-import RadioGroup from '../../../components/common/RadioGroup';
 import SearchBar from '../../../components/common/SearchBar';
 import TargetItemList from '../../../components/targetList/TargetItemList';
 import { TargetService } from '../../../services/TargetService';
 import { useTargetStore } from '../../../stores/targetStore';
+import TargetFilters from './TargetFilters';
 
 export default function TargetsList() {
   const { targets, loadTargets, deleteTarget } = useTargetStore();
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [selectedTargetsIds, setSelectedTargetsIds] = useState<string[]>([]);
-  const [searchResults, setSearchResults] = useState(targets);
+  const [search, setSearch] = useState('');
   const [isAttackedFilter, setIsAttackedFilter] = useState('הכל');
+  const [searchResults, setSearchResults] = useState(targets);
 
   useEffect(() => {
     loadTargets();
@@ -24,25 +24,16 @@ export default function TargetsList() {
   }, [targets]);
 
   const handleSearch = async (query: string) => {
-    if (!query.trim()) {
-      setSearchResults(targets);
-    } else {
-      const results = await TargetService.searchTargets(query);
-      setSearchResults(results);
-    }
+    setSearch(query);
+    const results = await TargetService.filterTargets({ query, isAttacked: isAttackedFilter });
+    setSearchResults(results);
   };
 
-  const filteredTargets = searchResults.filter(target => {
-    if (isAttackedFilter === 'הכל') return true;
-    return target.isAttacked === isAttackedFilter;
-  });
-
-  const sortedTargets = [...filteredTargets]
-    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
-    .map(target => ({
-      target,
-      isMarked: selectedTargetsIds.includes(target.id || ''),
-    }));
+  const handleFilterChange = async (value: string) => {
+    setIsAttackedFilter(value);
+    const results = await TargetService.filterTargets({ query: search, isAttacked: value });
+    setSearchResults(results);
+  };
 
   const handleLongPress = (id: string) => {
     setShowCheckboxes(true);
@@ -64,25 +55,17 @@ export default function TargetsList() {
     Alert.alert('מחיקה', 'המטרות נמחקו בהצלחה');
   };
 
+  const sortedTargets = [...searchResults]
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+    .map(target => ({
+      target,
+      isMarked: selectedTargetsIds.includes(target.id || ''),
+    }));
+
   return (
     <View style={styles.container}>
       <SearchBar onSearch={handleSearch} placeholder="חפש לפי שם או תיאור..." />
-      <Accordion
-        title="סינון לפי"
-      >
-        <View style={{ marginBottom: 8 }}>
-          <Text style={styles.filterLabel}>האם נתקף?</Text>
-          <RadioGroup
-            options={[
-              { label: 'כן', value: 'כן' },
-              { label: 'לא', value: 'לא' },
-              { label: 'הכל', value: 'הכל' },
-            ]}
-            value={isAttackedFilter}
-            onChange={setIsAttackedFilter}
-          />
-        </View>
-      </Accordion>
+      <TargetFilters value={isAttackedFilter} onFilterChange={handleFilterChange} />
       {sortedTargets.length === 0 ? (
         <Text style={styles.empty}>לא נמצאו מטרות</Text>
       ) : (
@@ -166,12 +149,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     textAlign: 'right',
-  },
-  filterLabel: {
-    fontSize: 15,
-    color: '#666',
-    marginBottom: 4,
-    textAlign: 'right',
-    fontWeight: '500',
   },
 }); 

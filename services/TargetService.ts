@@ -81,4 +81,19 @@ export const TargetService = {
       (t.description && t.description.toLowerCase().includes(lowerQuery))
     );
   },
+
+  async filterTargets({ query = '', isAttacked = 'הכל' }: { query?: string; isAttacked?: string }): Promise<TargetFields[]> {
+    let targets = await this.getTargets();
+    if (query && query.trim()) {
+      const lowerQuery = query.toLowerCase();
+      targets = targets.filter(t =>
+        (t.name && t.name.toLowerCase().includes(lowerQuery)) ||
+        (t.description && t.description.toLowerCase().includes(lowerQuery))
+      );
+    }
+    if (isAttacked !== 'הכל') {
+      targets = targets.filter(t => t.isAttacked === isAttacked);
+    }
+    return targets;
+  },
 }; 

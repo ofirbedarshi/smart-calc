@@ -6,7 +6,7 @@ import { useTargetStore } from '../../../stores/targetStore';
 
 export default function TargetsList() {
   const { targets, loadTargets, deleteTarget } = useTargetStore();
-  const [showCheckboxes, setShowCheckboxes] = useState(true);
+  const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [selectedTargetsIds, setSelectedTargetsIds] = useState<string[]>([]);
 
   useEffect(() => {

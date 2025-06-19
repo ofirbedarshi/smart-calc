@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import Button from '../../../components/common/Button';
+import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
 import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
 import { TargetFields } from '../../../services/TargetService';
 import { useLocationStore } from '../../../stores/locationStore';
@@ -87,7 +88,6 @@ export default function TargetDetails() {
     try {
       if (!targetFields.id) return;
       await deleteTarget(targetFields.id);
-      Alert.alert('מחיקה', 'המטרה נמחקה בהצלחה');
       router.push('/TargetsList');
     } catch (e) {
       console.log(e);
@@ -121,11 +121,15 @@ export default function TargetDetails() {
           theme="primary"
         />
         {targetFields.id && (
-          <Button
-            title="מחיקה"
-            theme="danger"
-            onPress={handleDelete}
-            small
+          <DeleteButtonWithConfirm
+            items={[typeof targetFields.name === 'string' ? targetFields.name : '']}
+            onDelete={handleDelete}
+            buttonProps={{
+              title: 'מחיקה',
+              theme: 'danger',
+              small: true,
+              onPress: () => {},
+            }}
           />
         )}
       </View>

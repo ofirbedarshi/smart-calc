@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../components/common/Button';
+import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
 import SearchBar from '../../../components/common/SearchBar';
 import TargetItemList from '../../../components/targetList/TargetItemList';
 import { TargetService } from '../../../services/TargetService';
@@ -52,7 +53,6 @@ export default function TargetsList() {
     }
     setSelectedTargetsIds([]);
     setShowCheckboxes(false);
-    Alert.alert('מחיקה', 'המטרות נמחקו בהצלחה');
   };
 
   const sortedTargets = [...searchResults]
@@ -87,12 +87,20 @@ export default function TargetsList() {
           {showCheckboxes && (
             <View style={styles.actionBar}>
               <View style={styles.buttonRow}>
-                <Button
-                  disabled={selectedTargetsIds.length === 0}
-                  title="מחיקה"
-                  onPress={handleDelete}
-                  theme="danger"
-                  small
+                <DeleteButtonWithConfirm
+                  items={sortedTargets
+                    .filter(t => t.target.id && selectedTargetsIds.includes(t.target.id))
+                    .map(t => typeof t.target.name === 'string' ? t.target.name : '')
+                    .filter(Boolean)
+                  }
+                  onDelete={handleDelete}
+                  buttonProps={{
+                    title: 'מחיקה',
+                    disabled: selectedTargetsIds.length === 0,
+                    theme: 'danger',
+                    small: true,
+                    onPress: () => {},
+                  }}
                 />
                 <Button
                   title="ביטול"

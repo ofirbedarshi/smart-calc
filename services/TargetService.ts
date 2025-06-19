@@ -71,4 +71,14 @@ export const TargetService = {
       throw err;
     }
   },
+
+  async searchTargets(query: string): Promise<TargetFields[]> {
+    const allTargets = await this.getTargets();
+    if (!query.trim()) return allTargets;
+    const lowerQuery = query.toLowerCase();
+    return allTargets.filter(t =>
+      (t.name && t.name.toLowerCase().includes(lowerQuery)) ||
+      (t.description && t.description.toLowerCase().includes(lowerQuery))
+    );
+  },
 }; 

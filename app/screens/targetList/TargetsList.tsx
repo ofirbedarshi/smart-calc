@@ -1,19 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import Button from '../../../components/common/Button';
 import TargetItemList from '../../../components/targetList/TargetItemList';
+import { TargetService } from '../../../services/TargetService';
 import { useTargetStore } from '../../../stores/targetStore';
 
 export default function TargetsList() {
   const { targets, loadTargets, deleteTarget } = useTargetStore();
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [selectedTargetsIds, setSelectedTargetsIds] = useState<string[]>([]);
+  const [search, setSearch] = useState('');
+  const [searchResults, setSearchResults] = useState(targets);
 
   useEffect(() => {
     loadTargets();
   }, [loadTargets]);
 
-  const sortedTargets = [...targets]
+  useEffect(() => {
+    setSearchResults(targets);
+  }, [targets]);
+
+  // Debounced search
+  useEffect(() => {
+    const handler = setTimeout(async () => {
+      if (!search.trim()) {
+        setSearchResults(targets);
+      } else {
+        const results = await TargetService.searchTargets(search);
+        setSearchResults(results);
+      }
+    }, 250);
+    return () => clearTimeout(handler);
+  }, [search, targets]);
+
+  const sortedTargets = [...searchResults]
     .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
     .map(target => ({
       target,
@@ -42,6 +62,13 @@ export default function TargetsList() {
 
   return (
     <View style={styles.container}>
+      <TextInput
+        style={styles.searchBar}
+        placeholder="חפש לפי שם או תיאור..."
+        value={search}
+        onChangeText={setSearch}
+        textAlign="right"
+      />
       {sortedTargets.length === 0 ? (
         <Text style={styles.empty}>לא נמצאו מטרות</Text>
       ) : (
@@ -92,6 +119,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  searchBar: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 12,
+    margin: 16,
+    fontSize: 16,
+    writingDirection: 'rtl',
   },
   empty: {
     textAlign: 'center',

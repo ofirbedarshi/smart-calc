@@ -20,7 +20,7 @@ export default function TargetsList() {
         <FlatList
           data={sortedTargets}
           keyExtractor={item => item.id}
-          renderItem={({ item }) => <TargetItemList target={item} />}
+          renderItem={({ item }) => <TargetItemList target={item} onLongPress={() => console.log("long press")} />}
         />
       )}
     </View>

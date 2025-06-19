@@ -57,16 +57,36 @@ export default function TargetDetails() {
     }));
   };
 
+  const validateFields = () => {
+    if (targetFields.name === '' || targetFields.description === '') {
+      Alert.alert('שגיאה', 'שם המטרה והתיאור הם שדות חובה');
+      return false;
+    }
+    return true;
+  };
+
+  const handleUpdateTarget = async () => {
+    await updateTarget(targetFields.id, targetFields);
+    Alert.alert('הצלחה', 'עריכה בוצעה בהצלחה');
+    setIsEditMode(false);
+  };
+
+  const handleAddTarget = async () => {
+    const newTarget = await addTarget(targetFields);
+    setTargetFields(newTarget);
+    Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
+    setIsEditMode(false);
+  };
+
   const handleSave = async () => {
-      try {
-        if (targetFields.id) {
-            await updateTarget(targetFields.id, targetFields);
-        } else {
-            const newTarget = await addTarget(targetFields);
-            setTargetFields(newTarget);
-            Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
-            setIsEditMode(false);
-        }
+    try {
+      if (!validateFields()) return;
+      
+      if (targetFields.id) {
+        await handleUpdateTarget();
+      } else {
+        await handleAddTarget();
+      }
     } catch (e) {
       Alert.alert('שגיאה', 'אירעה שגיאה בשמירה, נסה שוב');
     }
@@ -81,7 +101,7 @@ export default function TargetDetails() {
         try {
             await deleteTarget(targetFields.id!);
             Alert.alert('מחיקה', 'המטרה נמחקה בהצלחה');
-            router.push('/screens/targetList/TargetsList');
+            router.push('/TargetsList');
         } catch (e) {
             console.log(e);
             Alert.alert('שגיאה', 'אירעה שגיאה במחיקה, נסה שוב');

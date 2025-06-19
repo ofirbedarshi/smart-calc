@@ -58,25 +58,28 @@ export default function TargetsList() {
                 onMark={() => handleMark(item.target.id || '')}
               />
             )}
+            contentContainerStyle={showCheckboxes ? { paddingBottom: 90 } : undefined}
           />
           {showCheckboxes && (
-            <View style={styles.buttonRow}>
-              <Button
-                disabled={selectedTargetsIds.length === 0}
-                title="מחיקה"
-                onPress={handleDelete}
-                theme="danger"
-                small
-              />
-              <Button
-                title="ביטול"
-                onPress={() => {
-                  setShowCheckboxes(false);
-                  setSelectedTargetsIds([]);
-                }}
-                theme="primary"
-                small
-              />
+            <View style={styles.actionBar}>
+              <View style={styles.buttonRow}>
+                <Button
+                  disabled={selectedTargetsIds.length === 0}
+                  title="מחיקה"
+                  onPress={handleDelete}
+                  theme="danger"
+                  small
+                />
+                <Button
+                  title="ביטול"
+                  onPress={() => {
+                    setShowCheckboxes(false);
+                    setSelectedTargetsIds([]);
+                  }}
+                  theme="primary"
+                  small
+                />
+              </View>
             </View>
           )}
         </>
@@ -109,10 +112,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 24,
-    zIndex: 10,
+  },
+  actionBar: {
+    backgroundColor: '#fff',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderTopWidth: 1,
+    borderColor: '#eee',
+    position: 'relative',
   },
 }); 

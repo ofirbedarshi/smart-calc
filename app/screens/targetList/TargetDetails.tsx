@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Button from '../../../components/common/Button';
@@ -17,7 +17,7 @@ export default function TargetDetails() {
     const params = useLocalSearchParams();
     const target = JSON.parse(params.target as string) as TargetFields;
     const { locationData: selfLocation, loadLocation } = useLocationStore();
-    const { addTarget, updateTarget, loading } = useTargetStore();
+    const { addTarget, updateTarget, deleteTarget, loading } = useTargetStore();
     const [isEditMode, setIsEditMode] = useState(false);
     const [targetFields, setTargetFields] = useState<TargetFields>({
         ...{
@@ -34,6 +34,7 @@ export default function TargetDetails() {
         notes: '',
     }, ...target,
     });
+    const router = useRouter();
 
   // Compute azimuth, distance, elevation live
   const hasCoords = selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord && targetFields.height && targetFields.northCoord && targetFields.eastCoord;
@@ -75,6 +76,16 @@ export default function TargetDetails() {
     { label: 'כן', value: 'כן' },
     { label: 'לא', value: 'לא' },
   ];
+    
+    const handleDelete = async () => {
+        try {
+            await deleteTarget(targetFields.id!);
+            Alert.alert('מחיקה', 'המטרה נמחקה בהצלחה');
+            router.push('/screens/targetList/TargetsList');
+        } catch (e) {
+            Alert.alert('שגיאה', 'אירעה שגיאה במחיקה, נסה שוב');
+        }
+    };
 
   const renderItem = () => (
     <View style={styles.section}>
@@ -234,12 +245,22 @@ export default function TargetDetails() {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       />
-      <View style={styles.saveContainer}>
+      <View style={styles.saveContainerRow}>
         <Button
           title="שמור"
           onPress={handleSave}
           disabled={loading}
+          small
+          theme="primary"
         />
+        {targetFields.id && (
+          <Button
+            title="מחיקה"
+            theme="danger"
+            onPress={handleDelete}
+            small
+          />
+        )}
       </View>
     </>
   );
@@ -280,10 +301,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  saveContainer: {
+  saveContainerRow: {
+    flexDirection: 'row-reverse',
+    gap: 12,
     padding: 16,
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderColor: '#eee',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 }); 

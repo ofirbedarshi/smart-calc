@@ -30,7 +30,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="index"
+        name="calculator"
         options={{
           title: 'מחשבון',
           tabBarIcon: ({ color, size }) => (

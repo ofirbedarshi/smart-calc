@@ -1,6 +1,6 @@
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { CalculatorNavigation } from '../../components/CalculatorNavigation';
-import { SelfLocation } from '../../components/SelfLocation';
+import { CalculatorNavigation } from '../../../components/CalculatorNavigation';
+import { SelfLocation } from '../../../components/SelfLocation';
 
 export default function HomeScreen() {
   return (

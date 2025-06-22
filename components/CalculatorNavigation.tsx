@@ -3,11 +3,11 @@ import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const buttons = [
-  { text: 'המרת נ.צ', route: '/screens/calculators/CoordinateConversion', color: '#FFB3BA' },
-  { text: 'חיתוך לאחור', route: '/screens/calculators/BackAzimuth', color: '#BAFFC9' },
-  { text: 'חישוב גודל כתם', route: '/screens/calculators/StainSizeCalculation', color: '#BAE1FF' },
-  { text: 'חישוב יעילות', route: '/screens/calculators/EfficiencyCalculation', color: '#FFFFBA' },
-  { text: 'המרת יחידות', route: '/screens/calculators/UnitConversion', color: '#FFE4BA' },
+  { text: 'המרת נ.צ', route: '/calculator/CoordinateConversion', color: '#FFB3BA' },
+  { text: 'חיתוך לאחור', route: '/calculator/BackAzimuth', color: '#BAFFC9' },
+  { text: 'חישוב גודל כתם', route: '/calculator/StainSizeCalculation', color: '#BAE1FF' },
+  { text: 'חישוב יעילות', route: '/calculator/EfficiencyCalculation', color: '#FFFFBA' },
+  { text: 'המרת יחידות', route: '/calculator/UnitConversion', color: '#FFE4BA' },
 ];
 
 export const CalculatorNavigation: React.FC = () => {

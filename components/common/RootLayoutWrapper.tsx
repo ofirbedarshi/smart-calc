@@ -26,7 +26,7 @@ const RootLayoutWrapper: React.FC<RootLayoutWrapperProps> = ({ children }) => {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
           {children}
         </SafeAreaView>
       </GestureHandlerRootView>

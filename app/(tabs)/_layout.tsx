@@ -1,8 +1,11 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
+  const { bottom } = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
@@ -13,6 +16,8 @@ export default function TabLayout() {
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
+          height: 60 + bottom,
+          paddingBottom: bottom,
         },
       }}>
       <Tabs.Screen

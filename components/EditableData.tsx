@@ -1,11 +1,22 @@
+import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BaseInput, BaseInputProps } from './common/BaseInput';
+import Tooltip from './common/Tooltip';
 
 interface EditableDataProps extends BaseInputProps {
   editMode: boolean;
   editComponent?: React.ReactNode;
   disabled?: boolean;
+  info?: string;
+}
+
+function cloneWithPropsIfSupported(element: React.ReactNode, props: any) {
+  if (React.isValidElement(element)) {
+    // Only pass props that the element supports
+    return React.cloneElement(element, props);
+  }
+  return element;
 }
 
 export const EditableData: React.FC<EditableDataProps> = ({
@@ -14,6 +25,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
   value,
   editComponent,
   disabled = false,
+  info,
   ...props
 }) => {
   return (
@@ -22,9 +34,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
         <View style={styles.valueContainer}>
           {editMode ? (
             editComponent ? (
-              React.isValidElement(editComponent)
-                ? React.cloneElement(editComponent, { disabled })
-                : editComponent
+              cloneWithPropsIfSupported(editComponent, { disabled, info })
             ) : (
               <BaseInput
                 label=""
@@ -37,7 +47,16 @@ export const EditableData: React.FC<EditableDataProps> = ({
             <Text style={styles.value}>{value || 'אין ערך'}</Text>
           )}
         </View>
-        {label && <Text style={styles.label}>{label}</Text>}
+        {label && (
+          <View style={styles.labelInlineRow}>
+            <Text style={styles.label}>{label}</Text>
+            {!!info && info.trim() !== '' && (
+              <Tooltip content={info} direction='left'>
+                <FontAwesome name="info-circle" size={14} color="#007AFF" style={styles.infoIcon} />
+              </Tooltip>
+            )}
+          </View>
+        )}
       </View>
     </View>
   );
@@ -52,17 +71,26 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  labelInlineRow: {
+    flex: 1,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    marginLeft: 8,
+    gap: 4,
+  },
   label: {
     fontSize: 14,
     color: '#666',
     textAlign: 'right',
-    flex: 1,
-    marginLeft: 8,
+  },
+  infoIcon: {
+    marginRight: 1,
+    marginLeft: 2,
   },
   valueContainer: {
+    flex: 2,
     minHeight: 40,
     justifyContent: 'center',
-    flex: 2,
   },
   value: {
     fontSize: 16,

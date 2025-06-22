@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import Button from '../../../components/common/Button';
 import { CoordsData, CoordsInput } from '../../../components/common/CoordsInput';
@@ -208,11 +208,4 @@ export default function CoordinateConversion() {
       {hasResults && <Button title="הוסף מטרה" onPress={handleSave} theme="success" />}
     </ScreenWrapper>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-}); 
+} 

@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import { UnitConverter } from '../../../components/calculators/UnitConverter';
 import Header from '../../../components/common/Header';
 import InputCard from '../../../components/common/InputCard';
@@ -29,17 +28,4 @@ export default function UnitConversion() {
       </InputCard>
     </ScreenWrapper>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 16,
-  },
-}); 
+} 

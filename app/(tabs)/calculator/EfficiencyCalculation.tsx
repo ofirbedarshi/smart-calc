@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import Button from '../../../components/common/Button';
 import { GroupInput } from '../../../components/common/GroupInput';
@@ -65,17 +64,4 @@ export default function EfficiencyCalculation() {
       <ConversionResults title="תוצאות חישוב" fields={getResultFields()} />
     </ScreenWrapper>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 16,
-  },
-}); 
+} 

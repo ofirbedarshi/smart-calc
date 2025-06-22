@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetCoordinates } from '../../../components/calculators/TargetCoordinates';
 import Button from '../../../components/common/Button';
@@ -165,16 +165,4 @@ export default function BackAzimuth() {
       {hasResults && <Button title="שמירה" onPress={() => {}} theme="success" />}
     </ScreenWrapper>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  dropdownContainer: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    alignItems: 'flex-end',
-  },
-}); 
+} 

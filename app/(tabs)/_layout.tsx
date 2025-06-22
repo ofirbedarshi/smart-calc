@@ -8,6 +8,12 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarLabelPosition: 'below-icon',
+        tabBarStyle: {
+          backgroundColor: '#ffffff',
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
       }}>
       <Tabs.Screen
         name="TargetsList"

@@ -5,6 +5,7 @@ import { TargetCoordinates } from '../../../components/calculators/TargetCoordin
 import Button from '../../../components/common/Button';
 import { CoordsData } from '../../../components/common/CoordsInput';
 import { Dropdown } from '../../../components/common/Dropdown';
+import Header from '../../../components/common/Header';
 import InputCard from '../../../components/common/InputCard';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { BackAzimuthCalc } from '../../../services/calculators/BackAzimuthCalc';
@@ -124,6 +125,7 @@ export default function BackAzimuth() {
 
   return (
     <ScreenWrapper>
+      <Header title="חיתוך לאחור" />
       <InputCard>
         <TargetCoordinates
           title="מטרה 1"

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { BaseInput } from '../common/BaseInput';
 import { DirectionSwitcher } from '../common/DirectionSwitcher';
 
 interface UnitConverterProps {
@@ -62,16 +63,12 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({
         rightLabel={unit2Name}
       />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={inputValue}
-          onChangeText={handleInputChange}
-          placeholder={inputPlaceholder}
-          keyboardType="numeric"
-          textAlign="right"
-        />
-      </View>
+      <BaseInput
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder={inputPlaceholder}
+        type="number"
+      />
 
       <View style={styles.resultContainer}>
         <Text style={styles.resultLabel}>{resultLabel}:</Text>
@@ -94,16 +91,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 8,
-  },
-  input: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    paddingHorizontal: 12,
-    fontSize: 16,
-    backgroundColor: '#fff',
-    textAlign: 'right',
   },
   resultContainer: {
     marginTop: 8,

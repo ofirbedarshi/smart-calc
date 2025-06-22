@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { BaseInput } from './BaseInput';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -20,13 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, placeholder = 'חפש..
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={handleChange}
-        placeholder={placeholder}
-        textAlign="right"
-      />
+      <BaseInput value={value} onChange={handleChange} placeholder={placeholder} />
     </View>
   );
 };
@@ -34,15 +29,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, placeholder = 'חפש..
 const styles = StyleSheet.create({
   container: {
     margin: 16,
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    fontSize: 16,
-    writingDirection: 'rtl',
   },
 });
 

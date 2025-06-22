@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import { TargetCoordinates } from '../../../components/calculators/TargetCoordinates';
 import Button from '../../../components/common/Button';
 import { CoordsData } from '../../../components/common/CoordsInput';
 import { Dropdown } from '../../../components/common/Dropdown';
+import InputCard from '../../../components/common/InputCard';
+import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { BackAzimuthCalc } from '../../../services/calculators/BackAzimuthCalc';
 
 type TargetData = {
@@ -108,69 +110,65 @@ export default function BackAzimuth() {
     setResults(result);
   };
 
-  const isCalculateDisabled = !target1.coords.northCoord || !target1.coords.eastCoord || !target1.distance ||
-    !target2.coords.northCoord || !target2.coords.eastCoord || !target2.distance;
+  const isCalculateDisabled =
+    !target1.coords.northCoord ||
+    !target1.coords.eastCoord ||
+    !target1.distance ||
+    !target2.coords.northCoord ||
+    !target2.coords.eastCoord ||
+    !target2.distance;
 
   const directionOptions = [
     { label: 'ימנית', value: 'right' },
     { label: 'שמאלית', value: 'left' },
   ];
 
+  const hasResults = results.northCoord && results.eastCoord;
+
   return (
-    <ScrollView style={styles.container}>
-      <TargetCoordinates
-        title="מטרה 1"
-        coordsData={target1.coords}
-        onCoordsChange={handleTarget1CoordsChange}
-        distance={target1.distance}
-        onDistanceChange={(value) => handleTarget1FieldChange('distance', value)}
-        elevation={target1.elevation}
-        onElevationChange={(value) => handleTarget1FieldChange('elevation', value)}
-        height={target1.height}
-        onHeightChange={(value) => handleTarget1FieldChange('height', value)}
-      />
-
-      <View style={styles.dropdownContainer}>
-        <Dropdown
-          options={directionOptions}
-          value={direction}
-          onChange={(value) => {
-            setDirection(value as 'right' | 'left');
-            setResults({ northCoord: '', eastCoord: '' });
-          }}
+    <ScreenWrapper>
+      <InputCard>
+        <TargetCoordinates
+          title="מטרה 1"
+          coordsData={target1.coords}
+          onCoordsChange={handleTarget1CoordsChange}
+          distance={target1.distance}
+          onDistanceChange={value => handleTarget1FieldChange('distance', value)}
+          elevation={target1.elevation}
+          onElevationChange={value => handleTarget1FieldChange('elevation', value)}
+          height={target1.height}
+          onHeightChange={value => handleTarget1FieldChange('height', value)}
         />
-      </View>
+      </InputCard>
 
-      <TargetCoordinates
-        title="מטרה 2"
-        coordsData={target2.coords}
-        onCoordsChange={handleTarget2CoordsChange}
-        distance={target2.distance}
-        onDistanceChange={(value) => handleTarget2FieldChange('distance', value)}
-        elevation={target2.elevation}
-        onElevationChange={(value) => handleTarget2FieldChange('elevation', value)}
-        height={target2.height}
-        onHeightChange={(value) => handleTarget2FieldChange('height', value)}
+      <Dropdown
+        options={directionOptions}
+        value={direction}
+        onChange={value => {
+          setDirection(value as 'right' | 'left');
+          setResults({ northCoord: '', eastCoord: '' });
+        }}
       />
+      <InputCard>
+        <TargetCoordinates
+          title="מטרה 2"
+          coordsData={target2.coords}
+          onCoordsChange={handleTarget2CoordsChange}
+          distance={target2.distance}
+          onDistanceChange={value => handleTarget2FieldChange('distance', value)}
+          elevation={target2.elevation}
+          onElevationChange={value => handleTarget2FieldChange('elevation', value)}
+          height={target2.height}
+          onHeightChange={value => handleTarget2FieldChange('height', value)}
+        />
+      </InputCard>
 
-      <Button
-        title="חישוב נ.צ עצמי"
-        onPress={handleCalculate}
-        disabled={isCalculateDisabled}
-        theme="primary"
-      />
+      <Button title="חישוב נ.צ עצמי" onPress={handleCalculate} disabled={isCalculateDisabled} theme="primary" />
 
-      <ConversionResults
-        title="תוצאות חישוב"
-        fields={getResultFields()}
-      />
+      <ConversionResults title="תוצאות חישוב" fields={getResultFields()} />
 
-      <Button
-        title="שמירה"
-        onPress={() => {}}
-        theme="success"
-      />
-    </ScrollView>
+      {hasResults && <Button title="שמירה" onPress={() => {}} theme="success" />}
+    </ScreenWrapper>
   );
 }
 

@@ -70,27 +70,14 @@ export const TargetCoordinates: React.FC<TargetCoordinatesProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    margin: 8,
-    padding: 8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    gap: 16,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 16,
     textAlign: 'right',
   },
   additionalFields: {
-    marginTop: 16,
     gap: 16,
   },
 }); 

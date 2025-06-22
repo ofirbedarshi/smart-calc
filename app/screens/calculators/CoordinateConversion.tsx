@@ -1,13 +1,18 @@
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import Button from '../../../components/common/Button';
 import { CoordsData, CoordsInput } from '../../../components/common/CoordsInput';
 import { DirectionSwitcher } from '../../../components/common/DirectionSwitcher';
 import { GroupInput } from '../../../components/common/GroupInput';
+import InputCard from '../../../components/common/InputCard';
+import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { SelfLocation } from '../../../components/SelfLocation';
-import { ConversionResults as ConversionResultsType, CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
+import {
+  ConversionResults as ConversionResultsType,
+  CoordsConversionCalc,
+} from '../../../services/calculators/CoordsConversionCalc';
 import { LocationData } from '../../../services/LocationService';
 import { useLocationStore } from '../../../stores/locationStore';
 import { CalculatorField } from '../../../types/calculator';
@@ -16,7 +21,7 @@ export default function CoordinateConversion() {
   const { locationData: selfLocation } = useLocationStore();
   const [isReversed, setIsReversed] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
-  
+
   // Input states
   const [coordsData, setCoordsData] = useState<CoordsData>({
     northCoord: '',
@@ -26,7 +31,7 @@ export default function CoordinateConversion() {
   const [azimuth, setAzimuth] = useState('');
   const [distance, setDistance] = useState('');
   const [elevation, setElevation] = useState('');
-  
+
   // Results state
   const [results, setResults] = useState<ConversionResultsType>({
     azimuth: '',
@@ -125,7 +130,7 @@ export default function CoordinateConversion() {
 
     try {
       setIsCalculating(true);
-      
+
       if (isReversed) {
         const targetData = {
           azimuth,
@@ -166,32 +171,28 @@ export default function CoordinateConversion() {
     });
   };
 
-  const isCalculateDisabled = !selfLocation.height || !selfLocation.northCoord || !selfLocation.eastCoord ||
-    (isReversed ? (!azimuth || !distance || !elevation) : (!coordsData.eastCoord || !coordsData.northCoord || !coordsData.height));
+  const isCalculateDisabled =
+    !selfLocation.height ||
+    !selfLocation.northCoord ||
+    !selfLocation.eastCoord ||
+    (isReversed
+      ? !azimuth || !distance || !elevation
+      : !coordsData.eastCoord || !coordsData.northCoord || !coordsData.height);
 
-  const hasResults = isReversed ? 
-    (results.northCoord && results.eastCoord) : 
-    (results.azimuth && results.distance);
+  const hasResults = isReversed ? results.northCoord && results.eastCoord : results.azimuth && results.distance;
 
   return (
-    <ScrollView style={styles.container}>
-      <SelfLocation />
-      
-      <DirectionSwitcher
-        isReversed={isReversed}
-        onToggle={() => setIsReversed(!isReversed)}
-        leftLabel="נ.צ + גובה"
-        rightLabel="אזימוט + טווח + זהר"
-      />
-
-      {isReversed ? (
-        <GroupInput fields={getAzimuthFields()} />
-      ) : (
-        <CoordsInput
-          initialData={coordsData}
-          onChange={setCoordsData}
+    <ScreenWrapper>
+      <InputCard>
+        <SelfLocation />
+        <DirectionSwitcher
+          isReversed={isReversed}
+          onToggle={() => setIsReversed(!isReversed)}
+          leftLabel="נ.צ + גובה"
+          rightLabel="אזימוט + טווח + זהר"
         />
-      )}
+        {isReversed ? <GroupInput fields={getAzimuthFields()} /> : <CoordsInput initialData={coordsData} onChange={setCoordsData} />}
+      </InputCard>
 
       <Button
         title="חישוב קוארדינטות"
@@ -200,18 +201,10 @@ export default function CoordinateConversion() {
         theme="primary"
       />
 
-      <ConversionResults
-        title="תוצאות המרה"
-        fields={getResultFields()}
-      />
+      <ConversionResults title="תוצאות המרה" fields={getResultFields()} />
 
-      <Button
-        title="הוסף מטרה"
-        onPress={handleSave}
-        disabled={!hasResults}
-        theme="success"
-      />
-    </ScrollView>
+      {hasResults && <Button title="הוסף מטרה" onPress={handleSave} theme="success" />}
+    </ScreenWrapper>
   );
 }
 

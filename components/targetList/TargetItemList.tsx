@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useRef } from 'react';
-import { Animated, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TargetFields } from '../../services/TargetService';
 
 interface TargetItemListProps {
@@ -18,7 +18,7 @@ const TargetItemList: React.FC<TargetItemListProps> = ({ target, onLongPress, sh
 
   const handlePress = () => {
     router.push({
-      pathname: '/screens/targetList/TargetDetails',
+      pathname: '/TargetsList/TargetDetails',
       params: {
         target: JSON.stringify(target),
       },
@@ -36,7 +36,7 @@ const TargetItemList: React.FC<TargetItemListProps> = ({ target, onLongPress, sh
     });
   };
 
-  const handleMark = (e: React.MouseEvent | React.TouchEvent) => {
+  const handleMark = (e: GestureResponderEvent) => {
     e.stopPropagation();
     if (onMark) onMark(target);
   };

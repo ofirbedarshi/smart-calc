@@ -98,14 +98,14 @@ const FieldSection: React.FC<FieldSectionProps> = ({ targetFields, isEditMode, o
       info="הנתון 'טווח' מחושב אוטומטית לפי מחשבון ״המרת נ.צ״ לכן אינו ניתן לעריכה"
     />
     <EditableData
-      label="זוהר"
+      label="זוה״ר"
       value={computed.elevation}
       onChange={() => {}}
       editMode={isEditMode}
       type="number"
-      placeholder="הזן זוהר"
+      placeholder="הזן זוה״ר"
       disabled={true}
-      info="הנתון 'זוהר' מחושב אוטומטית לפי מחשבון ״המרת נ.צ״ לכן אינו ניתן לעריכה"
+      info="הנתון 'זוה״ר' מחושב אוטומטית לפי מחשבון ״המרת נ.צ״ לכן אינו ניתן לעריכה"
     />
     <EditableData
       label="האם נתקפה"

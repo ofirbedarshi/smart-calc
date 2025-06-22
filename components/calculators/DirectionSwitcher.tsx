@@ -11,13 +11,13 @@ export const DirectionSwitcher: React.FC<DirectionSwitcherProps> = ({ isReversed
   return (
     <View style={styles.container}>
       <Text style={styles.label}>
-        {isReversed ? 'אזימוט + טווח + זהר' : 'נ.צ + גובה'}
+        {isReversed ? 'אזימוט + טווח + זוה״ר' : 'נ.צ + גובה'}
       </Text>
       <TouchableOpacity onPress={onToggle} style={styles.switchButton}>
         <FontAwesome name="exchange" size={20} color="#007AFF" />
       </TouchableOpacity>
       <Text style={styles.label}>
-        {isReversed ? 'נ.צ + גובה' : 'אזימוט + טווח + זהר'}
+        {isReversed ? 'נ.צ + גובה' : 'אזימוט + טווח + זוה״ר'}
       </Text>
     </View>
   );

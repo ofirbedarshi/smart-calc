@@ -62,7 +62,7 @@ export default function CoordinateConversion() {
       keyboardType: 'numeric' as const,
     },
     {
-      label: 'זוהר',
+      label: 'זוה״ר',
       value: elevation,
       onChange: setElevation,
       keyboardType: 'numeric' as const,
@@ -97,7 +97,7 @@ export default function CoordinateConversion() {
         value: results.distance,
       },
       {
-        label: 'זוהר',
+        label: 'זוה״ר',
         value: results.elevation,
       },
     ];
@@ -111,7 +111,7 @@ export default function CoordinateConversion() {
     if (isReversed) {
       if (!azimuth) return 'חסר אזימוט';
       if (!distance) return 'חסר טווח';
-      if (!elevation) return 'חסר זוהר';
+      if (!elevation) return 'חסר זוה״ר';
     } else {
       if (!coordsData.eastCoord) return 'חסר נ.צ מזרחי';
       if (!coordsData.northCoord) return 'חסר נ.צ צפוני';
@@ -189,7 +189,7 @@ export default function CoordinateConversion() {
           isReversed={isReversed}
           onToggle={() => setIsReversed(!isReversed)}
           leftLabel="נ.צ + גובה"
-          rightLabel="אזימוט + טווח + זהר"
+          rightLabel="אזימוט + טווח + זוה״ר"
         />
         {isReversed ? <GroupInput fields={getAzimuthFields()} /> : <CoordsInput initialData={coordsData} onChange={setCoordsData} />}
       </InputCard>

@@ -24,7 +24,9 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange }) 
       setOpen={setOpen}
       setValue={(callback) => {
         const newValue = typeof callback === 'function' ? callback(value) : callback;
-        onChange(newValue);
+        if (newValue) {
+          onChange(newValue);
+        }
       }}
       style={styles.dropdown}
       textStyle={styles.dropdownText}
@@ -34,8 +36,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange }) 
       selectedItemLabelStyle={styles.selectedItemLabel}
       placeholder="בחר..."
       placeholderStyle={styles.placeholder}
-      zIndex={3000}
-      zIndexInverse={1000}
+      listMode="SCROLLVIEW"
     />
   );
 };
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     minHeight: 40,
+    zIndex: 1000,
   },
   dropdownText: {
     fontSize: 14,
@@ -58,6 +60,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 6,
+    zIndex: 1000,
   },
   listItemContainer: {
     height: 40,

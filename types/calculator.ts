@@ -4,6 +4,7 @@ export interface CalculatorField {
   onChange?: (value: string) => void;
   keyboardType?: 'numeric' | 'default';
   prefixLength?: number;
+  disabled?: boolean;
 }
 
 export interface CalculatorResults {

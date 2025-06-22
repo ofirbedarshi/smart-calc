@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import Button from '../../../components/common/Button';
 import { Dropdown } from '../../../components/common/Dropdown';
@@ -11,6 +10,12 @@ import { StainSizeCalc } from '../../../services/calculators/StainSizeCalc';
 import { CalculatorField } from '../../../types/calculator';
 
 type WeaponType = 'rattle' | 'bush' | 'spectro' | 'pop';
+
+const WEAPON_CONSTANTS = {
+  bush: { divergence: '13', selfDiameter: '9' },
+  spectro: { divergence: '16.5', selfDiameter: '4.3' },
+  pop: { divergence: '33', selfDiameter: '1.8' },
+} as const;
 
 export default function StainSizeCalculation() {
   const [weaponType, setWeaponType] = useState<WeaponType>('rattle');
@@ -28,6 +33,28 @@ export default function StainSizeCalculation() {
     { label: 'פופ', value: 'pop' },
   ];
 
+  const handleWeaponTypeChange = (value: WeaponType) => {
+    setWeaponType(value);
+    setResult({ size: '' });
+    
+    // Auto-fill constants for non-rattle weapons
+    if (value !== 'rattle') {
+      const constants = WEAPON_CONSTANTS[value];
+      setInputs(prev => ({
+        ...prev,
+        divergence: constants.divergence,
+        selfDiameter: constants.selfDiameter,
+      }));
+    } else {
+      // Clear divergence and selfDiameter for rattle
+      setInputs(prev => ({
+        ...prev,
+        divergence: '',
+        selfDiameter: '',
+      }));
+    }
+  };
+
   const handleInputChange = (field: keyof typeof inputs, value: string) => {
     setInputs(prev => ({ ...prev, [field]: value }));
     setResult({ size: '' });
@@ -39,6 +66,7 @@ export default function StainSizeCalculation() {
       value: inputs.divergence,
       onChange: value => handleInputChange('divergence', value),
       keyboardType: 'numeric',
+      disabled: weaponType !== 'rattle',
     },
     {
       label: 'טווח - ק״מ',
@@ -51,6 +79,7 @@ export default function StainSizeCalculation() {
       value: inputs.selfDiameter,
       onChange: value => handleInputChange('selfDiameter', value),
       keyboardType: 'numeric',
+      disabled: weaponType !== 'rattle',
     },
   ];
 
@@ -82,10 +111,7 @@ export default function StainSizeCalculation() {
         <Dropdown
           options={weaponOptions}
           value={weaponType}
-          onChange={value => {
-            setWeaponType(value as WeaponType);
-            setResult({ size: '' });
-          }}
+          onChange={value => handleWeaponTypeChange(value as WeaponType)}
         />
         <GroupInput fields={getInputFields()} />
       </InputCard>
@@ -95,22 +121,4 @@ export default function StainSizeCalculation() {
       <ConversionResults title="תוצאות חישוב" fields={getResultFields()} />
     </ScreenWrapper>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 16,
-  },
-  dropdownContainer: {
-    marginHorizontal: 16,
-    marginVertical: 8,
-    alignItems: 'flex-end',
-  },
-}); 
+} 

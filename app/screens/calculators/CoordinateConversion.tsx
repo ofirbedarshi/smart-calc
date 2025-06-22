@@ -6,6 +6,7 @@ import Button from '../../../components/common/Button';
 import { CoordsData, CoordsInput } from '../../../components/common/CoordsInput';
 import { DirectionSwitcher } from '../../../components/common/DirectionSwitcher';
 import { GroupInput } from '../../../components/common/GroupInput';
+import Header from '../../../components/common/Header';
 import InputCard from '../../../components/common/InputCard';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { SelfLocation } from '../../../components/SelfLocation';
@@ -183,6 +184,7 @@ export default function CoordinateConversion() {
 
   return (
     <ScreenWrapper>
+      <Header title="המרת קואורדינטות" />
       <InputCard>
         <SelfLocation />
         <DirectionSwitcher

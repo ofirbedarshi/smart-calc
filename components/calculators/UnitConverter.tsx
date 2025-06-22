@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { DirectionSwitcher } from '../common/DirectionSwitcher';
 
 interface UnitConverterProps {
+  title: string;
   unit1Name: string;
   unit2Name: string;
   unit1ToUnit2Calc: (value: number) => number;
@@ -10,6 +11,7 @@ interface UnitConverterProps {
 }
 
 export const UnitConverter: React.FC<UnitConverterProps> = ({
+  title,
   unit1Name,
   unit2Name,
   unit1ToUnit2Calc,
@@ -50,6 +52,7 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>{title}</Text>
       <DirectionSwitcher
         isReversed={isReversed}
         onToggle={handleDirectionChange}
@@ -80,6 +83,12 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 16,
     paddingHorizontal: 16,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 12,
   },
   inputContainer: {
     marginTop: 8,

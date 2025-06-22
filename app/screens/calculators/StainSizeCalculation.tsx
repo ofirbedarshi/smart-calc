@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import Button from '../../../components/common/Button';
 import { Dropdown } from '../../../components/common/Dropdown';
 import { GroupInput } from '../../../components/common/GroupInput';
+import Header from '../../../components/common/Header';
+import InputCard from '../../../components/common/InputCard';
+import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { StainSizeCalc } from '../../../services/calculators/StainSizeCalc';
 import { CalculatorField } from '../../../types/calculator';
 
@@ -34,19 +37,19 @@ export default function StainSizeCalculation() {
     {
       label: 'התבדרות - ס״מ',
       value: inputs.divergence,
-      onChange: (value) => handleInputChange('divergence', value),
+      onChange: value => handleInputChange('divergence', value),
       keyboardType: 'numeric',
     },
     {
       label: 'טווח - ק״מ',
       value: inputs.range,
-      onChange: (value) => handleInputChange('range', value),
+      onChange: value => handleInputChange('range', value),
       keyboardType: 'numeric',
     },
     {
       label: 'קוטר עצמית - סנטימטר',
       value: inputs.selfDiameter,
-      onChange: (value) => handleInputChange('selfDiameter', value),
+      onChange: value => handleInputChange('selfDiameter', value),
       keyboardType: 'numeric',
     },
   ];
@@ -73,34 +76,24 @@ export default function StainSizeCalculation() {
   const isCalculateDisabled = !inputs.divergence || !inputs.range || !inputs.selfDiameter;
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>חישוב גודל כתם</Text>
-
-      <View style={styles.dropdownContainer}>
+    <ScreenWrapper>
+      <Header title="חישוב גודל כתם" />
+      <InputCard>
         <Dropdown
           options={weaponOptions}
           value={weaponType}
-          onChange={(value) => {
+          onChange={value => {
             setWeaponType(value as WeaponType);
             setResult({ size: '' });
           }}
         />
-      </View>
+        <GroupInput fields={getInputFields()} />
+      </InputCard>
 
-      <GroupInput fields={getInputFields()} />
+      <Button title="חישוב" onPress={handleCalculate} disabled={isCalculateDisabled} theme="primary" />
 
-      <Button
-        title="חישוב"
-        onPress={handleCalculate}
-        disabled={isCalculateDisabled}
-        theme="primary"
-      />
-
-      <ConversionResults
-        title="תוצאות חישוב"
-        fields={getResultFields()}
-      />
-    </ScrollView>
+      <ConversionResults title="תוצאות חישוב" fields={getResultFields()} />
+    </ScreenWrapper>
   );
 }
 

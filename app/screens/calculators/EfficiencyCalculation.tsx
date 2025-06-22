@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
 import Button from '../../../components/common/Button';
 import { GroupInput } from '../../../components/common/GroupInput';
+import Header from '../../../components/common/Header';
+import InputCard from '../../../components/common/InputCard';
+import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { EfficiencyCalc } from '../../../services/calculators/EfficiencyCalc';
 import { CalculatorField } from '../../../types/calculator';
 
@@ -22,13 +25,13 @@ export default function EfficiencyCalculation() {
     {
       label: 'סטייה (מטר)',
       value: inputs.deviation,
-      onChange: (value) => handleInputChange('deviation', value),
+      onChange: value => handleInputChange('deviation', value),
       keyboardType: 'numeric',
     },
     {
       label: 'טווח (קילומטר)',
       value: inputs.range,
-      onChange: (value) => handleInputChange('range', value),
+      onChange: value => handleInputChange('range', value),
       keyboardType: 'numeric',
     },
   ];
@@ -53,23 +56,14 @@ export default function EfficiencyCalculation() {
   const isCalculateDisabled = !inputs.deviation || !inputs.range;
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>חישוב יעילות</Text>
-
-      <GroupInput fields={getInputFields()} />
-
-      <Button
-        title="חישוב"
-        onPress={handleCalculate}
-        disabled={isCalculateDisabled}
-        theme="primary"
-      />
-
-      <ConversionResults
-        title="תוצאות חישוב"
-        fields={getResultFields()}
-      />
-    </ScrollView>
+    <ScreenWrapper>
+      <Header title="חישוב יעילות" />
+      <InputCard>
+        <GroupInput fields={getInputFields()} />
+      </InputCard>
+      <Button title="חישוב" onPress={handleCalculate} disabled={isCalculateDisabled} theme="primary" />
+      <ConversionResults title="תוצאות חישוב" fields={getResultFields()} />
+    </ScreenWrapper>
   );
 }
 

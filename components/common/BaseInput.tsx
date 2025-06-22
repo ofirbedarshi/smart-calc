@@ -17,6 +17,7 @@ export interface BaseInputProps {
   error?: string;
   onBlur?: () => void;
   onFocus?: () => void;
+  textArea?: boolean;
 }
 
 export const BaseInput: React.FC<BaseInputProps> = ({
@@ -33,6 +34,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
   error,
   onBlur,
   onFocus,
+  textArea = false,
 }) => {
   const handleInputChange = (text: string) => {
     if (type === 'number') {
@@ -48,6 +50,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
     style: [
       styles.mainInput,
       disabled && styles.inputDisabled,
+      textArea && styles.textArea,
     ],
     value,
     onChangeText: handleInputChange,
@@ -57,6 +60,8 @@ export const BaseInput: React.FC<BaseInputProps> = ({
     editable: !disabled,
     onBlur,
     onFocus,
+    multiline: textArea,
+    numberOfLines: textArea ? 4 : 1,
   };
 
   const prefixInputProps = {
@@ -172,6 +177,11 @@ const styles = StyleSheet.create({
     height: 40,
     paddingHorizontal: 12,
     fontSize: 16,
+  },
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top',
+    paddingTop: 12,
   },
   errorText: {
     color: '#ff3b30',

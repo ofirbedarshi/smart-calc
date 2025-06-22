@@ -166,6 +166,7 @@ const FieldSection: React.FC<FieldSectionProps> = ({ targetFields, isEditMode, o
       onChange={value => onFieldChange('notes', value)}
       editMode={isEditMode}
       placeholder="הזן הערות"
+      textArea={true}
     />
   </View>
 );

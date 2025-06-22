@@ -9,6 +9,7 @@ interface EditableDataProps extends BaseInputProps {
   editComponent?: React.ReactNode;
   disabled?: boolean;
   info?: string;
+  textArea?: boolean;
 }
 
 function cloneWithPropsIfSupported(element: React.ReactNode, props: any) {
@@ -26,6 +27,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
   editComponent,
   disabled = false,
   info,
+  textArea = false,
   ...props
 }) => {
   return (
@@ -41,6 +43,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
                 value={value}
                 {...props}
                 disabled={disabled}
+                textArea={textArea}
               />
             )
           ) : (

@@ -1,14 +1,10 @@
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import { Slot } from 'expo-router';
+import RootLayoutWrapper from '../components/common/RootLayoutWrapper';
 
 export default function RootLayout() {
   return (
-    <>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </>
+    <RootLayoutWrapper>
+      <Slot />
+    </RootLayoutWrapper>
   );
 }

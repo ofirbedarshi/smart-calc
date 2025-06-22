@@ -13,7 +13,6 @@ type TargetData = {
   coords: CoordsData;
   distance: string;
   elevation: string;
-  height: string;
 };
 
 export default function BackAzimuth() {
@@ -25,7 +24,6 @@ export default function BackAzimuth() {
     },
     distance: '',
     elevation: '',
-    height: '',
   });
 
   const [target2, setTarget2] = useState<TargetData>({
@@ -36,7 +34,6 @@ export default function BackAzimuth() {
     },
     distance: '',
     elevation: '',
-    height: '',
   });
 
   const [direction, setDirection] = useState<'right' | 'left'>('right');
@@ -95,7 +92,7 @@ export default function BackAzimuth() {
       eastCoord: parseFloat(target1.coords.eastCoord),
       distance: parseFloat(target1.distance),
       elevation: target1.elevation ? parseFloat(target1.elevation) : undefined,
-      height: target1.height ? parseFloat(target1.height) : undefined,
+      height: target1.coords.height ? parseFloat(target1.coords.height) : undefined,
     };
 
     const target2Data = {
@@ -103,7 +100,7 @@ export default function BackAzimuth() {
       eastCoord: parseFloat(target2.coords.eastCoord),
       distance: parseFloat(target2.distance),
       elevation: target2.elevation ? parseFloat(target2.elevation) : undefined,
-      height: target2.height ? parseFloat(target2.height) : undefined,
+      height: target2.coords.height ? parseFloat(target2.coords.height) : undefined,
     };
 
     const result = BackAzimuthCalc.calculateSelfLocation(target1Data, target2Data, direction);
@@ -136,8 +133,6 @@ export default function BackAzimuth() {
           onDistanceChange={value => handleTarget1FieldChange('distance', value)}
           elevation={target1.elevation}
           onElevationChange={value => handleTarget1FieldChange('elevation', value)}
-          height={target1.height}
-          onHeightChange={value => handleTarget1FieldChange('height', value)}
         />
       </InputCard>
 
@@ -158,8 +153,6 @@ export default function BackAzimuth() {
           onDistanceChange={value => handleTarget2FieldChange('distance', value)}
           elevation={target2.elevation}
           onElevationChange={value => handleTarget2FieldChange('elevation', value)}
-          height={target2.height}
-          onHeightChange={value => handleTarget2FieldChange('height', value)}
         />
       </InputCard>
 

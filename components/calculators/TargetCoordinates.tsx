@@ -11,8 +11,6 @@ interface TargetCoordinatesProps {
   onDistanceChange: (value: string) => void;
   elevation?: string;
   onElevationChange?: (value: string) => void;
-  height?: string;
-  onHeightChange?: (value: string) => void;
 }
 
 export const TargetCoordinates: React.FC<TargetCoordinatesProps> = ({
@@ -23,8 +21,6 @@ export const TargetCoordinates: React.FC<TargetCoordinatesProps> = ({
   onDistanceChange,
   elevation,
   onElevationChange,
-  height,
-  onHeightChange,
 }) => {
   return (
     <View style={styles.container}>
@@ -50,17 +46,7 @@ export const TargetCoordinates: React.FC<TargetCoordinatesProps> = ({
             value={elevation || ''}
             onChange={onElevationChange}
             type="number"
-            placeholder="הזן זוה״ר"
-          />
-        )}
-
-        {onHeightChange && (
-          <BaseInput
-            label="גובה (מטרים) (אופציונלי)"
-            value={height || ''}
-            onChange={onHeightChange}
-            type="number"
-            placeholder="הזן גובה"
+            placeholder="הזן זוהר"
           />
         )}
       </View>

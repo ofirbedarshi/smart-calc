@@ -43,8 +43,10 @@ export const UnitConverter: React.FC<UnitConverterProps> = ({
 
   const handleDirectionChange = () => {
     setIsReversed(!isReversed);
-    setInputValue('');
-    setResult('');
+    const currentValue = inputValue;
+    const currentResult = result;
+    setInputValue(currentResult);
+    setResult(currentValue);
   };
 
   const inputPlaceholder = isReversed ? unit2Name : unit1Name;

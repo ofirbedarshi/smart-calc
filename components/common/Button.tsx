@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Keyboard, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface ButtonProps {
   title: string;
@@ -26,8 +26,13 @@ const Button: React.FC<ButtonProps> = ({ title, onPress, disabled, theme = 'prim
     small && styles.smallButtonText,
   ];
 
+  const handlePress = () => {
+    Keyboard.dismiss();
+    onPress();
+  };
+
   return (
-    <TouchableOpacity style={buttonStyle} onPress={onPress} disabled={disabled}>
+    <TouchableOpacity style={buttonStyle} onPress={handlePress} disabled={disabled}>
       <Text style={textStyle}>{title}</Text>
     </TouchableOpacity>
   );

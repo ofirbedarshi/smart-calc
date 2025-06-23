@@ -13,11 +13,10 @@ interface StainSizeResult {
 
 export class StainSizeCalc {
   static calculateStainSize(input: StainSizeInput): StainSizeResult {
-    // TODO: Implement actual calculation
-    // For now, return a random number between 1 and 1000
-    const randomSize = (Math.random() * 1000).toFixed(2);
+    const { divergence, range, selfDiameter } = input;
+    const size = 1.5 * ((range*divergence) + selfDiameter);
     return {
-      size: randomSize
+      size: size.toFixed(2)
     };
   }
 } 

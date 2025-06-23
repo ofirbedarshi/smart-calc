@@ -9,6 +9,7 @@ import Header from '../../../components/common/Header';
 import InputCard from '../../../components/common/InputCard';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { BackAzimuthCalc } from '../../../services/calculators/BackAzimuthCalc';
+import { useLocationStore } from '../../../stores/locationStore';
 
 type TargetData = {
   coords: CoordsData;
@@ -39,6 +40,8 @@ export default function BackAzimuth() {
 
   const [direction, setDirection] = useState<'right' | 'left'>('right');
   const [results, setResults] = useState({ northCoord: '', eastCoord: '', height: '' });
+
+  const saveLocation = useLocationStore(state => state.saveLocation);
 
   const handleTarget1CoordsChange = (coords: CoordsData) => {
     setTarget1(prev => ({ ...prev, coords }));
@@ -127,6 +130,19 @@ export default function BackAzimuth() {
 
   const hasResults = results.northCoord && results.eastCoord && results.height;
 
+  const handleSaveSelfLocation = async () => {
+    try {
+      await saveLocation({
+        northCoord: results.northCoord,
+        eastCoord: results.eastCoord,
+        height: results.height,
+      });
+      Alert.alert('הצלחה', 'המיקום העצמי עודכן בהצלחה');
+    } catch (e) {
+      Alert.alert('שגיאה', 'אירעה שגיאה בעדכון המיקום העצמי');
+    }
+  };
+
   return (
     <ScreenWrapper>
       <Header title="חיתוך לאחור" />
@@ -166,7 +182,7 @@ export default function BackAzimuth() {
 
       <ConversionResults title="תוצאות חישוב" fields={getResultFields()} />
 
-      {hasResults && <Button title="שמור כמיקום עצמי" onPress={() => {}} theme="success" />}
+      {hasResults && <Button title="שמור כמיקום עצמי" onPress={handleSaveSelfLocation} theme="success" />}
     </ScreenWrapper>
   );
 } 

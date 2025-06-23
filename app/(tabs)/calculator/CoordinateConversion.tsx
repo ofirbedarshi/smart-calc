@@ -165,7 +165,7 @@ export default function CoordinateConversion() {
     };
 
     router.push({
-      pathname: '/screens/targetList/TargetDetails',
+      pathname: '/TargetsList/TargetDetails',
       params: {
         target: JSON.stringify(target),
       },

@@ -43,8 +43,8 @@ export const CoordsInput: React.FC<CoordsInputProps> = ({
   };
 
   const validateHeight = (value: string) => {
-    if (!value) return 'גובה הוא שדה חובה';
-    if (!/^\d+(\.\d+)?$/.test(value)) return 'גובה חייב להיות מספר';
+    if (!value || value.trim() === "") return 'גובה הוא שדה חובה';
+    if (isNaN(Number(value))) return 'גובה חייב להיות מספר';
     return true;
   };
 

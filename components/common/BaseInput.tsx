@@ -38,7 +38,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
 }) => {
   const handleInputChange = (text: string) => {
     if (type === 'number') {
-      const numericValue = text.replace(/[^0-9.]/g, '');
+      const numericValue = text.replace(/[^0-9.-]/g, '');
       onChange(numericValue);
     } else {
       onChange(text);

@@ -11,40 +11,62 @@ export interface ConversionResults {
 
 export class CoordsConversionCalc {
   static calc(source: LocationData, target: LocationData): ConversionResults {
-    const sourceCoords = this.parseAndValidateLocation(source);
-    const targetCoords = this.parseAndValidateLocation(target);
+    const E_self = parseFloat(source.eastCoord);
+    const N_self = parseFloat(source.northCoord);
+    const H_self = parseFloat(source.height);
+    const E_target = parseFloat(target.eastCoord);
+    const N_target = parseFloat(target.northCoord);
+    const H_target = parseFloat(target.height);
 
-    const dx = targetCoords.eastCoord - sourceCoords.eastCoord;
-    const dy = targetCoords.northCoord - sourceCoords.northCoord;
-    const dz = targetCoords.height - sourceCoords.height;
+    const dE = E_target - E_self;
+    const dN = N_target - N_self;
+    const dH = H_target - H_self;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const azimuth = this.calculateAzimuth(dx, dy);
-    const elevation = this.calculateElevation(distance, dz);
+    // 3D range
+    const range = Math.sqrt(dE ** 2 + dN ** 2 + dH ** 2);
+
+    // Azimuth in radians
+    let theta = Math.atan2(dE, dN);
+    if (theta < 0) theta += 2 * Math.PI;
+    const azimuth_mil = (theta / (2 * Math.PI)) * 6400;
+
+    // Zohar (elevation angle) in mils
+    const horizontal_distance = Math.sqrt(dE ** 2 + dN ** 2);
+    const phi = Math.atan2(dH, horizontal_distance);
+    const zohar_mil = (phi / (2 * Math.PI)) * 6400;
 
     return {
-      azimuth: azimuth.toFixed(2),
-      distance: distance.toFixed(2),
-      elevation: elevation.toFixed(2),
+      azimuth: azimuth_mil.toFixed(2),
+      distance: range.toFixed(2),
+      elevation: zohar_mil.toFixed(2),
+      eastCoord: '',
+      northCoord: '',
+      height: '',
     };
   }
 
   static calcReverse(source: LocationData, target: { azimuth: string; distance: string; elevation: string }): ConversionResults {
     const sourceCoords = this.parseAndValidateLocation(source);
-    const targetValues = this.parseAndValidateTarget(target);
+    const azimuthMil = parseFloat(target.azimuth);
+    const rangeM = parseFloat(target.distance);
+    const zoharMil = parseFloat(target.elevation);
 
-    const azimuthRad = (targetValues.azimuth * Math.PI) / 180;
-    const elevationRad = (targetValues.elevation * Math.PI) / 180;
+    // Convert mils to radians
+    const theta = (azimuthMil / 6400) * 2 * Math.PI;
+    const phi = (zoharMil / 6400) * 2 * Math.PI;
 
-    const horizontalDistance = targetValues.distance * Math.cos(elevationRad);
-    const verticalDistance = targetValues.distance * Math.sin(elevationRad);
+    // Horizontal range (XY) and height change
+    const R_xy = rangeM * Math.cos(phi);
+    const dH = rangeM * Math.sin(phi);
 
-    const dx = horizontalDistance * Math.sin(azimuthRad);
-    const dy = horizontalDistance * Math.cos(azimuthRad);
+    // Easting and Northing components
+    const dE = R_xy * Math.sin(theta);
+    const dN = R_xy * Math.cos(theta);
 
-    const targetEastCoord = sourceCoords.eastCoord + dx;
-    const targetNorthCoord = sourceCoords.northCoord + dy;
-    const targetHeight = sourceCoords.height + verticalDistance;
+    // Compute target coordinates
+    const targetEastCoord = sourceCoords.eastCoord + dE;
+    const targetNorthCoord = sourceCoords.northCoord + dN;
+    const targetHeight = sourceCoords.height + dH;
 
     return {
       azimuth: target.azimuth,

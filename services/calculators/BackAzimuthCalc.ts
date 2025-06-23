@@ -3,12 +3,13 @@ interface TargetCoordinates {
   eastCoord: number;
   distance: number;
   elevation?: number;
-  height?: number;
+  height: number;
 }
 
 interface SelfLocationResult {
   northCoord: string;
   eastCoord: string;
+  height: string;
 }
 
 export class BackAzimuthCalc {
@@ -21,7 +22,8 @@ export class BackAzimuthCalc {
     // For now, return constant values
     return {
       northCoord: '123456.789',
-      eastCoord: '987654.321'
+      eastCoord: '987654.321',
+      height: '250.00',
     };
   }
 } 

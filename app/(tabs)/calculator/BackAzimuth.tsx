@@ -38,26 +38,26 @@ export default function BackAzimuth() {
   });
 
   const [direction, setDirection] = useState<'right' | 'left'>('right');
-  const [results, setResults] = useState({ northCoord: '', eastCoord: '' });
+  const [results, setResults] = useState({ northCoord: '', eastCoord: '', height: '' });
 
   const handleTarget1CoordsChange = (coords: CoordsData) => {
     setTarget1(prev => ({ ...prev, coords }));
-    setResults({ northCoord: '', eastCoord: '' });
+    setResults({ northCoord: '', eastCoord: '', height: '' });
   };
 
   const handleTarget2CoordsChange = (coords: CoordsData) => {
     setTarget2(prev => ({ ...prev, coords }));
-    setResults({ northCoord: '', eastCoord: '' });
+    setResults({ northCoord: '', eastCoord: '', height: '' });
   };
 
   const handleTarget1FieldChange = (field: keyof Omit<TargetData, 'coords'>, value: string) => {
     setTarget1(prev => ({ ...prev, [field]: value }));
-    setResults({ northCoord: '', eastCoord: '' });
+    setResults({ northCoord: '', eastCoord: '', height: '' });
   };
 
   const handleTarget2FieldChange = (field: keyof Omit<TargetData, 'coords'>, value: string) => {
     setTarget2(prev => ({ ...prev, [field]: value }));
-    setResults({ northCoord: '', eastCoord: '' });
+    setResults({ northCoord: '', eastCoord: '', height: '' });
   };
 
   const getResultFields = () => [
@@ -68,6 +68,10 @@ export default function BackAzimuth() {
     {
       label: 'נ.צ מזרחי',
       value: results.eastCoord,
+    },
+    {
+      label: 'גובה',
+      value: results.height,
     },
   ];
 
@@ -121,7 +125,7 @@ export default function BackAzimuth() {
     { label: 'שמאלית', value: 'left' },
   ];
 
-  const hasResults = results.northCoord && results.eastCoord;
+  const hasResults = results.northCoord && results.eastCoord && results.height;
 
   return (
     <ScreenWrapper>
@@ -143,7 +147,7 @@ export default function BackAzimuth() {
         value={direction}
         onChange={value => {
           setDirection(value as 'right' | 'left');
-          setResults({ northCoord: '', eastCoord: '' });
+          setResults({ northCoord: '', eastCoord: '', height: '' });
         }}
       />
       <InputCard>
@@ -162,7 +166,7 @@ export default function BackAzimuth() {
 
       <ConversionResults title="תוצאות חישוב" fields={getResultFields()} />
 
-      {hasResults && <Button title="שמירה" onPress={() => {}} theme="success" />}
+      {hasResults && <Button title="שמור כמיקום עצמי" onPress={() => {}} theme="success" />}
     </ScreenWrapper>
   );
 } 

@@ -177,6 +177,8 @@ const styles = StyleSheet.create({
     height: 40,
     paddingHorizontal: 12,
     fontSize: 16,
+    textAlign: 'right',
+    writingDirection: 'rtl',
   },
   textArea: {
     height: 100,

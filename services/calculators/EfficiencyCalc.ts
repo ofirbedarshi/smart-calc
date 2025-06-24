@@ -10,17 +10,12 @@ interface EfficiencyResult {
 export class EfficiencyCalc {
   static calculateEfficiency(input: EfficiencyInput): EfficiencyResult {
     const { deviation, range } = input;
-    
-    // Formula: 20 * deviation / range
-    // Convert range from km to meters for consistent units
-    const rangeInMeters = range * 1000;
-    const efficiency = (20 * deviation) / rangeInMeters;
-    
-    // Convert back to kilometers and format to 3 decimal places
-    const efficiencyInKm = (efficiency * 1000).toFixed(3);
-    
+  
+    // Formula: (20 * range) / deviation
+    const efficiency = (20 * range) / deviation;
+  
     return {
-      efficiency: efficiencyInKm
+      efficiency: efficiency.toFixed(3)
     };
   }
 } 

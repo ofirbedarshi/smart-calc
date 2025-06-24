@@ -15,15 +15,21 @@ const WEAPON_CONSTANTS = {
   bush: { divergence: '13', selfDiameter: '9' },
   spectro: { divergence: '16.5', selfDiameter: '4.3' },
   pop: { divergence: '33', selfDiameter: '1.8' },
+  rattle: { selfDiameter: '3.6', divergence: '' },
 } as const;
+
+const getInitialInputsByWeaponType = (weaponType: WeaponType) => {
+  const constants = WEAPON_CONSTANTS[weaponType];
+  return {
+    range: '',
+    divergence: constants.divergence,
+    selfDiameter: constants.selfDiameter,
+  };
+};
 
 export default function StainSizeCalculation() {
   const [weaponType, setWeaponType] = useState<WeaponType>('rattle');
-  const [inputs, setInputs] = useState({
-    divergence: '',
-    range: '',
-    selfDiameter: '',
-  });
+  const [inputs, setInputs] = useState(getInitialInputsByWeaponType(weaponType));
   const [result, setResult] = useState({ size: '' });
 
   const weaponOptions = [
@@ -37,23 +43,10 @@ export default function StainSizeCalculation() {
     setWeaponType(value);
     setResult({ size: '' });
     
-    // Auto-fill constants for non-rattle weapons
-    if (value !== 'rattle') {
-      const constants = WEAPON_CONSTANTS[value];
-      setInputs(prev => ({
-        ...prev,
-        divergence: constants.divergence,
-        selfDiameter: constants.selfDiameter,
-      }));
-    } else {
-      // Clear divergence and selfDiameter for rattle
-      setInputs(prev => ({
-        ...prev,
-        divergence: '',
-        selfDiameter: '',
-      }));
-    }
+    setInputs(getInitialInputsByWeaponType(value));
   };
+
+ 
 
   const handleInputChange = (field: keyof typeof inputs, value: string) => {
     setInputs(prev => ({ ...prev, [field]: value }));
@@ -79,7 +72,7 @@ export default function StainSizeCalculation() {
       value: inputs.selfDiameter,
       onChange: value => handleInputChange('selfDiameter', value),
       keyboardType: 'numeric',
-      disabled: weaponType !== 'rattle',
+      disabled: true,
     },
   ];
 

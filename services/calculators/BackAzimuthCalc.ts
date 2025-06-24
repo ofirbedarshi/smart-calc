@@ -21,8 +21,8 @@ export class BackAzimuthCalc {
     const toRad = (mil: number) => mil * (Math.PI / 3200);
 
     // Define "right" and "left" targets
-    const right = direction === 'right' ? target1 : target2;
-    const left = direction === 'right' ? target2 : target1;
+    const right = direction === 'right' ? target2 : target1;
+    const left = direction === 'right' ? target1 : target2;
 
     const x1 = right.eastCoord;
     const y1 = right.northCoord;

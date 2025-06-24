@@ -65,7 +65,7 @@ export default function TargetsList() {
 
   return (
     <View style={styles.container}>
-      <SearchBar onSearch={handleSearch} placeholder="חפש לפי שם או תיאור..." />
+      <SearchBar onSearch={handleSearch} placeholder="חפש לפי שם, תיאור או נ.צ..." />
       <TargetFilters value={isAttackedFilter} onFilterChange={handleFilterChange} />
       {sortedTargets.length === 0 ? (
         <Text style={styles.empty}>לא נמצאו מטרות</Text>

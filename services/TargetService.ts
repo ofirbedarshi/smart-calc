@@ -88,7 +88,9 @@ export const TargetService = {
       const lowerQuery = query.toLowerCase();
       targets = targets.filter(t =>
         (t.name && t.name.toLowerCase().includes(lowerQuery)) ||
-        (t.description && t.description.toLowerCase().includes(lowerQuery))
+        (t.description && t.description.toLowerCase().includes(lowerQuery)) ||
+        (t.northCoord && t.northCoord.toLowerCase().includes(lowerQuery)) ||
+        (t.eastCoord && t.eastCoord.toLowerCase().includes(lowerQuery))
       );
     }
     if (isAttacked !== 'הכל') {

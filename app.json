@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ofirbed2.smartcalc"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,14 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.ofirbed2.smartcalc",
-      "supportsRtl": false
+      "supportsRtl": false,
+      "manifest": {
+        "application": {
+          "attributes": {
+            "android:supportsRtl": "false"
+          }
+        }
+      }
     },
     "web": {
       "bundler": "metro",

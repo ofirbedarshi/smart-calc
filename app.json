@@ -20,6 +20,7 @@
       "edgeToEdgeEnabled": true,
       "package": "com.ofirbed2.smartcalc",
       "supportsRtl": false,
+      "usesCleartextTraffic": true,
       "manifest": {
         "application": {
           "attributes": {

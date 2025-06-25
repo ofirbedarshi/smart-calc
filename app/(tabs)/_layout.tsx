@@ -38,6 +38,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="library"
+        options={{
+          title: 'ספרייה',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="book" size={size} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

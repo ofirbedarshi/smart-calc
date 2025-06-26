@@ -9,7 +9,9 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "build:android": "rm -rf android .expo .expo-shared && npx expo prebuild && node scripts/disableRtl.js && npx expo run:android --variant release && mkdir -p builds && cp android/app/build/outputs/apk/release/app-release.apk builds/smart-calc.apk && echo '✅ APK saved to ./builds/smart-calc.apk'"
+    "build:android": "rm -rf android .expo .expo-shared && npx expo prebuild && node scripts/disableRtl.js && npx expo run:android --variant release && mkdir -p builds && cp android/app/build/outputs/apk/release/app-release.apk builds/smart-calc.apk && echo '✅ APK saved to ./builds/smart-calc.apk'",
+    "dev:all": "concurrently \"expo start\" \"npm run dev:web\"",
+    "dev:web": "cd web-library && npm run dev -- --host"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -53,6 +55,7 @@
     "@babel/core": "^7.25.2",
     "@types/react": "~19.0.10",
     "@types/uuid": "^10.0.0",
+    "concurrently": "^9.2.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "typescript": "~5.8.3"

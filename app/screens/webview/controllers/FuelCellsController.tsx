@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import type { WebView as WebViewType } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
-import fuelCellHtml from '../pages/fuelCellHtml';
+import { fuelCellHtml } from '../pages/fuelCellHtml';
 
 const isAndroid = Platform.OS === 'android';
 const WEBAPP_URL = isAndroid ? 'http://192.168.1.101:5173/fuel-cells' : 'http://localhost:5173/fuel-cells';

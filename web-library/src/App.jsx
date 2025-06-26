@@ -175,7 +175,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Editor />} />
+        <Route path="/" element={ <EditorPage/>} />
         <Route path="/fuel-cells" element={<FuelCellsScreen />} />
       </Routes>
     </BrowserRouter>

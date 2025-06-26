@@ -12,7 +12,7 @@ const ACCORDION_HTML = `
     padding: 1.5rem;
     margin: 1rem 0;
     transition: all 0.3s ease;
-    position: relative;" open>
+    position: relative;">
   <summary style="
       font-size: 1.2rem;
       font-weight: 600;

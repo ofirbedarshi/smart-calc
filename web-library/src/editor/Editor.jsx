@@ -1,8 +1,5 @@
-// TinyMCE-based rich text editor with custom controls for checkboxes and accordions. Includes a toggle for read/edit mode and a save button that logs HTML content.
-import { Editor } from '@tinymce/tinymce-react';
-import React, { useRef, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import FuelCellsScreen from './screens/FuelCellsScreen';
+import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
+import React, { useRef } from 'react';
 
 // --- Constants ---
 const ACCORDION_HTML = `
@@ -112,38 +109,23 @@ function setupTinyMCE(editor) {
   editor.on('click', (e) => handleCheckboxClick(editor, e));
 }
 
-// --- Main App Component ---
-function FuelCellsPage() {
-  return (
-    <div style={{ maxWidth: 600, margin: '40px auto', textAlign: 'right', direction: 'rtl', fontSize: 24 }}>
-      hello world
-    </div>
-  );
-}
-
-function EditorPage() {
-  const [value, setValue] = useState('<p>Start editing...</p>');
-  const [showRead, setShowRead] = useState(false); // Toggle between editor and read
+export default function Editor({ showRead = false, content, onChange }) {
   const editorRef = useRef(null);
 
   return (
     <div>
       <div style={{ maxWidth: 600, margin: '40px auto' }}>
-        {/* Toggle read/editor mode */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-          <button onClick={() => setShowRead((prev) => !prev)}>
-            {showRead ? 'ערוך' : 'תצוגה'}
-          </button>
-          {/* Save button */}
-          {!showRead && (
-            <button onClick={() => console.log(value)}>שמור</button>
-          )}
-        </div>
+        {/* Save button */}
+        {!showRead && (
+          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+            <button onClick={() => console.log(content)}>שמור</button>
+          </div>
+        )}
         {/* Editor or Read component */}
         {!showRead ? (
-          <Editor
-            value={value}
-            onEditorChange={setValue}
+          <TinyMCEEditor
+            value={content}
+            onEditorChange={onChange}
             onInit={(evt, editor) => (editorRef.current = editor)}
             tinymceScriptSrc={'/tinymce/tinymce.min.js'}
             init={{
@@ -164,22 +146,12 @@ function EditorPage() {
             }}
           />
         ) : (
-          <div style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8 }} />
+          <div
+            style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right' }}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         )}
       </div>
     </div>
   );
-}
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Editor />} />
-        <Route path="/fuel-cells" element={<FuelCellsScreen />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
-
-export default App;
+} 

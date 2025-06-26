@@ -1,7 +1,7 @@
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
 import { Button, View } from 'react-native';
-import FuelCellsScreen from './FuelCellsScreen';
+import FuelCellsController from '../webview/controllers/FuelCellsController';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +25,7 @@ export default function LibraryNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="LibraryMain" component={MainLibraryScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="FuelCells" component={FuelCellsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="FuelCells" component={FuelCellsController} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 } 

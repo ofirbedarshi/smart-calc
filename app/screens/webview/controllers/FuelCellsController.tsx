@@ -2,19 +2,19 @@ import React, { useRef, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import type { WebView as WebViewType } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
+import fuelCellHtml from '../pages/fuelCellHtml';
 
 const isAndroid = Platform.OS === 'android';
 const WEBAPP_URL = isAndroid ? 'http://192.168.1.101:5173/fuel-cells' : 'http://localhost:5173/fuel-cells';
 
-export default function FuelCellsScreen() {
+function FuelCellsController() {
   const webViewRef = useRef<WebViewType>(null);
-  const htmlContent = '<p>הדגמה של תאי דלק</p>';
   // Only keep logs in state for debugging, not shown in UI
   const [logs, setLogs] = useState('');
 
   const sendContentToWeb = () => {
     setLogs((prev) => prev + '\nSending content to webapp');
-    const message = JSON.stringify({ type: 'SET_CONTENT', html: htmlContent });
+    const message = JSON.stringify({ type: 'SET_CONTENT', html: fuelCellHtml });
     webViewRef.current?.postMessage(message);
   };
 
@@ -42,6 +42,8 @@ export default function FuelCellsScreen() {
     </View>
   );
 }
+
+export default FuelCellsController;
 
 const styles = StyleSheet.create({
   container: {

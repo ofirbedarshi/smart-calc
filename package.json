@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "build:android": "rm -rf android .expo .expo-shared && npx expo prebuild && node scripts/disableRtl.js && npx expo run:android --variant release && mkdir -p builds && cp android/app/build/outputs/apk/release/app-release.apk builds/smart-calc.apk && echo '✅ APK saved to ./builds/smart-calc.apk'",
-    "dev:all": "concurrently \"expo start\" \"npm run dev:web\"",
+    "dev:all": "concurrently \"expo start -- --tunnel\" \"npm run dev:web\"",
     "dev:web": "cd web-library && npm run dev -- --host"
   },
   "dependencies": {

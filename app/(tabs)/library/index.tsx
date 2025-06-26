@@ -5,7 +5,7 @@ import { WebView } from 'react-native-webview';
 const isAndroid = Platform.OS === 'android';
 
 // For development, use your machine's local IP address.
-const DEV_URL = isAndroid ? 'http://192.168.1.101:5173' : 'http://localhost:5173';
+const DEV_URL = isAndroid ? 'http://192.168.1.134:5173' : 'http://localhost:5173';
 
 export default function LibraryScreen() {
   return (

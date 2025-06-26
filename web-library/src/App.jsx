@@ -61,7 +61,7 @@ function App() {
               'lists', 'table', 'advlist', 'checklist'
             ],
             toolbar:
-              'undo redo | blocks | bold underline | bullist numlist checklist | insert2x2table insertCheckbox insertAccordion',
+              'undo redo | blocks | bold underline | bullist numlist checklist | insert2x2table insertCheckbox insertAccordion removeAccordion',
             branding: false,
             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px; color: #000; direction: rtl; }',
             directionality: 'rtl',
@@ -128,6 +128,28 @@ function App() {
   </div>
 </details>
                   `);
+                },
+              });
+              // Add custom remove accordion button
+              editor.ui.registry.addButton('removeAccordion', {
+                text: 'מחק אקורדיון',
+                tooltip: 'מחק את האקורדיון הקרוב',
+                onAction: () => {
+                  const editor = editorRef.current;
+                  if (!editor) return;
+                  const node = editor.selection ? editor.selection.getNode() : null;
+                  if (!node) return;
+                  // Find the closest <details> ancestor
+                  let detailsNode = node;
+                  while (detailsNode && detailsNode.nodeName.toLowerCase() !== 'details') {
+                    detailsNode = detailsNode.parentNode;
+                  }
+                  if (detailsNode && detailsNode.nodeName.toLowerCase() === 'details') {
+                    detailsNode.parentNode.removeChild(detailsNode);
+                    // Update the editor content
+                    const newContent = editor.getContent();
+                    editor.setContent(newContent);
+                  }
                 },
               });
             },

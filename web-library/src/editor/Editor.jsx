@@ -109,48 +109,49 @@ function setupTinyMCE(editor) {
   editor.on('click', (e) => handleCheckboxClick(editor, e));
 }
 
-export default function Editor({ showRead = false, content, onChange }) {
+export default function Editor({ content, onChange, readOnly = false }) {
   const editorRef = useRef(null);
+
+  if (readOnly) {
+    return (
+      <div style={{ maxWidth: 600, margin: '40px auto' }}>
+        <div
+          style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
+      </div>
+    );
+  }
+
+  // Build TinyMCE init config for edit mode
+  const editorInit = {
+    height: 300,
+    menubar: false,
+    plugins: [
+      'lists', 'table', 'advlist', 'checklist'
+    ],
+    toolbar:
+      'undo redo | blocks | bold underline | bullist numlist checklist | insert2x2table insertCheckbox insertAccordion removeAccordion',
+    branding: false,
+    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px; color: #000; direction: rtl; }',
+    directionality: 'rtl',
+    mobile: {
+      theme: 'silver'
+    },
+    setup: setupTinyMCE,
+    readonly: 0,
+  };
 
   return (
     <div>
       <div style={{ maxWidth: 600, margin: '40px auto' }}>
-        {/* Save button */}
-        {!showRead && (
-          <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-            <button onClick={() => console.log(content)}>שמור</button>
-          </div>
-        )}
-        {/* Editor or Read component */}
-        {!showRead ? (
-          <TinyMCEEditor
-            value={content}
-            onEditorChange={onChange}
-            onInit={(evt, editor) => (editorRef.current = editor)}
-            tinymceScriptSrc={'/tinymce/tinymce.min.js'}
-            init={{
-              height: 300,
-              menubar: false,
-              plugins: [
-                'lists', 'table', 'advlist', 'checklist'
-              ],
-              toolbar:
-                'undo redo | blocks | bold underline | bullist numlist checklist | insert2x2table insertCheckbox insertAccordion removeAccordion',
-              branding: false,
-              content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px; color: #000; direction: rtl; }',
-              directionality: 'rtl',
-              mobile: {
-                theme: 'silver'
-              },
-              setup: setupTinyMCE,
-            }}
-          />
-        ) : (
-          <div
-            style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right' }}
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
-        )}
+        <TinyMCEEditor
+          value={content}
+          onEditorChange={onChange}
+          onInit={(evt, editor) => (editorRef.current = editor)}
+          tinymceScriptSrc={'/tinymce/tinymce.min.js'}
+          init={editorInit}
+        />
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export default function FuelCellsScreen() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0 }}>
-      <Editor showRead={true} content={content} onChange={setContent} />
+      <Editor content={content} onChange={setContent} readOnly />
     </div>
   );
 } 

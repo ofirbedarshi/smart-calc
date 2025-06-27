@@ -3,8 +3,7 @@ import React, { useRef } from 'react';
 
 // --- Constants ---
 const ACCORDION_HTML = `
-<details style="
-    width: 100%;
+<details open style="
     max-width: 600px;
     background: white;
     border-radius: 12px;
@@ -109,15 +108,22 @@ function setupTinyMCE(editor) {
   editor.on('click', (e) => handleCheckboxClick(editor, e));
 }
 
+function stripDetailsOpen(html) {
+  // Remove 'open' attribute from all <details ...> tags, regardless of attribute order
+  return html.replace(/(<details\b[^>]*?)\sopen(=(["'])?open\3)?/gi, '$1');
+}
+
 export default function Editor({ content, onChange, readOnly = false }) {
   const editorRef = useRef(null);
 
   if (readOnly) {
+    // Remove 'open' from all <details> tags for read mode
+    const safeContent = stripDetailsOpen(content);
     return (
       <div style={{ maxWidth: 600, margin: '40px auto' }}>
         <div
           style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: safeContent }}
         />
       </div>
     );

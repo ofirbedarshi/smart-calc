@@ -1,4 +1,4 @@
-const html = `<table style="border-collapse: collapse; width: 100%; direction: rtl; text-align: right;" border="1">
+const safeRangesHtml = `<table style="border-collapse: collapse; width: 100%; direction: rtl; text-align: right;" border="1">
 <thead>
 <tr style="background: #e6f0f5;">
 <th>גורם אש</th>
@@ -53,4 +53,4 @@ const html = `<table style="border-collapse: collapse; width: 100%; direction: r
 </tbody>
 </table>`;
 
-export { html };
+export { safeRangesHtml };

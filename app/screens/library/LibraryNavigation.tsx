@@ -3,21 +3,42 @@ import React from 'react';
 import { Button, View } from 'react-native';
 import GenericWebViewController from '../webview/controllers/GenericWebViewController';
 import { fuelCellHtml } from '../webview/pages/fuelCellHtml';
+import { safeRangesHtml } from '../webview/pages/safeRangesHtml';
 
 const Stack = createNativeStackNavigator();
 
+const contentScreens = [
+  {
+    navigationCtaLabel: 'תאי דלק',
+    storageKey: 'fuelCellContent',
+    fallbackHtml: fuelCellHtml,
+    routeName: 'FuelCells',
+  },
+  {
+    navigationCtaLabel: 'טווחי בטיחות',
+    storageKey: 'safeRangesContent',
+    fallbackHtml: safeRangesHtml,
+    routeName: 'safeRanges',
+  },
+  // Add more screens here as needed
+];
+
 type LibraryStackParamList = {
   LibraryMain: undefined;
-  FuelCells: undefined;
+} & {
+  [key: string]: undefined;
 };
 
 function MainLibraryScreen({ navigation }: { navigation: NativeStackNavigationProp<LibraryStackParamList, 'LibraryMain'> }) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button
-        title="תאי דלק"
-        onPress={() => navigation.navigate('FuelCells')}
-      />
+      {contentScreens.map(screen => (
+        <Button
+          key={screen.routeName}
+          title={screen.navigationCtaLabel}
+          onPress={() => navigation.navigate(screen.routeName)}
+        />
+      ))}
     </View>
   );
 }
@@ -26,16 +47,19 @@ export default function LibraryNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="LibraryMain" component={MainLibraryScreen} options={{ headerShown: false }} />
-      <Stack.Screen
-        name="FuelCells"
-        children={() => (
-          <GenericWebViewController
-            storageKey="fuelCellContent"
-            fallbackHtml={fuelCellHtml}
-          />
-        )}
-        options={{ headerShown: false }}
-      />
+      {contentScreens.map(screen => (
+        <Stack.Screen
+          key={screen.routeName}
+          name={screen.routeName}
+          children={() => (
+            <GenericWebViewController
+              storageKey={screen.storageKey}
+              fallbackHtml={screen.fallbackHtml}
+            />
+          )}
+          options={{ headerShown: false }}
+        />
+      ))}
     </Stack.Navigator>
   );
 } 

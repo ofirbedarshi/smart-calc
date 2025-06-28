@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, /* Text, */ View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import type { WebView as WebViewType } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
 import LibraryContentService from '../../../services/LibraryContentService';
 
 const WEBAPP_URL = Platform.OS === 'android'
-  ? 'http://192.168.1.101:5173/contentEditor'
-  : 'http://localhost:5173/contentEditor';
+  ? (__DEV__ ? 'http://192.168.1.101:5173/contentEditor' : 'file:///android_asset/web-content/index.html')
+  : (__DEV__ ? 'http://localhost:5173/contentEditor' : 'file:///web-content/index.html');
 
 interface GenericWebViewControllerProps {
   storageKey: string;
@@ -25,7 +25,7 @@ function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewCo
       try {
         const saved = await LibraryContentService.getContent(storageKey);
         setInitialHtml(saved || fallbackHtml);
-        setLogs((prev) => prev + '\nLoaded initial content');
+        setLogs((prev) => prev + '\nLoaded initial content 2');
       } catch (e) {
         setInitialHtml(fallbackHtml);
         setLogs((prev) => prev + '\nError loading content, using fallback');
@@ -67,12 +67,26 @@ function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewCo
   return (
     <View style={{ flex: 1 }}>
       {/* Logs for debugging, can be hidden in production */}
-      {/* <Text style={{ padding: 8, color: '#333', fontSize: 12 }}>{logs}</Text> */}
+      <Text style={{ padding: 8, color: '#333', fontSize: 12 }}>{logs}</Text>
       <WebView
         ref={webViewRef}
         style={styles.container}
         source={{ uri: WEBAPP_URL }}
         onMessage={handleWebViewMessage}
+        allowFileAccess={true}
+        allowUniversalAccessFromFileURLs={true}
+        allowFileAccessFromFileURLs={true}
+        mixedContentMode="always"
+        domStorageEnabled={true}
+        javaScriptEnabled={true}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          setLogs((prev) => prev + '\nWebView error: ' + nativeEvent.description);
+        }}
+        onHttpError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          setLogs((prev) => prev + '\nWebView HTTP error: ' + nativeEvent.statusCode);
+        }}
       />
     </View>
   );

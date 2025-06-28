@@ -25,6 +25,44 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## Offline Web Content
+
+This app includes a web-based content editor that works offline. The web content is built and bundled with the APK.
+
+### Building for Development
+
+To build the web content for development:
+
+```bash
+npm run build:web
+```
+
+This will:
+1. Build the webapp from `web-library/`
+2. Copy the built files to `assets/web-content/`
+3. Make the content available for offline use
+
+### Building for Production
+
+To build the complete Android APK with offline web content:
+
+```bash
+npm run build:android
+```
+
+This will:
+1. Build the webapp and copy it to assets
+2. Build the Android APK
+3. Save the APK to `builds/smart-calc.apk`
+
+### Web Content Structure
+
+- `web-library/` - Source code for the web-based content editor
+- `assets/web-content/` - Built web content (generated automatically, ignored by git)
+- The WebView loads from `file:///android_asset/web-content/index.html` on Android
+
+**Note**: The `assets/web-content/` directory is automatically generated and is in `.gitignore`. Run `npm run build:web` to generate it locally.
+
 ## Get a fresh project
 
 When you're ready, run:

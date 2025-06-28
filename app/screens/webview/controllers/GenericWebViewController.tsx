@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import type { WebView as WebViewType } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
 import LibraryContentService from '../../../services/LibraryContentService';
@@ -67,7 +67,7 @@ function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewCo
   return (
     <View style={{ flex: 1 }}>
       {/* Logs for debugging, can be hidden in production */}
-      <Text style={{ padding: 8, color: '#333', fontSize: 12 }}>{logs}</Text>
+      {/* <Text style={{ padding: 8, color: '#333', fontSize: 12 }}>{logs}</Text> */}
       <WebView
         ref={webViewRef}
         style={styles.container}
@@ -79,6 +79,8 @@ function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewCo
         mixedContentMode="always"
         domStorageEnabled={true}
         javaScriptEnabled={true}
+        scalesPageToFit={false}
+        bounces={false}
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
           setLogs((prev) => prev + '\nWebView error: ' + nativeEvent.description);

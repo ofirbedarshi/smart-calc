@@ -117,11 +117,13 @@ export default function Editor({ content, onChange, readOnly = false }) {
   const editorRef = useRef(null);
 
   if (readOnly) {
+    // Strip 'open' attribute from details elements in read mode
+    const strippedContent = stripDetailsOpen(content);
     return (
       <div style={{ height: '100vh', width: '100vw' }}>
         <div
           style={{ height: '100%', width: '100%', background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
-          dangerouslySetInnerHTML={{ __html: content }}
+          dangerouslySetInnerHTML={{ __html: strippedContent }}
         />
       </div>
     );
@@ -153,7 +155,7 @@ export default function Editor({ content, onChange, readOnly = false }) {
           value={content}
           onEditorChange={onChange}
           onInit={(evt, editor) => (editorRef.current = editor)}
-          tinymceScriptSrc={'/tinymce/tinymce.min.js'}
+          tinymceScriptSrc={'./tinymce/tinymce.min.js'}
           init={editorInit}
         />
       </div>

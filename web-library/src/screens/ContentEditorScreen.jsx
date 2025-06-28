@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Editor from '../editor/Editor';
 
-export default function FuelCellsScreen() {
+export default function ContentEditorScreen() {
   const [content, setContent] = useState('Loading...');
   const contentRef = useRef(content);
   // Only keep logs in state for debugging, not shown in UI

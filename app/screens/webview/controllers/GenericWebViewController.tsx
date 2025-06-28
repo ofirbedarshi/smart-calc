@@ -3,12 +3,17 @@ import { Platform, StyleSheet, View } from 'react-native';
 import type { WebView as WebViewType } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
 import LibraryContentService from '../../../services/LibraryContentService';
-import { fuelCellHtml } from '../pages/fuelCellHtml';
 
-const isAndroid = Platform.OS === 'android';
-const WEBAPP_URL = isAndroid ? 'http://192.168.1.101:5173/fuel-cells' : 'http://localhost:5173/fuel-cells';
+const WEBAPP_URL = Platform.OS === 'android'
+  ? 'http://192.168.1.101:5173/contentEditor'
+  : 'http://localhost:5173/contentEditor';
 
-function FuelCellsController() {
+interface GenericWebViewControllerProps {
+  storageKey: string;
+  fallbackHtml: string;
+}
+
+function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewControllerProps) {
   const webViewRef = useRef<WebViewType>(null);
   const [logs, setLogs] = useState('');
   const [initialHtml, setInitialHtml] = useState<string | null>(null);
@@ -18,15 +23,15 @@ function FuelCellsController() {
   useEffect(() => {
     (async () => {
       try {
-        const saved = await LibraryContentService.getContent('fuelCellContent');
-        setInitialHtml(saved || fuelCellHtml);
+        const saved = await LibraryContentService.getContent(storageKey);
+        setInitialHtml(saved || fallbackHtml);
         setLogs((prev) => prev + '\nLoaded initial content');
       } catch (e) {
-        setInitialHtml(fuelCellHtml);
+        setInitialHtml(fallbackHtml);
         setLogs((prev) => prev + '\nError loading content, using fallback');
       }
     })();
-  }, []);
+  }, [storageKey, fallbackHtml]);
 
   const sendContentToWeb = () => {
     if (!initialHtml) return;
@@ -44,7 +49,7 @@ function FuelCellsController() {
         setTimeout(sendContentToWeb, 0);
       }
       if (data && data.type === 'SAVE_CONTENT' && typeof data.html === 'string') {
-        await LibraryContentService.setContent('fuelCellContent', data.html);
+        await LibraryContentService.setContent(storageKey, data.html);
         setLogs((prev) => prev + '\nSaved content to LibraryContentService');
       }
     } catch (e) {
@@ -61,6 +66,8 @@ function FuelCellsController() {
 
   return (
     <View style={{ flex: 1 }}>
+      {/* Logs for debugging, can be hidden in production */}
+      {/* <Text style={{ padding: 8, color: '#333', fontSize: 12 }}>{logs}</Text> */}
       <WebView
         ref={webViewRef}
         style={styles.container}
@@ -71,7 +78,7 @@ function FuelCellsController() {
   );
 }
 
-export default FuelCellsController;
+export default GenericWebViewController;
 
 const styles = StyleSheet.create({
   container: {

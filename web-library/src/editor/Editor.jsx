@@ -132,7 +132,7 @@ export default function Editor({ content, onChange, readOnly = false }) {
   // Build TinyMCE init config for edit mode
   const editorInit = {
     ...{
-      height: 300,
+      height: 600,
     },
     menubar: false,
     plugins: [

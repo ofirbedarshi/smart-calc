@@ -117,13 +117,13 @@ export default function Editor({ content, onChange, readOnly = false }) {
   const editorRef = useRef(null);
 
   if (readOnly) {
-    // Strip 'open' attribute from details elements in read mode
-    const strippedContent = stripDetailsOpen(content);
+    // Remove 'open' from all <details> tags for read mode
+    const safeContent = stripDetailsOpen(content);
     return (
-      <div style={{ height: '100vh', width: '100vw' }}>
+      <div style={{ maxWidth: 600, margin: '40px auto' }}>
         <div
-          style={{ height: '100%', width: '100%', background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
-          dangerouslySetInnerHTML={{ __html: strippedContent }}
+          style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
+          dangerouslySetInnerHTML={{ __html: safeContent }}
         />
       </div>
     );
@@ -131,7 +131,9 @@ export default function Editor({ content, onChange, readOnly = false }) {
 
   // Build TinyMCE init config for edit mode
   const editorInit = {
-    height: '100%',
+    ...{
+      height: 300,
+    },
     menubar: false,
     plugins: [
       'lists', 'table', 'advlist', 'checklist'
@@ -149,8 +151,8 @@ export default function Editor({ content, onChange, readOnly = false }) {
   };
 
   return (
-    <div style={{ height: '100vh', width: '100vw' }}>
-      <div style={{ height: '100%', width: '100%' }}>
+    <div>
+      <div style={{ maxWidth: 600, margin: '40px auto' }}>
         <TinyMCEEditor
           value={content}
           onEditorChange={onChange}

@@ -5,8 +5,8 @@ import { WebView } from 'react-native-webview';
 import LibraryContentService from '../../../services/LibraryContentService';
 
 const WEBAPP_URL = Platform.OS === 'android'
-  ? (__DEV__ ? 'http://192.168.1.101:5173/contentEditor' : 'file:///android_asset/web-content/index.html')
-  : (__DEV__ ? 'http://localhost:5173/contentEditor' : 'file:///web-content/index.html');
+  ? (__DEV__ ? 'http://192.168.1.134:5173/' : 'file:///android_asset/web-content/index.html')
+  : (__DEV__ ? 'http://localhost:5173' : 'file:///web-content/index.html');
 
 interface GenericWebViewControllerProps {
   storageKey: string;
@@ -80,7 +80,24 @@ function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewCo
         domStorageEnabled={true}
         javaScriptEnabled={true}
         scalesPageToFit={false}
-        bounces={false}
+        setBuiltInZoomControls={false}
+        setDisplayZoomControls={false}
+        automaticallyAdjustContentInsets={false}
+        contentInsetAdjustmentBehavior="never"
+        onShouldStartLoadWithRequest={() => true}
+        injectedJavaScript={`
+          (function() {
+            if (window.visualViewport) {
+              window.visualViewport.scale = 1;
+            }
+            var viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+              viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            }
+            document.documentElement.style.zoom = '1';
+            document.body.style.zoom = '1';
+          })();
+        `}
         onError={(syntheticEvent) => {
           const { nativeEvent } = syntheticEvent;
           setLogs((prev) => prev + '\nWebView error: ' + nativeEvent.description);

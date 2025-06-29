@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import AdminModeModal from '../components/AdminModeModal';
 import Editor from '../editor/Editor';
 
 export default function ContentEditorScreen() {
@@ -7,6 +8,7 @@ export default function ContentEditorScreen() {
   // Only keep logs in state for debugging, not shown in UI
   const [logs, setLogs] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
   contentRef.current = content;
 
   useEffect(() => {
@@ -48,17 +50,54 @@ export default function ContentEditorScreen() {
     }
   };
 
+  const handleAdminApproved = () => {
+    setIsEditMode(true);
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <div style={{ maxWidth: 600, margin: '24px auto 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <button onClick={() => setIsEditMode((prev) => !prev)}>
-          {isEditMode ? 'תצוגה' : 'עריכה'}
+        <button 
+          onClick={() => {
+            if (isEditMode) {
+              setIsEditMode(false);
+            } else {
+              setShowAdminModal(true);
+            }
+          }}
+          style={{
+            padding: '8px 16px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            background: isEditMode ? '#f0f0f0' : 'white',
+            cursor: 'pointer'
+          }}
+        >
+          {isEditMode ? 'תצוגה' : 'ערוך'}
         </button>
         {isEditMode && (
-          <button onClick={handleSave}>שמור</button>
+          <button 
+            onClick={handleSave}
+            style={{
+              padding: '8px 16px',
+              border: 'none',
+              borderRadius: '4px',
+              background: '#1976d2',
+              color: 'white',
+              cursor: 'pointer'
+            }}
+          >
+            שמור
+          </button>
         )}
       </div>
       <Editor content={content} onChange={setContent} readOnly={!isEditMode} />
+      
+      <AdminModeModal
+        isOpen={showAdminModal}
+        onClose={() => setShowAdminModal(false)}
+        onAdminApproved={handleAdminApproved}
+      />
     </div>
   );
 } 

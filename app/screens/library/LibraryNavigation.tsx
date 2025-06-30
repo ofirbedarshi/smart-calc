@@ -28,6 +28,7 @@ const contentScreens = [
     storageKey: 'tzagonPhotos',
     fallbackHtml: tzagonPhotosHtml,
     routeName: 'tzagonPhotos',
+    allowEdit: true,
   },
   {
     navigationCtaLabel: 'כוונים',
@@ -76,6 +77,7 @@ export default function LibraryNavigation() {
             <GenericWebViewController
               storageKey={screen.storageKey}
               fallbackHtml={screen.fallbackHtml}
+              allowEdit={screen.allowEdit}
             />
           )}
           options={{ headerShown: false }}

@@ -9,6 +9,7 @@ export default function ContentEditorScreen() {
   const [logs, setLogs] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const [allowEdit, setAllowEdit] = useState(false);
   contentRef.current = content;
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function ContentEditorScreen() {
         if (data && data.type === 'SET_CONTENT' && typeof data.html === 'string') {
           appendLog('[document] SET_CONTENT');
           setContent(data.html);
+          setAllowEdit(!!data.allowEdit);
         }
       } catch (e) {
         // Optionally keep error logs for debugging
@@ -62,7 +64,11 @@ export default function ContentEditorScreen() {
             if (isEditMode) {
               setIsEditMode(false);
             } else {
-              setShowAdminModal(true);
+              if (allowEdit) {
+                setIsEditMode(true);
+              } else {
+                setShowAdminModal(true);
+              }
             }
           }}
           style={{

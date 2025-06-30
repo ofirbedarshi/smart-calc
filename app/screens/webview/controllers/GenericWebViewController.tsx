@@ -11,9 +11,10 @@ const WEBAPP_URL = Platform.OS === 'android'
 interface GenericWebViewControllerProps {
   storageKey: string;
   fallbackHtml: string;
+  allowEdit?: boolean;
 }
 
-function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewControllerProps) {
+function GenericWebViewController({ storageKey, fallbackHtml, allowEdit }: GenericWebViewControllerProps) {
   const webViewRef = useRef<WebViewType>(null);
   const [logs, setLogs] = useState('');
   const [initialHtml, setInitialHtml] = useState<string | null>(null);
@@ -36,7 +37,7 @@ function GenericWebViewController({ storageKey, fallbackHtml }: GenericWebViewCo
   const sendContentToWeb = () => {
     if (!initialHtml) return;
     setLogs((prev) => prev + '\nSending content to webapp');
-    const message = JSON.stringify({ type: 'SET_CONTENT', html: initialHtml });
+    const message = JSON.stringify({ type: 'SET_CONTENT', html: initialHtml, allowEdit });
     webViewRef.current?.postMessage(message);
   };
 

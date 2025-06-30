@@ -187,6 +187,8 @@ const fuelCellHtml = `<h3><strong id="docs-internal-guid-c3ad06e5-7fff-f328-b973
 <p dir="rtl">מסך FAILURE: תא הדלק כשל! אין באפשרותו לחזור לעבוד. עלייך להפנות את תא הדלק לגורם מוסמך לטובת תיקון תא הדלק בחברה.</p>
 <p>&nbsp;</p>
 </div>
-</details>`;
+</details>
+<p>&nbsp;</p>
+`;
 
 export { fuelCellHtml };

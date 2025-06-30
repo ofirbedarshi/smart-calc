@@ -3,6 +3,7 @@ import React from 'react';
 import { Button, View } from 'react-native';
 import GenericWebViewController from '../webview/controllers/GenericWebViewController';
 import { aimHtml } from '../webview/pages/aimHtml';
+import { evenRatlerHtml } from '../webview/pages/evenRatlerHtml';
 import { fuelCellHtml } from '../webview/pages/fuelCellHtml';
 import { safeRangesHtml } from '../webview/pages/safeRangesHtml';
 import { tzagonPhotosHtml } from '../webview/pages/tzagonPhotosHtml';
@@ -33,6 +34,12 @@ const contentScreens = [
     storageKey: 'aim',
     fallbackHtml: aimHtml,
     routeName: 'aim',
+  },
+  {
+    navigationCtaLabel: 'איון ראטלר',
+    storageKey: 'evenRatler',
+    fallbackHtml: evenRatlerHtml,
+    routeName: 'evenRatler',
   },
   // Add more screens here as needed
 ];

@@ -41,6 +41,7 @@ const tzagonPhotosHtml = `
 </tr>
 </tbody>
 </table>
+<p>&nbsp;</p>
 `;
 
 export { tzagonPhotosHtml };

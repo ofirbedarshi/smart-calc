@@ -30,8 +30,9 @@ const ACCORDION_HTML = `
     <p>הוסף תוכן כאן</p>
   </div>
 </details>
+<p>&nbsp;</p>
 `;
-const TABLE_2X2_HTML = '<table border="1"><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table>';
+const TABLE_2X2_HTML = '<table border="1"><tbody><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></tbody></table><p>&nbsp;</p>';
 const CHECKBOX_HTML = '<input type="checkbox" class="mce-checkbox" />';
 
 // --- TinyMCE Button Callbacks ---

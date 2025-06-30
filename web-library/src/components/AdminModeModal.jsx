@@ -61,7 +61,6 @@ const AdminModeModal = ({ isOpen, onClose, onAdminApproved }) => {
               touchAction: 'manipulation',
               WebkitTapHighlightColor: 'transparent',
             }}
-            placeholder="הכנס סיסמה"
             autoFocus
           />
         </div>

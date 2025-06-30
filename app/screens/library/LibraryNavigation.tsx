@@ -4,6 +4,7 @@ import { Button, View } from 'react-native';
 import GenericWebViewController from '../webview/controllers/GenericWebViewController';
 import { fuelCellHtml } from '../webview/pages/fuelCellHtml';
 import { safeRangesHtml } from '../webview/pages/safeRangesHtml';
+import { tzagonPhotosHtml } from '../webview/pages/tzagonPhotosHtml';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,12 @@ const contentScreens = [
     storageKey: 'safeRangesContent',
     fallbackHtml: safeRangesHtml,
     routeName: 'safeRanges',
+  },
+  {
+    navigationCtaLabel: 'צילומי צגון',
+    storageKey: 'tzagonPhotos',
+    fallbackHtml: tzagonPhotosHtml,
+    routeName: 'tzagonPhotos',
   },
   // Add more screens here as needed
 ];

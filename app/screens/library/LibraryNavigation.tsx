@@ -2,6 +2,7 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import React from 'react';
 import { Button, View } from 'react-native';
 import GenericWebViewController from '../webview/controllers/GenericWebViewController';
+import { aimHtml } from '../webview/pages/aimHtml';
 import { fuelCellHtml } from '../webview/pages/fuelCellHtml';
 import { safeRangesHtml } from '../webview/pages/safeRangesHtml';
 import { tzagonPhotosHtml } from '../webview/pages/tzagonPhotosHtml';
@@ -26,6 +27,12 @@ const contentScreens = [
     storageKey: 'tzagonPhotos',
     fallbackHtml: tzagonPhotosHtml,
     routeName: 'tzagonPhotos',
+  },
+  {
+    navigationCtaLabel: 'כוונים',
+    storageKey: 'aim',
+    fallbackHtml: aimHtml,
+    routeName: 'aim',
   },
   // Add more screens here as needed
 ];

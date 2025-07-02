@@ -58,46 +58,59 @@ export default function ContentEditorScreen() {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <div style={{ maxWidth: 600, margin: '24px auto 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <button 
-          onClick={() => {
-            if (isEditMode) {
-              setIsEditMode(false);
-            } else {
-              if (allowEdit) {
-                setIsEditMode(true);
-              } else {
-                setShowAdminModal(true);
-              }
-            }
-          }}
-          style={{
-            padding: '8px 16px',
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            background: isEditMode ? '#f0f0f0' : 'white',
-            cursor: 'pointer'
-          }}
-        >
-          {isEditMode ? 'תצוגה' : 'ערוך'}
-        </button>
-        {isEditMode && (
-          <button 
+      {/* Buttons above the editor */}
+      {isEditMode && (
+        <div style={{ display: 'flex', gap: '8px', marginBottom: 16 }}>
+          <button
+            onClick={() => setIsEditMode(false)}
+            style={{
+              padding: '8px 16px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              background: '#f0f0f0',
+              cursor: 'pointer',
+            }}
+          >
+            תצוגה
+          </button>
+          <button
             onClick={handleSave}
             style={{
               padding: '8px 16px',
-              border: 'none',
+              border: '1px solid #4caf50',
               borderRadius: '4px',
-              background: '#1976d2',
+              background: '#4caf50',
               color: 'white',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             שמור
           </button>
-        )}
-      </div>
+        </div>
+      )}
       <Editor content={content} onChange={setContent} readOnly={!isEditMode} />
+      
+      {!isEditMode && (
+        <button
+          onClick={() => {
+            if (allowEdit) {
+              setIsEditMode(true);
+            } else {
+              setShowAdminModal(true);
+            }
+          }}
+          style={{
+            marginTop: 16,
+            padding: '8px 16px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            background: 'white',
+            cursor: 'pointer',
+          }}
+        >
+          ערוך
+        </button>
+      )}
       
       <AdminModeModal
         isOpen={showAdminModal}

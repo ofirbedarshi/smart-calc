@@ -77,13 +77,6 @@ const contentScreens = [
     ],
   },
   {
-    navigationCtaLabel: 'איון ראטלר',
-    storageKey: 'evenRatler',
-    fallbackHtml: evenRatlerHtml,
-    routeName: 'evenRatler',
-    color: '#FFE4BA',
-  },
-  {
     navigationCtaLabel: 'ספקטרו',
     color: '#baaf9d',
     routeName: 'SpectroOptions',
@@ -103,6 +96,13 @@ const contentScreens = [
         color: '#baaf9d',
       },
     ],
+  },
+  {
+    navigationCtaLabel: 'איון ראטלר',
+    storageKey: 'evenRatler',
+    fallbackHtml: evenRatlerHtml,
+    routeName: 'evenRatler',
+    color: '#FFE4BA',
   },
   // Add more screens here as needed
 ];
@@ -130,7 +130,7 @@ const normalizedScreens = contentScreens.map(screen => ({ ...screen, color: '#ba
 
 function MainLibraryScreen({ navigation }: { navigation: NativeStackNavigationProp<LibraryStackParamList, 'LibraryMain'> }) {
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+    <ScrollView style={styles.container}>
       <Header title="ספרייה" />
       <View style={styles.flexGrid}>
         {normalizedScreens.map((screen) => (
@@ -206,8 +206,7 @@ const styles = StyleSheet.create({
   flexGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: 16,
     marginBottom: 16,
   },

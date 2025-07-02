@@ -65,12 +65,12 @@ export default function BackAzimuth() {
 
   const getResultFields = () => [
     {
-      label: 'נ.צ צפוני',
-      value: results.northCoord,
-    },
-    {
       label: 'נ.צ מזרחי',
       value: results.eastCoord,
+    },
+    {
+      label: 'נ.צ צפוני',
+      value: results.northCoord,
     },
     {
       label: 'גובה',

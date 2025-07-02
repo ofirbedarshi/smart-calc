@@ -47,6 +47,14 @@ const FieldSection: React.FC<FieldSectionProps> = ({ targetFields, isEditMode, o
       placeholder="הזן תיאור"
     />
     <EditableData
+      label="נ.צ מזרחי"
+      value={targetFields.eastCoord}
+      onChange={value => onFieldChange('eastCoord', value)}
+      editMode={isEditMode}
+      type="number"
+      placeholder="הזן נ.צ מזרחי"
+    />
+     <EditableData
       label="נ.צ צפוני"
       value={targetFields.northCoord}
       onChange={value => onFieldChange('northCoord', value)}
@@ -60,14 +68,6 @@ const FieldSection: React.FC<FieldSectionProps> = ({ targetFields, isEditMode, o
           placeholder="הזן נ.צ צפוני"
         />
       }
-    />
-    <EditableData
-      label="נ.צ מזרחי"
-      value={targetFields.eastCoord}
-      onChange={value => onFieldChange('eastCoord', value)}
-      editMode={isEditMode}
-      type="number"
-      placeholder="הזן נ.צ מזרחי"
     />
     <EditableData
       label="גובה"

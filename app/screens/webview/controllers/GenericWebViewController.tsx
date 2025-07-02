@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 import type { WebView as WebViewType } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
 import LibraryContentService from '../../../services/LibraryContentService';
@@ -50,8 +50,14 @@ function GenericWebViewController({ storageKey, fallbackHtml, allowEdit }: Gener
         setTimeout(sendContentToWeb, 0);
       }
       if (data && data.type === 'SAVE_CONTENT' && typeof data.html === 'string') {
-        await LibraryContentService.setContent(storageKey, data.html);
-        setLogs((prev) => prev + '\nSaved content to LibraryContentService');
+        try {
+          await LibraryContentService.setContent(storageKey, data.html);
+          setLogs((prev) => prev + '\nSaved content to LibraryContentService');
+          Alert.alert('הצלחה', 'התוכן נשמר בהצלחה');
+        } catch (err) {
+          setLogs((prev) => prev + '\nFailed to save content: ' + err);
+          Alert.alert('שגיאה', 'שמירת התוכן נכשלה, נסה שוב');
+        }
       }
     } catch (e) {
       setLogs((prev) => prev + '\nError parsing message: ' + e);

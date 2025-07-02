@@ -2,10 +2,14 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Header from '../../../components/common/Header';
+import SubMenuNavigation from '../../../components/common/SubMenuNavigation';
 import GenericWebViewController from '../webview/controllers/GenericWebViewController';
 import { aimHtml } from '../webview/pages/aimHtml';
+import { checkListHtml } from '../webview/pages/checkListHtml';
 import { evenRatlerHtml } from '../webview/pages/evenRatlerHtml';
 import { fuelCellHtml } from '../webview/pages/fuelCellHtml';
+import { popEquiListHtml } from '../webview/pages/popEquiListHtml';
+import { popErrorsHtml } from '../webview/pages/popErrorsHtml';
 import { safeRangesHtml } from '../webview/pages/safeRangesHtml';
 import { tzagonPhotosHtml } from '../webview/pages/tzagonPhotosHtml';
 
@@ -17,14 +21,14 @@ const contentScreens = [
     storageKey: 'fuelCellContent',
     fallbackHtml: fuelCellHtml,
     routeName: 'FuelCells',
-    color: '#FFB3BA', // Pastel Red
+    color: '#FFB3BA',
   },
   {
     navigationCtaLabel: 'פקלון כוונים',
     storageKey: 'aim',
     fallbackHtml: aimHtml,
     routeName: 'aim',
-    color: '#FFFFBA', // Pastel Yellow
+    color: '#FFFFBA', 
   },
  
   {
@@ -32,7 +36,7 @@ const contentScreens = [
     storageKey: 'safeRangesContent',
     fallbackHtml: safeRangesHtml,
     routeName: 'safeRanges',
-    color: '#BAFFC9', // Pastel Green
+    color: '#BAFFC9', 
   },
   {
     navigationCtaLabel: 'צילומי צגון',
@@ -40,14 +44,42 @@ const contentScreens = [
     fallbackHtml: tzagonPhotosHtml,
     routeName: 'tzagonPhotos',
     allowEdit: true,
-    color: '#BAE1FF', // Pastel Blue
+    color: '#BAE1FF', 
+  },
+   {
+    navigationCtaLabel: 'פופ',
+    color: '#BAE1FF',
+    routeName: 'PopOptions',
+    subNavigations: [
+      {
+        navigationCtaLabel: 'צק ליסט',
+        storageKey: 'checkList',
+        fallbackHtml: checkListHtml,
+        routeName: 'PopCheckList',
+        color: '#BAE1FF',
+      },
+      {
+        navigationCtaLabel: 'רשמצ',
+        storageKey: 'popEquiList',
+        fallbackHtml: popEquiListHtml,
+        routeName: 'PopEquiList',
+        color: '#BAE1FF',
+      },
+      {
+        navigationCtaLabel: 'תקלות',
+        storageKey: 'popErrors',
+        fallbackHtml: popErrorsHtml,
+        routeName: 'PopErrors',
+        color: '#BAE1FF',
+      },
+    ],
   },
   {
     navigationCtaLabel: 'איון ראטלר',
     storageKey: 'evenRatler',
     fallbackHtml: evenRatlerHtml,
     routeName: 'evenRatler',
-    color: '#FFE4BA', // Pastel Orange
+    color: '#FFE4BA',
   },
   // Add more screens here as needed
 ];
@@ -58,31 +90,32 @@ type LibraryStackParamList = {
   [key: string]: undefined;
 };
 
+// LibraryNavButton: UI for a single navigation button
+const LibraryNavButton: React.FC<{ screen: any; onPress: () => void }> = ({ screen, onPress }) => (
+  <TouchableOpacity
+    key={screen.routeName}
+    style={[styles.gridButton, screen.color ? { backgroundColor: screen.color } : null]}
+    onPress={onPress}
+    activeOpacity={0.85}
+  >
+    <Text style={styles.buttonText}>{screen.navigationCtaLabel}</Text>
+  </TouchableOpacity>
+);
+
+// Set all button colors to #baaf9d
+const normalizedScreens = contentScreens.map(screen => ({ ...screen, color: '#baaf9d' }));
+
 function MainLibraryScreen({ navigation }: { navigation: NativeStackNavigationProp<LibraryStackParamList, 'LibraryMain'> }) {
-  // Arrange buttons in two columns
-  const rows = [];
-  for (let i = 0; i < contentScreens.length; i += 2) {
-    rows.push(contentScreens.slice(i, i + 2));
-  }
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
       <Header title="ספרייה" />
-      <View style={styles.gridContainer}>
-        {rows.map((row, rowIndex) => (
-          <View key={rowIndex} style={styles.row}>
-            {row.map((screen) => (
-              <TouchableOpacity
-                key={screen.routeName}
-                style={styles.gridButton}
-                onPress={() => navigation.navigate(screen.routeName)}
-                activeOpacity={0.85}
-              >
-                <Text style={styles.buttonText}>{screen.navigationCtaLabel}</Text>
-              </TouchableOpacity>
-            ))}
-            {/* If odd number of buttons, fill the last cell */}
-            {row.length === 1 && <View style={styles.gridButton} />}
-          </View>
+      <View style={styles.flexGrid}>
+        {normalizedScreens.map((screen) => (
+          <LibraryNavButton
+            key={screen.routeName}
+            screen={screen}
+            onPress={() => navigation.navigate(screen.routeName)}
+          />
         ))}
       </View>
     </ScrollView>
@@ -93,20 +126,50 @@ export default function LibraryNavigation() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="LibraryMain" component={MainLibraryScreen} options={{ headerShown: false }} />
-      {contentScreens.map(screen => (
+      {contentScreens.filter(screen => screen.subNavigations).map(screen => (
         <Stack.Screen
           key={screen.routeName}
           name={screen.routeName}
-          children={() => (
-            <GenericWebViewController
-              storageKey={screen.storageKey}
-              fallbackHtml={screen.fallbackHtml}
-              allowEdit={screen.allowEdit}
+          children={({ navigation }) => (
+            <SubMenuNavigation
+              title={screen.navigationCtaLabel}
+              options={screen.subNavigations!}
+              navigation={navigation}
             />
           )}
           options={{ headerShown: false }}
         />
       ))}
+      {contentScreens.flatMap(screen =>
+        screen.subNavigations
+          ? screen.subNavigations.map(sub => (
+              <Stack.Screen
+                key={sub.routeName}
+                name={sub.routeName}
+                children={() => (
+                  <GenericWebViewController
+                    storageKey={sub.storageKey}
+                    fallbackHtml={sub.fallbackHtml}
+                  />
+                )}
+                options={{ headerShown: false }}
+              />
+            ))
+          : screen.routeName && screen.fallbackHtml && (
+              <Stack.Screen
+                key={screen.routeName}
+                name={screen.routeName}
+                children={() => (
+                  <GenericWebViewController
+                    storageKey={screen.storageKey}
+                    fallbackHtml={screen.fallbackHtml}
+                    allowEdit={screen.allowEdit}
+                  />
+                )}
+                options={{ headerShown: false }}
+              />
+            )
+      )}
     </Stack.Navigator>
   );
 }
@@ -115,28 +178,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f7f4ef', // match the image background
+    backgroundColor: '#f7f4ef',
   },
-  gridContainer: {
-    flex: 1,
+  flexGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 16,
     marginBottom: 16,
-    gap: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 24,
   },
   gridButton: {
     backgroundColor: '#baaf9d',
-    minWidth: 150,
     minHeight: 90,
-    flex: 1,
-    marginHorizontal: 8,
+    flexBasis: '48%',
+    maxWidth: 150,
+    margin: 7,
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',

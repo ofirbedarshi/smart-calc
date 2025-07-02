@@ -46,7 +46,9 @@ const AdminModeModal = ({ isOpen, onClose, onAdminApproved }) => {
           </label>
           <input
             id="admin-password"
-            type="password"
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={{

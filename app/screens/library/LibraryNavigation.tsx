@@ -11,6 +11,8 @@ import { fuelCellHtml } from '../webview/pages/fuelCellHtml';
 import { popEquiListHtml } from '../webview/pages/popEquiListHtml';
 import { popErrorsHtml } from '../webview/pages/popErrorsHtml';
 import { safeRangesHtml } from '../webview/pages/safeRangesHtml';
+import { spectroCheckListHtml } from '../webview/pages/spectroCheckListHtml';
+import { spectroEquiListHtml } from '../webview/pages/spectroEquiListHtml';
 import { tzagonPhotosHtml } from '../webview/pages/tzagonPhotosHtml';
 
 const Stack = createNativeStackNavigator();
@@ -80,6 +82,27 @@ const contentScreens = [
     fallbackHtml: evenRatlerHtml,
     routeName: 'evenRatler',
     color: '#FFE4BA',
+  },
+  {
+    navigationCtaLabel: 'ספקטרו',
+    color: '#baaf9d',
+    routeName: 'SpectroOptions',
+    subNavigations: [
+      {
+        navigationCtaLabel: "צ'ק ליסט",
+        storageKey: 'spectroCheckList',
+        fallbackHtml: spectroCheckListHtml,
+        routeName: 'SpectroCheckList',
+        color: '#baaf9d',
+      },
+      {
+        navigationCtaLabel: 'רשמ"צ',
+        storageKey: 'spectroEquiList',
+        fallbackHtml: spectroEquiListHtml,
+        routeName: 'SpectroEquiList',
+        color: '#baaf9d',
+      },
+    ],
   },
   // Add more screens here as needed
 ];

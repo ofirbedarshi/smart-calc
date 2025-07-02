@@ -3,6 +3,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Header from '../../../components/common/Header';
 import SubMenuNavigation from '../../../components/common/SubMenuNavigation';
+import Tevel from '../../../components/common/Tevel';
 import GenericWebViewController from '../webview/controllers/GenericWebViewController';
 import { aimHtml } from '../webview/pages/aimHtml';
 import { checkListHtml } from '../webview/pages/checkListHtml';
@@ -104,6 +105,11 @@ const contentScreens = [
     routeName: 'evenRatler',
     color: '#FFE4BA',
   },
+  {
+    navigationCtaLabel: 'תבל',
+    routeName: 'Tevel',
+    color: '#baaf9d',
+  },
   // Add more screens here as needed
 ];
 
@@ -178,20 +184,29 @@ export default function LibraryNavigation() {
                 options={{ headerShown: false }}
               />
             ))
-          : screen.routeName && screen.fallbackHtml && (
-              <Stack.Screen
-                key={screen.routeName}
-                name={screen.routeName}
-                children={() => (
-                  <GenericWebViewController
-                    storageKey={screen.storageKey}
-                    fallbackHtml={screen.fallbackHtml}
-                    allowEdit={screen.allowEdit}
-                  />
-                )}
-                options={{ headerShown: false }}
-              />
-            )
+          : screen.routeName === 'Tevel'
+            ? (
+                <Stack.Screen
+                  key={screen.routeName}
+                  name={screen.routeName}
+                  component={Tevel}
+                  options={{ headerShown: false }}
+                />
+              )
+            : screen.routeName && screen.fallbackHtml && (
+                <Stack.Screen
+                  key={screen.routeName}
+                  name={screen.routeName}
+                  children={() => (
+                    <GenericWebViewController
+                      storageKey={screen.storageKey}
+                      fallbackHtml={screen.fallbackHtml}
+                      allowEdit={screen.allowEdit}
+                    />
+                  )}
+                  options={{ headerShown: false }}
+                />
+              )
       )}
     </Stack.Navigator>
   );

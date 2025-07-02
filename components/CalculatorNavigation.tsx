@@ -3,11 +3,11 @@ import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const buttons = [
-  { text: 'המרת נ.צ', route: '/calculator/CoordinateConversion', color: '#FFB3BA' },
-  { text: 'חיתוך לאחור', route: '/calculator/BackAzimuth', color: '#BAFFC9' },
-  { text: 'חישוב גודל כתם', route: '/calculator/StainSizeCalculation', color: '#BAE1FF' },
-  { text: 'חישוב יעילות', route: '/calculator/EfficiencyCalculation', color: '#FFFFBA' },
-  { text: 'המרת יחידות', route: '/calculator/UnitConversion', color: '#FFE4BA' },
+  { text: 'המרת נ.צ', route: '/calculator/CoordinateConversion', color: '#939c80' },
+  { text: 'חיתוך לאחור', route: '/calculator/BackAzimuth', color: '#b7bd9e' },
+  { text: 'חישוב גודל כתם', route: '/calculator/StainSizeCalculation', color: '#b3b8bd' },
+  { text: 'חישוב יעילות', route: '/calculator/EfficiencyCalculation', color: '#baaf9d' },
+  { text: 'המרת יחידות', route: '/calculator/UnitConversion', color: '#d8d1c3' },
 ];
 
 export const CalculatorNavigation: React.FC = () => {
@@ -16,7 +16,7 @@ export const CalculatorNavigation: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       <Image
-        source={require('../assets/images/maglan-logo.png')}
+        source={require('../assets/images/maglanSymbol.jpeg')}
         style={styles.logo}
         resizeMode="contain"
       />

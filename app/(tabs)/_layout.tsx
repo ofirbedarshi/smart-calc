@@ -20,6 +20,15 @@ export default function TabLayout() {
           paddingBottom: bottom,
         },
       }}>
+        <Tabs.Screen
+        name="library"
+        options={{
+          title: 'ספרייה',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="book" size={size} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="TargetsList"
         options={{
@@ -35,15 +44,6 @@ export default function TabLayout() {
           title: 'מחשבון',
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="calculator" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="library"
-        options={{
-          title: 'ספרייה',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="book" size={size} color={color} />
           ),
         }}
       />

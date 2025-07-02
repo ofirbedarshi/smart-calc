@@ -20,6 +20,14 @@ const contentScreens = [
     color: '#FFB3BA', // Pastel Red
   },
   {
+    navigationCtaLabel: 'פקלון כוונים',
+    storageKey: 'aim',
+    fallbackHtml: aimHtml,
+    routeName: 'aim',
+    color: '#FFFFBA', // Pastel Yellow
+  },
+ 
+  {
     navigationCtaLabel: 'טווחי בטיחות',
     storageKey: 'safeRangesContent',
     fallbackHtml: safeRangesHtml,
@@ -33,13 +41,6 @@ const contentScreens = [
     routeName: 'tzagonPhotos',
     allowEdit: true,
     color: '#BAE1FF', // Pastel Blue
-  },
-  {
-    navigationCtaLabel: 'כוונים',
-    storageKey: 'aim',
-    fallbackHtml: aimHtml,
-    routeName: 'aim',
-    color: '#FFFFBA', // Pastel Yellow
   },
   {
     navigationCtaLabel: 'איון ראטלר',
@@ -58,18 +59,30 @@ type LibraryStackParamList = {
 };
 
 function MainLibraryScreen({ navigation }: { navigation: NativeStackNavigationProp<LibraryStackParamList, 'LibraryMain'> }) {
+  // Arrange buttons in two columns
+  const rows = [];
+  for (let i = 0; i < contentScreens.length; i += 2) {
+    rows.push(contentScreens.slice(i, i + 2));
+  }
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
       <Header title="ספרייה" />
-      <View style={styles.buttonContainer}>
-        {contentScreens.map((screen) => (
-          <TouchableOpacity
-            key={screen.routeName}
-            style={[styles.button, { backgroundColor: screen.color }]}
-            onPress={() => navigation.navigate(screen.routeName)}
-          >
-            <Text style={styles.buttonText}>{screen.navigationCtaLabel}</Text>
-          </TouchableOpacity>
+      <View style={styles.gridContainer}>
+        {rows.map((row, rowIndex) => (
+          <View key={rowIndex} style={styles.row}>
+            {row.map((screen) => (
+              <TouchableOpacity
+                key={screen.routeName}
+                style={styles.gridButton}
+                onPress={() => navigation.navigate(screen.routeName)}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.buttonText}>{screen.navigationCtaLabel}</Text>
+              </TouchableOpacity>
+            ))}
+            {/* If odd number of buttons, fill the last cell */}
+            {row.length === 1 && <View style={styles.gridButton} />}
+          </View>
         ))}
       </View>
     </ScrollView>
@@ -102,28 +115,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#f7f4ef', // match the image background
   },
-  buttonContainer: {
-    gap: 16,
-    marginTop: 16,
-  },
-  button: {
-    padding: 16,
-    borderRadius: 8,
+  gridContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 16,
+    gap: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  gridButton: {
+    backgroundColor: '#baaf9d',
+    minWidth: 150,
+    minHeight: 90,
+    flex: 1,
+    marginHorizontal: 8,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#444',
+    textAlign: 'center',
   },
 }); 

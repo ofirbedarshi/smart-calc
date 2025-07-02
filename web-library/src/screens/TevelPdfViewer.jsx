@@ -7,7 +7,7 @@ const pdfUrl = 'pdf/tevel.pdf';
 const TevelPdfViewer = () => (
   <div style={{ width: '100vw', height: '100vh', background: '#fff', direction: 'rtl' }}>
     <div style={{ height: '100vh' }}>
-      <Worker workerUrl={'pdfjs/pdf.worker.js'}>
+      <Worker workerUrl={'pdfjs/pdf.worker.min.js'}>
         <Viewer fileUrl={pdfUrl} />
       </Worker>
     </div>

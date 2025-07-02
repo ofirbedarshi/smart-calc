@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Platform, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const PDF_VIEWER_URL = 'http://192.168.1.134:5173/#/tevel-pdf';
+const PDF_VIEWER_URL = Platform.OS === 'android'
+  ? (__DEV__ ? 'http://192.168.1.134:5173/#/tevel-pdf' : 'file:///android_asset/web-content/index.html#/tevel-pdf')
+  : (__DEV__ ? 'http://localhost:5173/#/tevel-pdf' : 'file:///web-content/index.html#/tevel-pdf');
 
 const Tevel = () => {
   const [loading, setLoading] = useState(true);
@@ -39,6 +41,16 @@ const Tevel = () => {
             javaScriptEnabled
             domStorageEnabled
             allowsBackForwardNavigationGestures
+            allowFileAccess={true}
+            allowUniversalAccessFromFileURLs={true}
+            allowFileAccessFromFileURLs={true}
+            mixedContentMode="always"
+            scalesPageToFit={false}
+            setBuiltInZoomControls={false}
+            setDisplayZoomControls={false}
+            automaticallyAdjustContentInsets={false}
+            contentInsetAdjustmentBehavior="never"
+            onShouldStartLoadWithRequest={() => true}
           />
         </>
       )}

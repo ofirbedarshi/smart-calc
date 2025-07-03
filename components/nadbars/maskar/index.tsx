@@ -48,7 +48,7 @@ const Maskar: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     marginTop: 24,
-    alignItems: 'center',
+    padding: 20,
     justifyContent: 'center',
   },
 });

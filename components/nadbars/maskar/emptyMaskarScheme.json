@@ -11,6 +11,50 @@
         { "label": "אזימוט", "fieldId": "azimuth", "value": "" },
         { "label": "טווח", "fieldId": "distance", "value": "" }
       ]
+    },
+    {
+      "type": "form",
+      "header": "לחיצת ידיים",
+      "data": [
+        { "label": "עבודה על עזר", "fieldId": "ezer", "value": "" },
+        { "label": "מיקום עצמי - נצ״א", "fieldId": "natza", "value": "" },
+        { "label": "ק אחרון כוחותינו", "fieldId": "ourForces", "value": "" },
+        { "label": "מודיעין ואיומים", "fieldId": "threats", "value": "" }
+      ]
+    },
+    {
+      "type": "form",
+      "header": "נתונים כלליים",
+      "data": [
+        { "label": "שם ותיאור מטרה", "fieldId": "targetName", "value": "" },
+        { "label": "נ.צ UTM", "fieldId": "natza", "value": "" },
+        { "label": "נ.צ אריחי", "fieldId": "arihi", "value": "" },
+        { "label": "גובה מטרה", "fieldId": "targetHeight", "value": "" },
+        { "label": "כיוון כניסה מומלץ", "fieldId": "enterence", "value": "" },
+        { "label": "קסום", "fieldId": "kasoom", "value": "" }
+      ]
+    },
+    {
+      "type": "form",
+      "header": "אצע״ד ק״מ",
+      "data": [
+        { "label": "אימות על העזר", "fieldId": "confirm", "value": "" },
+        { "label": "צביעת שטח", "fieldId": "areaPaint", "value": "" },
+        { "label": "עצמים בולטים", "fieldId": "bigObjects", "value": "" },
+        { "label": "דקירת מטרה", "fieldId": "targetPoint", "value": "" },
+        { "label": "קונטרסטיות", "fieldId": "Kon", "value": "" },
+        { "label": "מידע עדכני", "fieldId": "info", "value": "" },
+       
+      ]
+    },
+    {
+      "type": "form",
+      "header": "הולכת שטח",
+      "data": [
+        { "label": "עוגן", "fieldId": "ogen", "value": "" },
+        { "label": "הולכה", "fieldId": "holacha", "value": "" },
+        { "label": "הישג נדרש", "fieldId": "requiredAchievment", "value": "" },
+      ]
     }
   ]
 }

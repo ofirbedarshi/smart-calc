@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import FormElement from './FormElement';
 import { NadbarElement, NadbarScheme } from './nadbarTypes';
 
@@ -33,31 +33,43 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ scheme, onChange, onErr
   };
 
   return (
-    <View style={styles.container}>
-      {scheme.elements.map((element, idx) => {
-        switch (element.type) {
-          case 'form':
-            return (
-              <FormElement
-                key={idx}
-                element={element}
-                onFieldChange={(fieldId: string, value: string) => handleFormFieldChange(idx, fieldId, value)}
-              />
-            );
-          default:
-            onError?.('Unsupported element type', { elementIdx: idx, type: element.type });
-            return null;
-        }
-      })}
-    </View>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        {scheme.elements.map((element, idx) => {
+          switch (element.type) {
+            case 'form':
+              return (
+                <View key={idx} style={styles.elementWrapper}>
+                  <FormElement
+                    element={element}
+                    onFieldChange={(fieldId: string, value: string) => handleFormFieldChange(idx, fieldId, value)}
+                  />
+                </View>
+              );
+            default:
+              onError?.('Unsupported element type', { elementIdx: idx, type: element.type });
+              return null;
+          }
+        })}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
   container: {
     width: '100%',
+    maxWidth: 500,
     alignItems: 'center',
-    padding: 20
+  },
+  elementWrapper: {
+    width: '100%',
+    marginBottom: 20,
   },
 });
 

@@ -2,12 +2,13 @@
 
 export type NadbarFormField = {
   label: string;
-  fieldId: string;
+  fieldId: string; // must be non-empty
   value: string;
 };
 
 export type NadbarElement = {
   type: 'form';
+  header?: string; // optional header for form sections
   data: NadbarFormField[];
 };
 

@@ -14,5 +14,6 @@ export type NadbarElement = {
 export type NadbarScheme = {
   name: string;
   id: string;
+  updatedAt: string;
   elements: NadbarElement[];
 }; 

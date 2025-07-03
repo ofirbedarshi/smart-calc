@@ -1,19 +1,16 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
-import Button from '../../../components/common/Button';
-import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import LinkButton from '../../../components/common/LinkButton';
 import SearchBar from '../../../components/common/SearchBar';
-import TargetItemList from '../../../components/targetList/TargetItemList';
+import SelectableList from '../../../components/common/SelectableList';
 import { TargetService } from '../../../services/TargetService';
 import { useTargetStore } from '../../../stores/targetStore';
+import { formatDate } from '../../../utils/dateUtils';
 import TargetFilters from './TargetFilters';
 
 export default function TargetsList() {
   const { targets, loadTargets, deleteTarget } = useTargetStore();
-  const [showCheckboxes, setShowCheckboxes] = useState(false);
-  const [selectedTargetsIds, setSelectedTargetsIds] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [isAttackedFilter, setIsAttackedFilter] = useState('הכל');
   const [searchResults, setSearchResults] = useState(targets);
@@ -39,97 +36,55 @@ export default function TargetsList() {
     setSearchResults(results);
   };
 
-  const handleLongPress = (id: string) => {
-    setShowCheckboxes(true);
-    setSelectedTargetsIds([id]);
-  };
-
-  const handleMark = (id: string) => {
-    setSelectedTargetsIds(prev =>
-      prev.includes(id) ? prev.filter(selectedId => selectedId !== id) : [...prev, id]
-    );
-  };
-
-  const handleDelete = async () => {
-    for (const id of selectedTargetsIds) {
+  const handleDelete = async (ids: string[]) => {
+    for (const id of ids) {
       await deleteTarget(id);
     }
-    setSelectedTargetsIds([]);
-    setShowCheckboxes(false);
+    loadTargets();
     Alert.alert('מחיקה', 'המטרות נמחקו בהצלחה');
   };
 
+  const handleNavigate = (target: any) => {
+    router.push({
+      pathname: '/TargetsList/TargetDetails',
+      params: { target: JSON.stringify(target) },
+    });
+  };
+
   const sortedTargets = [...searchResults]
-    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
-    .map(target => ({
-      target,
-      isMarked: selectedTargetsIds.includes(target.id || ''),
-    }));
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
   return (
     <View style={styles.container}>
       <SearchBar onSearch={handleSearch} placeholder="חפש לפי שם, תיאור או נ.צ..." />
-        <View style={{ justifyContent: 'space-between',flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginHorizontal: 8 }}>
-          <TargetFilters value={isAttackedFilter} onFilterChange={handleFilterChange} />
-          <LinkButton
-            title="הוסף מטרה"
-            onPress={() => router.push({
-              pathname: '/TargetsList/TargetDetails',
-              params: {
-                target: JSON.stringify({}),
-              },
-            })}
-          />
-        </View>
+      <View style={{ justifyContent: 'space-between', flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginHorizontal: 8 }}>
+        <TargetFilters value={isAttackedFilter} onFilterChange={handleFilterChange} />
+        <LinkButton
+          title="הוסף מטרה"
+          onPress={() => router.push({
+            pathname: '/TargetsList/TargetDetails',
+            params: { target: JSON.stringify({}) },
+          })}
+        />
+      </View>
       {sortedTargets.length === 0 ? (
         <Text style={styles.empty}>לא נמצאו מטרות</Text>
       ) : (
-        <>
-          <FlatList
-            data={sortedTargets}
-            keyExtractor={item => item.target.id || ''}
-            renderItem={({ item }) => (
-              <TargetItemList
-                target={item.target}
-                showCheckbox={showCheckboxes}
-                isMarked={item.isMarked}
-                onLongPress={() => handleLongPress(item.target.id || '')}
-                onMark={() => handleMark(item.target.id || '')}
-              />
-            )}
-            contentContainerStyle={showCheckboxes ? { paddingBottom: 90 } : undefined}
-          />
-          {showCheckboxes && (
-            <View style={styles.actionBar}>
-              <View style={styles.buttonRow}>
-                <DeleteButtonWithConfirm
-                  items={sortedTargets
-                    .filter(t => t.target.id && selectedTargetsIds.includes(t.target.id))
-                    .map(t => typeof t.target.name === 'string' ? t.target.name : '')
-                    .filter(Boolean)
-                  }
-                  onDelete={handleDelete}
-                  buttonProps={{
-                    title: 'מחיקה',
-                    disabled: selectedTargetsIds.length === 0,
-                    theme: 'danger',
-                    small: true,
-                    onPress: () => {},
-                  }}
-                />
-                <Button
-                  title="ביטול"
-                  onPress={() => {
-                    setShowCheckboxes(false);
-                    setSelectedTargetsIds([]);
-                  }}
-                  theme="primary"
-                  small
-                />
+        <SelectableList
+          data={sortedTargets}
+          keyExtractor={item => item.id || ''}
+          renderItemContent={item => (
+            <>
+              <Text style={styles.name} onPress={() => handleNavigate(item)}>{item.name}</Text>
+              <View style={styles.updatedAtContainer}>
+                <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
+                <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
               </View>
-            </View>
+            </>
           )}
-        </>
+          onDelete={handleDelete}
+          itemLabel={item => item.name}
+        />
       )}
     </View>
   );
@@ -146,31 +101,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#888',
   },
-  deleteButtonContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 24,
-    alignItems: 'center',
-    zIndex: 10,
-  },
-  buttonRow: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 12,
-  },
-  actionBar: {
-    backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderTopWidth: 1,
-    borderColor: '#eee',
-    position: 'relative',
-  },
-  filterAccordionText: {
-    fontSize: 16,
-    color: '#333',
+  name: {
+    fontSize: 18,
+    color: '#222',
     textAlign: 'right',
+  },
+  updatedAtContainer: {
+    alignItems: 'flex-start',
+    minWidth: 90,
+  },
+  updatedAtLabel: {
+    fontSize: 9,
+    color: '#888',
+    opacity: 0.6,
+    textAlign: 'left',
+  },
+  updatedAtDate: {
+    fontSize: 10,
+    color: '#888',
+    textAlign: 'left',
   },
 }); 

@@ -13,7 +13,12 @@ export type NadbarElement = {
 
 export type NadbarScheme = {
   name: string;
+  type: NadbarType;
   id: string;
   updatedAt: string;
   elements: NadbarElement[];
 }; 
+
+export enum NadbarType {
+  Maskar = 'Maskar'
+}

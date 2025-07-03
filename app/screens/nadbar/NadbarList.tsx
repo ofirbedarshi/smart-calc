@@ -1,14 +1,26 @@
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { NadbarScheme } from '../../../components/common/nadbarTypes';
+import { NadbarScheme, NadbarType } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import { NadbarService } from '../../../services/NadbarService';
 import { formatDate } from '../../../utils/dateUtils';
+
+function getNadbarRoute(nadbar: NadbarScheme) {
+  switch (nadbar.type) {
+    case NadbarType.Maskar:
+      return '/TargetPage/Maskar';
+    // Add more cases for other nadbar types/screens as needed
+    default:
+      return null;
+  }
+}
 
 const NadbarList: React.FC = () => {
   const [nadbars, setNadbars] = useState<NadbarScheme[]>([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState<NadbarScheme[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     NadbarService.getNadbars().then(setNadbars);
@@ -17,6 +29,16 @@ const NadbarList: React.FC = () => {
   useEffect(() => {
     NadbarService.filterNadbars(search).then(setFiltered);
   }, [search, nadbars]);
+
+  const handlePress = (nadbar: NadbarScheme) => {
+    const route = getNadbarRoute(nadbar);
+    if (route) {
+      router.push({ pathname: route, params: { nadbar: JSON.stringify(nadbar) } });
+    } else {
+      // fallback: just log
+      console.log('No route for nadbar:', nadbar);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -30,7 +52,7 @@ const NadbarList: React.FC = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.item}
-              onPress={() => console.log('Pressed nadbar:', item)}
+              onPress={() => handlePress(item)}
             >
               <View style={styles.itemRow}>
                 <Text style={styles.name}>{item.name}</Text>

@@ -1,0 +1,15 @@
+{
+  "name": "Maskar",
+  "id": "",
+  "elements": [
+    {
+      "type": "form",
+      "data": [
+        { "label": "תדר", "fieldId": "freq", "value": "" },
+        { "label": "או״ק חוליה", "fieldId": "ok_team", "value": "" },
+        { "label": "אזימוט", "fieldId": "azimuth", "value": "" },
+        { "label": "טווח", "fieldId": "distance", "value": "" }
+      ]
+    }
+  ]
+}

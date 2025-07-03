@@ -1,7 +1,9 @@
+import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../components/common/Button';
 import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
+import LinkButton from '../../../components/common/LinkButton';
 import SearchBar from '../../../components/common/SearchBar';
 import TargetItemList from '../../../components/targetList/TargetItemList';
 import { TargetService } from '../../../services/TargetService';
@@ -15,6 +17,7 @@ export default function TargetsList() {
   const [search, setSearch] = useState('');
   const [isAttackedFilter, setIsAttackedFilter] = useState('הכל');
   const [searchResults, setSearchResults] = useState(targets);
+  const router = useRouter();
 
   useEffect(() => {
     loadTargets();
@@ -66,7 +69,18 @@ export default function TargetsList() {
   return (
     <View style={styles.container}>
       <SearchBar onSearch={handleSearch} placeholder="חפש לפי שם, תיאור או נ.צ..." />
-      <TargetFilters value={isAttackedFilter} onFilterChange={handleFilterChange} />
+        <View style={{ justifyContent: 'space-between',flexDirection: 'row-reverse', alignItems: 'center', gap: 8, marginHorizontal: 8 }}>
+          <TargetFilters value={isAttackedFilter} onFilterChange={handleFilterChange} />
+          <LinkButton
+            title="הוסף מטרה"
+            onPress={() => router.push({
+              pathname: '/TargetsList/TargetDetails',
+              params: {
+                target: JSON.stringify({}),
+              },
+            })}
+          />
+        </View>
       {sortedTargets.length === 0 ? (
         <Text style={styles.empty}>לא נמצאו מטרות</Text>
       ) : (

@@ -15,7 +15,7 @@ export type NadbarScheme = {
   name: string;
   type: NadbarType;
   id: string;
-  updatedAt: string;
+  updatedAt: number;
   elements: NadbarElement[];
 }; 
 

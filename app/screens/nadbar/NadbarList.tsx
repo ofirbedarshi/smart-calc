@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { NadbarScheme, NadbarType } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import { NadbarService } from '../../../services/NadbarService';
@@ -20,6 +20,8 @@ const NadbarList: React.FC = () => {
   const [nadbars, setNadbars] = useState<NadbarScheme[]>([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState<NadbarScheme[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showCheckboxes, setShowCheckboxes] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,6 +33,10 @@ const NadbarList: React.FC = () => {
   }, [search, nadbars]);
 
   const handlePress = (nadbar: NadbarScheme) => {
+    if (showCheckboxes) {
+      handleMark(nadbar.id);
+      return;
+    }
     const route = getNadbarRoute(nadbar);
     if (route) {
       router.push({ pathname: route, params: { nadbar: JSON.stringify(nadbar) } });
@@ -38,6 +44,35 @@ const NadbarList: React.FC = () => {
       // fallback: just log
       console.log('No route for nadbar:', nadbar);
     }
+  };
+
+  const handleLongPress = (id: string) => {
+    setShowCheckboxes(true);
+    setSelectedIds([id]);
+  };
+
+  const handleMark = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(selectedId => selectedId !== id) : [...prev, id]
+    );
+  };
+
+  const handleDelete = async () => {
+    Alert.alert('מחיקה', 'האם אתה בטוח שברצונך למחוק את הנדברים שנבחרו?', [
+      { text: 'ביטול', style: 'cancel' },
+      {
+        text: 'מחק', style: 'destructive', onPress: async () => {
+          for (const id of selectedIds) {
+            await NadbarService.deleteNadbar(id);
+          }
+          const updated = await NadbarService.getNadbars();
+          setNadbars(updated);
+          setSelectedIds([]);
+          setShowCheckboxes(false);
+          Alert.alert('מחיקה', 'הנדברים נמחקו בהצלחה');
+        }
+      }
+    ]);
   };
 
   return (
@@ -51,8 +86,9 @@ const NadbarList: React.FC = () => {
           keyExtractor={item => item.id || item.name}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={styles.item}
+              style={[styles.item, showCheckboxes && selectedIds.includes(item.id) && styles.itemSelected]}
               onPress={() => handlePress(item)}
+              onLongPress={() => handleLongPress(item.id)}
             >
               <View style={styles.itemRow}>
                 <Text style={styles.name}>{item.name}</Text>
@@ -60,10 +96,23 @@ const NadbarList: React.FC = () => {
                   <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
                   <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
                 </View>
+                {showCheckboxes && (
+                  <View style={styles.checkbox}>
+                    <Text style={{ fontSize: 18, color: selectedIds.includes(item.id) ? '#007AFF' : '#bbb' }}>
+                      {selectedIds.includes(item.id) ? '☑' : '☐'}
+                    </Text>
+                  </View>
+                )}
               </View>
             </TouchableOpacity>
           )}
         />
+      )}
+      {showCheckboxes && (
+        <View style={styles.actionBar}>
+          <Button title="מחק" onPress={handleDelete} color="#ff3b30" disabled={selectedIds.length === 0} />
+          <Button title="ביטול" onPress={() => { setShowCheckboxes(false); setSelectedIds([]); }} />
+        </View>
       )}
     </View>
   );
@@ -93,6 +142,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 2,
   },
+  itemSelected: {
+    borderColor: '#007AFF',
+    borderWidth: 2,
+  },
   itemRow: {
     flexDirection: 'row-reverse',
     justifyContent: 'space-between',
@@ -117,6 +170,20 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#888',
     textAlign: 'left',
+  },
+  checkbox: {
+    marginLeft: 12,
+  },
+  actionBar: {
+    backgroundColor: '#fff',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderTopWidth: 1,
+    borderColor: '#eee',
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
   },
 });
 

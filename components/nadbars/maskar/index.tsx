@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, StyleSheet, View } from 'react-native';
 import { NadbarService } from '../../../services/NadbarService';
 import NadbarRenderer from '../../common/NadbarRenderer';
@@ -10,7 +11,17 @@ const handleError = (message: string, params?: any) => {
 };
 
 const Maskar: React.FC = () => {
-  const [scheme, setScheme] = useState<NadbarScheme>(emptyMaskarScheme as NadbarScheme);
+  const params = useLocalSearchParams();
+  const initialScheme: NadbarScheme = params.nadbar
+    ? JSON.parse(params.nadbar as string)
+    : (emptyMaskarScheme as NadbarScheme);
+  const [scheme, setScheme] = useState<NadbarScheme>(initialScheme);
+
+  useEffect(() => {
+    if (params.nadbar) {
+      setScheme(JSON.parse(params.nadbar as string));
+    }
+  }, [params.nadbar]);
 
   const handleChange = (updatedScheme: NadbarScheme) => {
     setScheme(updatedScheme);

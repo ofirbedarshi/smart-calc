@@ -36,4 +36,11 @@ export class NadbarService {
     const lower = query.toLowerCase();
     return nadbars.filter(n => n.name && n.name.toLowerCase().includes(lower));
   }
+
+  static async deleteNadbar(id: string): Promise<NadbarScheme[]> {
+    const nadbars = await this.getNadbars();
+    const updated = nadbars.filter(n => n.id !== id);
+    await StorageService.saveData(NADBARS_KEY, updated);
+    return updated;
+  }
 } 

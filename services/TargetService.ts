@@ -4,6 +4,7 @@ import uuid from 'react-native-uuid';
 export interface TargetFields {
   id?: string;
   createdAt?: number;
+  updatedAt?: number;
   name: string;
   description: string;
   northCoord: string;
@@ -30,13 +31,15 @@ export const TargetService = {
     }
   },
 
-  async addTarget(target: Omit<TargetFields, 'id' | 'createdAt'>): Promise<{newTarget: TargetFields, newTargets: TargetFields[]}> {
+  async addTarget(target: Omit<TargetFields, 'id' | 'createdAt' | 'updatedAt'>): Promise<{newTarget: TargetFields, newTargets: TargetFields[]}> {
     try {
+      const now = Date.now();
       const newTargetId = uuid.v4() as string;
       const newTarget: TargetFields = {
         ...target,
         id: newTargetId,
-        createdAt: Date.now(),
+        createdAt: now,
+        updatedAt: now,
       };
       const targets = await this.getTargets();
       const updated = [newTarget, ...targets];
@@ -50,8 +53,9 @@ export const TargetService = {
 
   async updateTarget(id: string, updates: Partial<TargetFields>): Promise<TargetFields[]> {
     try {
+      const now = Date.now();
       const targets = await this.getTargets();
-      const updated = targets.map(t => t.id === id ? { ...t, ...updates } : t);
+      const updated = targets.map(t => t.id === id ? { ...t, ...updates, updatedAt: now } : t);
       await AsyncStorage.setItem(TARGETS_KEY, JSON.stringify(updated));
       return updated;
     } catch (err) {

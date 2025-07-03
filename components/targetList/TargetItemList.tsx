@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import React, { useRef } from 'react';
 import { Animated, GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { TargetFields } from '../../services/TargetService';
+import { formatDate } from '../../utils/dateUtils';
 
 interface TargetItemListProps {
   target: TargetFields;
@@ -57,7 +58,10 @@ const TargetItemList: React.FC<TargetItemListProps> = ({ target, onLongPress, sh
         >
           <View style={styles.textContainer}>
             <Text style={styles.name}>{target.name}</Text>
-            <Text style={styles.description}>{target.description}</Text>
+            <View style={styles.updatedAtContainer}>
+              <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
+              <Text style={styles.updatedAtDate}>{formatDate(Number(target.updatedAt))}</Text>
+            </View>
           </View>
         </TouchableOpacity>
       </Animated.View>
@@ -94,24 +98,37 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
     padding: 16,
+    justifyContent: 'space-between',
   },
   textContainer: {
     flex: 1,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   name: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 4,
     textAlign: 'right',
   },
-  description: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'right',
+  updatedAtContainer: {
+    alignItems: 'flex-start',
+    minWidth: 90,
+  },
+  updatedAtLabel: {
+    fontSize: 9,
+    color: '#888',
+    opacity: 0.6,
+    textAlign: 'left',
+  },
+  updatedAtDate: {
+    fontSize: 10,
+    color: '#888',
+    textAlign: 'left',
   },
   checkbox: {
     marginLeft: 12,

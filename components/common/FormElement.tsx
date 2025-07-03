@@ -1,5 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { BaseInput } from './BaseInput';
+import InputCard from './InputCard';
 import { NadbarElement, NadbarFormField } from './nadbarTypes';
 
 interface FormElementProps {
@@ -9,47 +11,31 @@ interface FormElementProps {
 
 const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => {
   return (
-    <View style={styles.container}>
-      {element.data.map((field: NadbarFormField) => (
-        <View key={field.fieldId} style={styles.fieldRow}>
-          <Text style={styles.label}>{field.label}</Text>
-          <TextInput
-            style={styles.input}
+    <InputCard style={styles.card}>
+      <View style={styles.container}>
+        {element.data.map((field: NadbarFormField) => (
+          <BaseInput
+            key={field.fieldId}
+            label={field.label}
             value={field.value}
-            onChangeText={value => onFieldChange(field.fieldId, value)}
+            onChange={value => onFieldChange(field.fieldId, value)}
           />
-        </View>
-      ))}
-    </View>
+        ))}
+      </View>
+    </InputCard>
   );
 };
 
 const styles = StyleSheet.create({
+  card: {
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center',
+  },
   container: {
     marginVertical: 8,
     gap: 12,
-  },
-  fieldRow: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 8,
-  },
-  label: {
-    fontSize: 16,
-    color: '#333',
-    minWidth: 80,
-    textAlign: 'right',
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
-    padding: 8,
-    fontSize: 16,
-    textAlign: 'right',
-    backgroundColor: '#fff',
+    width: '100%',
   },
 });
 

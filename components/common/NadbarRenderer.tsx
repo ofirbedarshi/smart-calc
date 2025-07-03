@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import FormElement from './FormElement';
 import { NadbarElement, NadbarScheme } from './nadbarTypes';
 
@@ -10,10 +10,8 @@ interface NadbarRendererProps {
 }
 
 const NadbarRenderer: React.FC<NadbarRendererProps> = ({ scheme, onChange, onError }) => {
-  const [currentScheme, setCurrentScheme] = useState<NadbarScheme>(scheme);
-
   const handleFormFieldChange = (elementIdx: number, fieldId: string, value: string) => {
-    const element = currentScheme.elements[elementIdx];
+    const element = scheme.elements[elementIdx];
     if (!element) {
       onError?.('Element not found at index', { elementIdx });
       return;
@@ -28,16 +26,15 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ scheme, onChange, onErr
         field.fieldId === fieldId ? { ...field, value } : field
       ),
     };
-    const updatedElements = [...currentScheme.elements];
+    const updatedElements = [...scheme.elements];
     updatedElements[elementIdx] = updatedElement;
-    const updatedScheme = { ...currentScheme, elements: updatedElements };
-    setCurrentScheme(updatedScheme);
+    const updatedScheme = { ...scheme, elements: updatedElements };
     onChange?.(updatedScheme);
   };
 
   return (
-    <View>
-      {currentScheme.elements.map((element, idx) => {
+    <View style={styles.container}>
+      {scheme.elements.map((element, idx) => {
         switch (element.type) {
           case 'form':
             return (
@@ -55,5 +52,13 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ scheme, onChange, onErr
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    alignItems: 'center',
+    padding: 20
+  },
+});
 
 export default NadbarRenderer; 

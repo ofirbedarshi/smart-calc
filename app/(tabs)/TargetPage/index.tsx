@@ -8,6 +8,7 @@ const TargetPage = () => {
   return (
     <View style={styles.container}>
       <Button title="מסקר" onPress={() => router.push('/TargetPage/Maskar')} />
+      <Button title="בנק נדברים" onPress={() => router.push('/TargetPage/NadbarListRoute')} />
     </View>
   );
 };

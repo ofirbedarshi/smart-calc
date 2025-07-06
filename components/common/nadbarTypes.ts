@@ -12,6 +12,7 @@ export type NadbarFormField = {
   value: string;
   inputType?: InputType; // optional, defaults to 'text'
   inputOptions?: InputOptions; // optional, for dropdown options etc.
+  targetField?: string; // optional, maps to target entity field
 };
 
 export type NadbarElement = {
@@ -24,6 +25,7 @@ export type NadbarScheme = {
   name: string;
   type: NadbarType;
   id: string;
+  targetId?: string; // optional, ID of the associated target
   updatedAt: number;
   elements: NadbarElement[];
 }; 

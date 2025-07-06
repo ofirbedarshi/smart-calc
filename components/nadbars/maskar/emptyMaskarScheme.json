@@ -1,15 +1,17 @@
 {
-  "name": `מסק״ר`,
+  "name": "מסק״ר",
   "type": "Maskar",
   "id": "",
+  "targetId": "",
+  "updatedAt": 0,
   "elements": [
     {
       "type": "form",
       "data": [
         { "label": "תדר", "fieldId": "freq", "value": "" },
         { "label": "או״ק חוליה", "fieldId": "ok_team", "value": "" },
-        { "label": "אזימוט", "fieldId": "azimuth", "value": "" },
-        { "label": "טווח", "fieldId": "distance", "value": "" }
+        { "label": "אזימוט", "fieldId": "azimuth", "value": "", "targetField": "azimuth" },
+        { "label": "טווח", "fieldId": "distance", "value": "", "targetField": "distance" }
       ]
     },
     {
@@ -26,11 +28,11 @@
       "type": "form",
       "header": "נתונים כלליים",
       "data": [
-        { "label": "שם ותיאור מטרה", "fieldId": "targetName", "value": "" },
+        { "label": "שם ותיאור מטרה", "fieldId": "targetName", "value": "",  "targetField": "description" },
         { "label": "נ.צ UTM", "fieldId": "natza", "value": "" },
         { "label": "נ.צ אריחי", "fieldId": "arihi", "value": "" },
-        { "label": "גובה מטרה", "fieldId": "targetHeight", "value": "" },
-        { "label": "כיוון כניסה מומלץ", "fieldId": "enterence", "value": "" },
+        { "label": "גובה מטרה", "fieldId": "targetHeight", "value": "",  "targetField": "height"},
+        { "label": "כיוון כניסה מומלץ", "fieldId": "enterence", "value": "",  "inputType": "dropdown", "inputOptions": {"dropdown": ["מומלץ", "מאפשר"]} },
         { "label": "קסום", "fieldId": "kasoom", "value": "" }
       ]
     },
@@ -43,8 +45,7 @@
         { "label": "עצמים בולטים", "fieldId": "bigObjects", "value": "" },
         { "label": "דקירת מטרה", "fieldId": "targetPoint", "value": "" },
         { "label": "קונטרסטיות", "fieldId": "Kon", "value": "" },
-        { "label": "מידע עדכני", "fieldId": "info", "value": "" },
-       
+        { "label": "מידע עדכני", "fieldId": "info", "value": "" }
       ]
     },
     {

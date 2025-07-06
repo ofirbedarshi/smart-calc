@@ -1,7 +1,9 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, ScrollView, StyleSheet, View } from 'react-native';
+import { TargetEntity } from '../../../entities';
 import { NadbarService } from '../../../services/NadbarService';
+import { useLocationStore } from '../../../stores/locationStore';
 import NadbarRenderer from '../../common/NadbarRenderer';
 import { NadbarScheme } from '../../common/nadbarTypes';
 import { TargetSelectorModal } from '../../common/TargetSelectorModal';
@@ -13,6 +15,7 @@ const handleError = (message: string, params?: any) => {
 
 const Maskar: React.FC = () => {
   const params = useLocalSearchParams();
+  const { locationData: selfLocation } = useLocationStore();
   const initialScheme: NadbarScheme = params.nadbar
     ? JSON.parse(params.nadbar as string)
     : (emptyMaskarScheme as NadbarScheme);
@@ -38,8 +41,49 @@ const Maskar: React.FC = () => {
     }
   };
 
-  const handleChooseTarget = (target: any) => {
-    console.log('Selected target:', target);
+  const populateFieldsWithTargetData = (target: any) => {
+    if (!selfLocation) {
+      Alert.alert('שגיאה', 'מיקום עצמי לא זמין');
+      return;
+    }
+
+    // Create entity temporarily just to get computed values
+    const entity = TargetEntity.fromTargetData(target, selfLocation);
+    
+    const updatedScheme = { ...scheme };
+    
+    updatedScheme.elements = updatedScheme.elements.map(element => ({
+      ...element,
+      data: element.data.map(field => {
+        if (field.targetField) {
+          // Map targetField to entity property and copy the value statically
+          const targetValue = entity[field.targetField as keyof TargetEntity];
+          return {
+            ...field,
+            value: typeof targetValue === 'string' ? targetValue : ''
+          };
+        }
+        return field;
+      })
+    }));
+
+    setScheme(updatedScheme);
+  };
+
+  const handleChooseTarget = async (target: any) => {
+    try {
+      // Update scheme with targetId (for reference only)
+      const updatedScheme = { ...scheme, targetId: target.id };
+      setScheme(updatedScheme);
+      
+      // Copy target values statically - no dynamic connection
+      populateFieldsWithTargetData(target);
+      
+      console.log('Selected target:', target);
+    } catch (error) {
+      console.error('[Maskar] Failed to process selected target:', error);
+      Alert.alert('שגיאה', 'שגיאה בטעינת נתוני המטרה');
+    }
   };
 
   return (

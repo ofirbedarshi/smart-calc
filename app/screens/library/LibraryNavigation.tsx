@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginTop: 16,
     marginBottom: 16,
+    justifyContent: 'center'
   },
   gridButton: {
     backgroundColor: '#baaf9d',
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonText: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#444',
     textAlign: 'center',

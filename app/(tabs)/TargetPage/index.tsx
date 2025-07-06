@@ -11,8 +11,20 @@ const TargetPage = () => {
   const targetScreens = [
     {
       navigationCtaLabel: 'מסקר',
-      routeName: 'Maskar',
+      routeName: 'MaskarOptions',
       color: '#baaf9d',
+      subNavigations: [
+        {
+          navigationCtaLabel: 'מסקר',
+          routeName: 'Maskar',
+          color: '#baaf9d',
+        },
+        {
+          navigationCtaLabel: 'מסקר loal',
+          routeName: 'MaskarLoal',
+          color: '#baaf9d',
+        },
+      ],
     },
   ];
 

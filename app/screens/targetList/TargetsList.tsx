@@ -75,7 +75,7 @@ export default function TargetsList() {
           keyExtractor={item => item.id || ''}
           renderItemContent={item => (
             <>
-              <Text style={styles.name} onPress={() => handleNavigate(item)}>{item.name}</Text>
+              <Text style={styles.name}>{item.name}</Text>
               <View style={styles.updatedAtContainer}>
                 <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
                 <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
@@ -84,6 +84,7 @@ export default function TargetsList() {
           )}
           onDelete={handleDelete}
           itemLabel={item => item.name}
+          onItemPress={handleNavigate}
         />
       )}
     </View>

@@ -61,7 +61,7 @@ const NadbarList: React.FC = () => {
           keyExtractor={item => item.id}
           renderItemContent={item => (
             <>
-              <Text style={styles.name} onPress={() => handleNavigate(item)}>{item.name}</Text>
+              <Text style={styles.name}>{item.name}</Text>
               <View style={styles.updatedAtContainer}>
                 <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
                 <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
@@ -70,6 +70,7 @@ const NadbarList: React.FC = () => {
           )}
           onDelete={handleDelete}
           itemLabel={item => item.name}
+          onItemPress={handleNavigate}
         />
       )}
     </View>

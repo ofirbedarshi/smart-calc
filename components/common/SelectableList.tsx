@@ -10,9 +10,10 @@ interface SelectableListProps<T> {
   renderItemContent: (item: T) => React.ReactNode;
   onDelete: (ids: string[]) => Promise<void>;
   itemLabel: (item: T) => string;
+  onItemPress?: (item: T) => void;
 }
 
-function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, itemLabel }: SelectableListProps<T>) {
+function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, itemLabel, onItemPress }: SelectableListProps<T>) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -41,10 +42,7 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
     if (showCheckboxes) {
       handleMark(id);
     } else {
-      // Let parent handle navigation or other logic
-      if (typeof renderItemContent === 'function') {
-        // No-op here, parent should handle
-      }
+      onItemPress?.(item);
     }
   };
 

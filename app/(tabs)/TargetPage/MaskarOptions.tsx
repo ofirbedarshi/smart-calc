@@ -1,24 +1,26 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
-import TargetSubMenuNavigation from '../../../components/common/TargetSubMenuNavigation';
+import SimpleNavigationMenu from '../../../components/common/SimpleNavigationMenu';
 
 const MaskarOptions = () => {
-  const maskarOptions = [
-    {
-      navigationCtaLabel: 'מסקר',
-      routeName: 'Maskar',
-      color: '#baaf9d',
-    },
-    {
-      navigationCtaLabel: 'מסקר loal',
-      routeName: 'MaskarLoal',
-      color: '#baaf9d',
-    },
+  const router = useRouter();
+
+  const maskarItems = [
+    { label: 'מסקר', route: 'Maskar' },
+    { label: 'מסקר loal', route: 'MaskarLoal' },
   ];
 
+  const handleNavigate = (route: string) => {
+    router.push(`/TargetPage/${route}` as any);
+  };
+
   return (
-    <TargetSubMenuNavigation
+    <SimpleNavigationMenu
       title="מסקר"
-      options={maskarOptions}
+      items={maskarItems}
+      backgroundColor="#f9f8f4"
+      buttonColor="#baaf9d"
+      onNavigate={handleNavigate}
     />
   );
 };

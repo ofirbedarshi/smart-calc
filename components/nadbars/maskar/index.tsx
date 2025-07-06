@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, StyleSheet, View } from 'react-native';
+import { Alert, Button, ScrollView, StyleSheet, View } from 'react-native';
 import { NadbarService } from '../../../services/NadbarService';
 import NadbarRenderer from '../../common/NadbarRenderer';
 import { NadbarScheme } from '../../common/nadbarTypes';
@@ -38,18 +38,22 @@ const Maskar: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Button title="שמור" onPress={handleSave} />
-      <NadbarRenderer scheme={scheme} onChange={handleChange} onError={handleError} />
-    </View>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Button title="שמור" onPress={handleSave} />
+        <NadbarRenderer scheme={scheme} onChange={handleChange} onError={handleError} />
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+  },
   container: {
     marginTop: 24,
     padding: 20,
-    justifyContent: 'center',
   },
 });
 

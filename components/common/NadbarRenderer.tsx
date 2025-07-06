@@ -59,13 +59,10 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ scheme, onChange, onErr
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    alignItems: 'center',
     paddingVertical: 20,
   },
   container: {
     width: '100%',
-    maxWidth: 500,
-    alignItems: 'center',
   },
   elementWrapper: {
     width: '100%',

@@ -4,11 +4,11 @@ import { Alert, Button, ScrollView, StyleSheet, View } from 'react-native';
 import { TargetEntity } from '../../../entities';
 import { NadbarService } from '../../../services/NadbarService';
 import { useLocationStore } from '../../../stores/locationStore';
+import { MergedNadbar, NadbarMerger } from '../../../utils/NadbarMerger';
 import { TargetToNadbarMapper } from '../../../utils/TargetToNadbarMapper';
 import NadbarRenderer from '../../common/NadbarRenderer';
-import { NadbarScheme } from '../../common/nadbarTypes';
 import { TargetSelectorModal } from '../../common/TargetSelectorModal';
-import emptyMaskarScheme from './emptyMaskarScheme.json';
+import { DEFAULT_MASKAR_TEMPLATE } from './maskarTemplate';
 
 const handleError = (message: string, params?: any) => {
   Alert.alert('שגיאה', `${message}${params ? '\n' + JSON.stringify(params, null, 2) : ''}`);
@@ -17,43 +17,86 @@ const handleError = (message: string, params?: any) => {
 const Maskar: React.FC = () => {
   const params = useLocalSearchParams();
   const { locationData: selfLocation } = useLocationStore();
-  const initialScheme: NadbarScheme = params.nadbar
-    ? JSON.parse(params.nadbar as string)
-    : (emptyMaskarScheme as NadbarScheme);
-  const [scheme, setScheme] = useState<NadbarScheme>(initialScheme);
+  const [mergedNadbar, setMergedNadbar] = useState<MergedNadbar | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  // Load existing nadbar or create new one in memory
   useEffect(() => {
-    if (params.nadbar) {
-      setScheme(JSON.parse(params.nadbar as string));
-    }
-  }, [params.nadbar]);
+    const loadNadbar = async () => {
+      try {
+        setLoading(true);
+        
+        if (params.nadbarId) {
+          // Load existing nadbar
+          const nadbarData = await NadbarService.getNadbar(params.nadbarId as string);
+          if (nadbarData) {
+            // For now, all nadbars use the default template
+            const merged = NadbarMerger.merge(DEFAULT_MASKAR_TEMPLATE, nadbarData);
+            setMergedNadbar(merged);
+          }
+        } else {
+          // Create new nadbar in memory only (not saved yet)
+          const emptyNadbar = NadbarMerger.createEmptyNadbar(DEFAULT_MASKAR_TEMPLATE);
+          setMergedNadbar(emptyNadbar);
+        }
+      } catch (error) {
+        console.error('[Maskar] Failed to load nadbar:', error);
+        Alert.alert('שגיאה', 'שגיאה בטעינת הנדבר');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleChange = (updatedScheme: NadbarScheme) => {
-    setScheme(updatedScheme);
+    loadNadbar();
+  }, [params.nadbarId]);
+
+  const handleChange = (updatedNadbar: MergedNadbar) => {
+    // Just update the state, don't save to storage
+    setMergedNadbar(updatedNadbar);
   };
 
   const handleSave = async () => {
     try {
-      const saved = await NadbarService.saveNadbar(scheme);
-      setScheme(saved);
-      Alert.alert('הצלחה', 'הנדבר עודכן בהצלחה');
-    } catch (e) {
-      Alert.alert('שגיאה', 'שגיאה בשמירה');
+      if (!mergedNadbar) return;
+      
+      const values = NadbarMerger.extractValues(mergedNadbar);
+      
+      if (!mergedNadbar.id) {
+        // Create new nadbar in storage
+        const newNadbarData = await NadbarService.saveNadbar({
+          templateId: DEFAULT_MASKAR_TEMPLATE.id,
+          targetId: mergedNadbar.targetId,
+          values: values
+        });
+        
+        // Update with the real saved nadbar
+        const savedMerged = NadbarMerger.merge(DEFAULT_MASKAR_TEMPLATE, newNadbarData);
+        setMergedNadbar(savedMerged);
+        
+        Alert.alert('הצלחה', 'הנדבר נשמר בהצלחה');
+      } else {
+        // Update existing nadbar
+        await NadbarService.updateNadbar(mergedNadbar.id, { values });
+        Alert.alert('הצלחה', 'הנדבר עודכן בהצלחה');
+      }
+    } catch (error) {
+      console.error('[Maskar] Failed to save nadbar:', error);
+      Alert.alert('שגיאה', 'שגיאה בשמירת הנדבר');
     }
   };
 
   const populateFieldsWithTargetData = (target: any) => {
-    if (!selfLocation) {
-      Alert.alert('שגיאה', 'מיקום עצמי לא זמין');
+    if (!selfLocation || !mergedNadbar) {
+      Alert.alert('שגיאה', 'מיקום עצמי או נדבר לא זמין');
       return;
     }
 
     // Create entity temporarily just to get computed values
     const entity = TargetEntity.fromTargetData(target, selfLocation);
     
-    const updatedScheme = { ...scheme };
+    const updatedNadbar = { ...mergedNadbar };
     
-    updatedScheme.elements = updatedScheme.elements.map(element => ({
+    updatedNadbar.elements = updatedNadbar.elements.map(element => ({
       ...element,
       data: element.data.map(field => {
         if (field.targetField) {
@@ -67,16 +110,20 @@ const Maskar: React.FC = () => {
       })
     }));
 
-    setScheme(updatedScheme);
+    setMergedNadbar(updatedNadbar);
   };
 
   const handleChooseTarget = async (target: any) => {
     try {
-      // Update scheme with targetId (for reference only)
-      const updatedScheme = { ...scheme, targetId: target.id };
-      setScheme(updatedScheme);
+      if (!mergedNadbar) return;
+
+      // Update nadbar with targetId
+      await NadbarService.updateNadbar(mergedNadbar.id, { targetId: target.id });
       
-      // Copy target values statically - no dynamic connection
+      // Update merged nadbar
+      setMergedNadbar(prev => prev ? { ...prev, targetId: target.id } : null);
+      
+      // Copy target values statically
       populateFieldsWithTargetData(target);
       
       console.log('Selected target:', target);
@@ -86,6 +133,22 @@ const Maskar: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Button title="טוען..." disabled />
+      </View>
+    );
+  }
+
+  if (!mergedNadbar) {
+    return (
+      <View style={styles.errorContainer}>
+        <Button title="שגיאה בטעינת הנדבר" disabled />
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -93,7 +156,11 @@ const Maskar: React.FC = () => {
           <Button title="שמור" onPress={handleSave} />
           <TargetSelectorModal onChooseTarget={handleChooseTarget} />
         </View>
-        <NadbarRenderer scheme={scheme} onChange={handleChange} onError={handleError} />
+        <NadbarRenderer 
+          nadbar={mergedNadbar} 
+          onChange={handleChange} 
+          onError={handleError} 
+        />
       </View>
     </ScrollView>
   );
@@ -111,6 +178,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

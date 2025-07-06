@@ -1,4 +1,4 @@
-// Nadbar types for schema-driven UI
+// Nadbar types for template + data separation
 
 export type InputType = 'text' | 'textArea' | 'number' | 'dropdown';
 
@@ -9,7 +9,6 @@ export type InputOptions = {
 export type NadbarFormField = {
   label: string;
   fieldId: string; // must be non-empty
-  value: string;
   inputType?: InputType; // optional, defaults to 'text'
   inputOptions?: InputOptions; // optional, for dropdown options etc.
   targetField?: string; // optional, maps to target entity field
@@ -21,14 +20,24 @@ export type NadbarElement = {
   data: NadbarFormField[];
 };
 
-export type NadbarScheme = {
+// Template - static structure (for now, just the default maskar template)
+export type NadbarTemplate = {
+  id: string;
   name: string;
   type: NadbarType;
-  id: string;
-  targetId?: string; // optional, ID of the associated target
-  updatedAt: number;
+  version: string;
   elements: NadbarElement[];
-}; 
+};
+
+// Data - dynamic values for each instance
+export type NadbarData = {
+  id: string;
+  templateId: string;
+  targetId?: string;
+  values: Record<string, string>; // fieldId -> value mapping
+  createdAt: number;
+  updatedAt: number;
+};
 
 export enum NadbarType {
   Maskar = 'Maskar'

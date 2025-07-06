@@ -1,17 +1,17 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { MergedNadbar, MergedNadbarElement } from '../../utils/NadbarMerger';
 import FormElement from './FormElement';
-import { NadbarElement, NadbarScheme } from './nadbarTypes';
 
 interface NadbarRendererProps {
-  scheme: NadbarScheme;
-  onChange?: (updatedScheme: NadbarScheme) => void;
+  nadbar: MergedNadbar;
+  onChange?: (updatedNadbar: MergedNadbar) => void;
   onError?: (message: string, params?: any) => void;
 }
 
-const NadbarRenderer: React.FC<NadbarRendererProps> = ({ scheme, onChange, onError }) => {
+const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onError }) => {
   const handleFormFieldChange = (elementIdx: number, fieldId: string, value: string) => {
-    const element = scheme.elements[elementIdx];
+    const element = nadbar.elements[elementIdx];
     if (!element) {
       onError?.('Element not found at index', { elementIdx });
       return;
@@ -20,22 +20,22 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ scheme, onChange, onErr
       onError?.('Element at index is not of type "form"', { elementIdx, type: element.type });
       return;
     }
-    const updatedElement: NadbarElement = {
+    const updatedElement: MergedNadbarElement = {
       ...element,
       data: element.data.map(field =>
         field.fieldId === fieldId ? { ...field, value } : field
       ),
     };
-    const updatedElements = [...scheme.elements];
+    const updatedElements = [...nadbar.elements];
     updatedElements[elementIdx] = updatedElement;
-    const updatedScheme = { ...scheme, elements: updatedElements };
-    onChange?.(updatedScheme);
+    const updatedNadbar = { ...nadbar, elements: updatedElements };
+    onChange?.(updatedNadbar);
   };
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        {scheme.elements.map((element, idx) => {
+        {nadbar.elements.map((element, idx) => {
           switch (element.type) {
             case 'form':
               return (

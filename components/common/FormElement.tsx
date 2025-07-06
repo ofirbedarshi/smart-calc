@@ -1,17 +1,17 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { MergedNadbarElement, MergedNadbarField } from '../../utils/NadbarMerger';
 import { BaseInput } from './BaseInput';
 import { Dropdown } from './Dropdown';
 import InputCard from './InputCard';
-import { NadbarElement, NadbarFormField } from './nadbarTypes';
 
 interface FormElementProps {
-  element: Extract<NadbarElement, { type: 'form' }>;
+  element: Extract<MergedNadbarElement, { type: 'form' }>;
   onFieldChange: (fieldId: string, value: string) => void;
 }
 
 const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => {
-  const renderInput = (field: NadbarFormField) => {
+  const renderInput = (field: MergedNadbarField) => {
     if (field.inputType === 'dropdown' && field.inputOptions?.dropdown) {
       const options = field.inputOptions.dropdown.map(option => ({
         label: option,
@@ -42,7 +42,7 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
         {element.header && (
           <Text style={styles.header}>{element.header}</Text>
         )}
-        {element.data.map((field: NadbarFormField) => (
+        {element.data.map((field: MergedNadbarField) => (
           <View key={field.fieldId} style={styles.row}>
             <View style={styles.inputWrapper}>
               {renderInput(field)}

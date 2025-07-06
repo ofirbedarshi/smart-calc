@@ -1,15 +1,16 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
-import { NadbarScheme, NadbarType } from '../../../components/common/nadbarTypes';
+import { NadbarData } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import SelectableList from '../../../components/common/SelectableList';
+import { DEFAULT_MASKAR_TEMPLATE } from '../../../components/nadbars/maskar/maskarTemplate';
 import { NadbarService } from '../../../services/NadbarService';
 import { formatDate } from '../../../utils/dateUtils';
 
-function getNadbarRoute(nadbar: NadbarScheme) {
-  switch (nadbar.type) {
-    case NadbarType.Maskar:
+function getNadbarRoute(nadbar: NadbarData) {
+  switch (nadbar.templateId) {
+    case DEFAULT_MASKAR_TEMPLATE.id:
       return '/TargetPage/Maskar';
     // Add more cases for other nadbar types/screens as needed
     default:
@@ -17,10 +18,19 @@ function getNadbarRoute(nadbar: NadbarScheme) {
   }
 }
 
+function getNadbarName(nadbar: NadbarData): string {
+  switch (nadbar.templateId) {
+    case DEFAULT_MASKAR_TEMPLATE.id:
+      return DEFAULT_MASKAR_TEMPLATE.name;
+    default:
+      return 'נדבר לא ידוע';
+  }
+}
+
 const NadbarList: React.FC = () => {
-  const [nadbars, setNadbars] = useState<NadbarScheme[]>([]);
+  const [nadbars, setNadbars] = useState<NadbarData[]>([]);
   const [search, setSearch] = useState('');
-  const [filtered, setFiltered] = useState<NadbarScheme[]>([]);
+  const [filtered, setFiltered] = useState<NadbarData[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -40,10 +50,10 @@ const NadbarList: React.FC = () => {
     setNadbars(updated);
   };
 
-  const handleNavigate = (nadbar: NadbarScheme) => {
+  const handleNavigate = (nadbar: NadbarData) => {
     const route = getNadbarRoute(nadbar);
     if (route) {
-      router.push({ pathname: route, params: { nadbar: JSON.stringify(nadbar) } });
+      router.push({ pathname: route, params: { nadbarId: nadbar.id } });
     } else {
       // fallback: just log
       console.log('No route for nadbar:', nadbar);
@@ -61,7 +71,7 @@ const NadbarList: React.FC = () => {
           keyExtractor={item => item.id}
           renderItemContent={item => (
             <>
-              <Text style={styles.name}>{item.name}</Text>
+              <Text style={styles.name}>{getNadbarName(item)}</Text>
               <View style={styles.updatedAtContainer}>
                 <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
                 <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
@@ -69,7 +79,7 @@ const NadbarList: React.FC = () => {
             </>
           )}
           onDelete={handleDelete}
-          itemLabel={item => item.name}
+          itemLabel={item => getNadbarName(item)}
           onItemPress={handleNavigate}
         />
       )}

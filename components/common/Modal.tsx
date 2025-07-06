@@ -7,9 +7,10 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  fullScreen?: boolean;
 }
 
-export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children }) => {
+export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children, fullScreen = false }) => {
   return (
     <RNModal
       visible={visible}
@@ -17,8 +18,8 @@ export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children 
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
+      <View style={[styles.modalOverlay, fullScreen && styles.fullScreenOverlay]}>
+        <View style={[styles.modalContent, fullScreen && styles.fullScreenContent]}>
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <FontAwesome name="times" size={20} color="#666" />
@@ -66,5 +67,16 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     padding: 16,
+    flex: 1,
+  },
+  fullScreenOverlay: {
+    padding: 0,
+  },
+  fullScreenContent: {
+    width: '100%',
+    height: '100%',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    borderRadius: 0,
   },
 }); 

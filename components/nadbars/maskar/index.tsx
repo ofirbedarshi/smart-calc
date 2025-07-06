@@ -4,6 +4,7 @@ import { Alert, Button, ScrollView, StyleSheet, View } from 'react-native';
 import { NadbarService } from '../../../services/NadbarService';
 import NadbarRenderer from '../../common/NadbarRenderer';
 import { NadbarScheme } from '../../common/nadbarTypes';
+import { TargetSelectorModal } from '../../common/TargetSelectorModal';
 import emptyMaskarScheme from './emptyMaskarScheme.json';
 
 const handleError = (message: string, params?: any) => {
@@ -37,10 +38,17 @@ const Maskar: React.FC = () => {
     }
   };
 
+  const handleChooseTarget = (target: any) => {
+    console.log('Selected target:', target);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <Button title="שמור" onPress={handleSave} />
+        <View style={styles.buttonContainer}>
+          <Button title="שמור" onPress={handleSave} />
+          <TargetSelectorModal onChooseTarget={handleChooseTarget} />
+        </View>
         <NadbarRenderer scheme={scheme} onChange={handleChange} onError={handleError} />
       </View>
     </ScrollView>
@@ -54,6 +62,11 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 24,
     padding: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
 });
 

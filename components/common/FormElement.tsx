@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { BaseInput } from './BaseInput';
+import { Dropdown } from './Dropdown';
 import InputCard from './InputCard';
 import { NadbarElement, NadbarFormField } from './nadbarTypes';
 
@@ -10,6 +11,31 @@ interface FormElementProps {
 }
 
 const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => {
+  const renderInput = (field: NadbarFormField) => {
+    if (field.inputType === 'dropdown' && field.inputOptions?.dropdown) {
+      const options = field.inputOptions.dropdown.map(option => ({
+        label: option,
+        value: option,
+      }));
+      
+      return (
+        <Dropdown
+          options={options}
+          value={field.value}
+          onChange={value => onFieldChange(field.fieldId, value)}
+        />
+      );
+    }
+    
+    return (
+      <BaseInput
+        value={field.value}
+        onChange={value => onFieldChange(field.fieldId, value)}
+        textArea={field.inputType === 'textArea'}
+      />
+    );
+  };
+
   return (
     <InputCard style={styles.card}>
       <View style={styles.container}>
@@ -19,10 +45,7 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
         {element.data.map((field: NadbarFormField) => (
           <View key={field.fieldId} style={styles.row}>
             <View style={styles.inputWrapper}>
-              <BaseInput
-                value={field.value}
-                onChange={value => onFieldChange(field.fieldId, value)}
-              />
+              {renderInput(field)}
             </View>
             <Text style={styles.label}>{field.label}</Text>
           </View>

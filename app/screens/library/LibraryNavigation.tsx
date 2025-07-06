@@ -1,8 +1,9 @@
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import Header from '../../../components/common/Header';
 import SubMenuNavigation from '../../../components/common/SubMenuNavigation';
+import TargetNavButton from '../../../components/common/TargetNavButton';
 import Tevel from '../../../components/common/Tevel';
 import GenericWebViewController from '../webview/controllers/GenericWebViewController';
 import { aimHtml } from '../webview/pages/aimHtml';
@@ -119,18 +120,6 @@ type LibraryStackParamList = {
   [key: string]: undefined;
 };
 
-// LibraryNavButton: UI for a single navigation button
-const LibraryNavButton: React.FC<{ screen: any; onPress: () => void }> = ({ screen, onPress }) => (
-  <TouchableOpacity
-    key={screen.routeName}
-    style={[styles.gridButton, screen.color ? { backgroundColor: screen.color } : null]}
-    onPress={onPress}
-    activeOpacity={0.85}
-  >
-    <Text style={styles.buttonText}>{screen.navigationCtaLabel}</Text>
-  </TouchableOpacity>
-);
-
 // Set all button colors to #baaf9d
 const normalizedScreens = contentScreens.map(screen => ({ ...screen, color: '#baaf9d' }));
 
@@ -140,10 +129,11 @@ function MainLibraryScreen({ navigation }: { navigation: NativeStackNavigationPr
       <Header title="ספרייה" />
       <View style={styles.flexGrid}>
         {normalizedScreens.map((screen) => (
-          <LibraryNavButton
+          <TargetNavButton
             key={screen.routeName}
             screen={screen}
             onPress={() => navigation.navigate(screen.routeName)}
+            backgroundColor="#baaf9d"
           />
         ))}
       </View>
@@ -225,26 +215,5 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 16,
     justifyContent: 'center'
-  },
-  gridButton: {
-    backgroundColor: '#baaf9d',
-    minHeight: 90,
-    flexBasis: '48%',
-    maxWidth: 150,
-    margin: 7,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#444',
-    textAlign: 'center',
   },
 }); 

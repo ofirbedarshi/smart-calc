@@ -18,8 +18,8 @@ const MaskarOptions = () => {
     <SimpleNavigationMenu
       title="מסקר"
       items={maskarItems}
-      backgroundColor="#f9f8f4"
-      buttonColor="#baaf9d"
+       backgroundColor="#f9f8f4"
+      buttonColor="#cfddde"
       onNavigate={handleNavigate}
     />
   );

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import Button from '../../../components/common/Button';
 import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
+import TargetNadbarsSection from '../../../components/targetList/TargetNadbarsSection';
 import { TargetEntity } from '../../../entities';
 import { TargetFields } from '../../../services/TargetService';
 import { useLocationStore } from '../../../stores/locationStore';
@@ -99,13 +100,18 @@ export default function TargetDetails() {
       <FlatList
         data={[1]}
         renderItem={() => (
-          <FieldSection
-            targetFields={targetEntity.data}
-            isEditMode={isEditMode}
-            onFieldChange={handleFieldChange}
-            computed={computed}
-            onToggleEdit={() => setIsEditMode(!isEditMode)}
-          />
+          <>
+            <FieldSection
+              targetFields={targetEntity.data}
+              isEditMode={isEditMode}
+              onFieldChange={handleFieldChange}
+              computed={computed}
+              onToggleEdit={() => setIsEditMode(!isEditMode)}
+            />
+            {targetEntity.id && (
+              <TargetNadbarsSection targetId={targetEntity.id} />
+            )}
+          </>
         )}
         keyExtractor={() => '1'}
         style={styles.container}

@@ -3,26 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, StyleSheet, View } from 'react-native';
 import Button from '../../../components/common/Button';
 import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
-import { CoordsConversionCalc } from '../../../services/calculators/CoordsConversionCalc';
+import { TargetEntity } from '../../../entities';
 import { TargetFields } from '../../../services/TargetService';
 import { useLocationStore } from '../../../stores/locationStore';
 import { useTargetStore } from '../../../stores/targetStore';
 import FieldSection from './FieldSection';
-
-// Field definitions and options outside the component for clarity
-const EMPTY_TARGET: TargetFields = {
-  name: '',
-  description: '',
-  northCoord: '',
-  eastCoord: '',
-  height: '',
-  isAttacked: '',
-  time: '',
-  ammunition: '',
-  team: '',
-  date: '',
-  notes: '',
-};
 
 export default function TargetDetails() {
   const params = useLocalSearchParams();
@@ -30,34 +15,40 @@ export default function TargetDetails() {
   const { locationData: selfLocation, loadLocation } = useLocationStore();
   const { addTarget, updateTarget, deleteTarget, loading } = useTargetStore();
   const [isEditMode, setIsEditMode] = useState(false);
-  const [targetFields, setTargetFields] = useState<TargetFields>({ ...EMPTY_TARGET, ...target });
+  const [targetEntity, setTargetEntity] = useState<TargetEntity>(() => 
+    TargetEntity.fromTargetData(target, selfLocation)
+  );
   const router = useRouter();
 
-  // Compute azimuth, distance, elevation live
-  const hasCoords = Boolean(
-    selfLocation.height && selfLocation.northCoord && selfLocation.eastCoord &&
-    targetFields.height && targetFields.northCoord && targetFields.eastCoord
-  );
-  const computed = hasCoords
-    ? CoordsConversionCalc.calc(selfLocation, {
-        height: targetFields.height,
-        northCoord: targetFields.northCoord,
-        eastCoord: targetFields.eastCoord,
-      })
-    : { azimuth: '', distance: '', elevation: '' };
-
+  // Update target entity when self location changes
   useEffect(() => {
-    if (!hasCoords) loadLocation();
-  }, [hasCoords, loadLocation, targetFields.northCoord, targetFields.eastCoord, targetFields.height, selfLocation.northCoord, selfLocation.eastCoord, selfLocation.height]);
+    if (selfLocation) {
+      setTargetEntity(prev => {
+        const updated = new TargetEntity(prev.data, selfLocation);
+        return updated;
+      });
+    }
+  }, [selfLocation]);
+
+  // Load location if not available
+  useEffect(() => {
+    if (!selfLocation) {
+      loadLocation();
+    }
+  }, [selfLocation, loadLocation]);
 
   // Field change handler
   const handleFieldChange = (field: keyof TargetFields, value: string) => {
-    setTargetFields(prev => ({ ...prev, [field]: value }));
+    setTargetEntity(prev => {
+      const updated = new TargetEntity(prev.data, selfLocation);
+      updated.updateField(field, value);
+      return updated;
+    });
   };
 
   // Validation
   const validateFields = () => {
-    if (!targetFields.name || !targetFields.description) {
+    if (!targetEntity.name || !targetEntity.description) {
       Alert.alert('שגיאה', 'שם המטרה והתיאור הם שדות חובה');
       return false;
     }
@@ -68,13 +59,13 @@ export default function TargetDetails() {
   const handleSave = async () => {
     try {
       if (!validateFields()) return;
-      if (targetFields.id) {
-        await updateTarget(targetFields.id as string, targetFields);
+      if (targetEntity.id) {
+        await updateTarget(targetEntity.id, targetEntity.data);
         Alert.alert('הצלחה', 'עריכה בוצעה בהצלחה');
         setIsEditMode(false);
       } else {
-        const newTarget = await addTarget(targetFields);
-        setTargetFields(newTarget);
+        const newTarget = await addTarget(targetEntity.data);
+        setTargetEntity(TargetEntity.fromTargetData(newTarget, selfLocation));
         Alert.alert('הצלחה', 'שמירה בוצעה בהצלחה');
         setIsEditMode(false);
       }
@@ -86,8 +77,8 @@ export default function TargetDetails() {
   // Delete logic
   const handleDelete = async () => {
     try {
-      if (!targetFields.id) return;
-      await deleteTarget(targetFields.id);
+      if (!targetEntity.id) return;
+      await deleteTarget(targetEntity.id);
       Alert.alert('מחיקה', 'המטרה נמחקה בהצלחה');
       router.push('/TargetsList');
     } catch (e) {
@@ -96,13 +87,20 @@ export default function TargetDetails() {
     }
   };
 
+  // Get computed values from the entity getters
+  const computed = {
+    azimuth: targetEntity.azimuth,
+    distance: targetEntity.distance,
+    elevation: targetEntity.elevation,
+  };
+
   return (
     <>
       <FlatList
         data={[1]}
         renderItem={() => (
           <FieldSection
-            targetFields={targetFields}
+            targetFields={targetEntity.data}
             isEditMode={isEditMode}
             onFieldChange={handleFieldChange}
             computed={computed}
@@ -121,9 +119,9 @@ export default function TargetDetails() {
           small
           theme="primary"
         />
-        {targetFields.id && (
+        {targetEntity.id && (
           <DeleteButtonWithConfirm
-            items={[typeof targetFields.name === 'string' ? targetFields.name : '']}
+            items={[typeof targetEntity.name === 'string' ? targetEntity.name : '']}
             onDelete={handleDelete}
             buttonProps={{
               title: 'מחיקה',

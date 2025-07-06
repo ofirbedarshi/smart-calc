@@ -29,7 +29,7 @@
       "header": "נתונים כלליים",
       "data": [
         { "label": "שם ותיאור מטרה", "fieldId": "targetName", "value": "",  "targetField": "description" },
-        { "label": "נ.צ UTM", "fieldId": "natza", "value": "" },
+        { "label": "נ.צ UTM", "fieldId": "natza", "value": "", "targetField": "coords" },
         { "label": "נ.צ אריחי", "fieldId": "arihi", "value": "" },
         { "label": "גובה מטרה", "fieldId": "targetHeight", "value": "",  "targetField": "height"},
         { "label": "כיוון כניסה מומלץ", "fieldId": "enterence", "value": "",  "inputType": "dropdown", "inputOptions": {"dropdown": ["מומלץ", "מאפשר"]} },

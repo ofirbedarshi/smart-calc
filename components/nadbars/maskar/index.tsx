@@ -4,6 +4,7 @@ import { Alert, Button, ScrollView, StyleSheet, View } from 'react-native';
 import { TargetEntity } from '../../../entities';
 import { NadbarService } from '../../../services/NadbarService';
 import { useLocationStore } from '../../../stores/locationStore';
+import { TargetToNadbarMapper } from '../../../utils/TargetToNadbarMapper';
 import NadbarRenderer from '../../common/NadbarRenderer';
 import { NadbarScheme } from '../../common/nadbarTypes';
 import { TargetSelectorModal } from '../../common/TargetSelectorModal';
@@ -56,11 +57,10 @@ const Maskar: React.FC = () => {
       ...element,
       data: element.data.map(field => {
         if (field.targetField) {
-          // Map targetField to entity property and copy the value statically
-          const targetValue = entity[field.targetField as keyof TargetEntity];
+          const targetValue = TargetToNadbarMapper.getValue(field.targetField, entity);
           return {
             ...field,
-            value: typeof targetValue === 'string' ? targetValue : ''
+            value: targetValue
           };
         }
         return field;

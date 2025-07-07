@@ -1,11 +1,12 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { TargetEntity } from '../../entities';
 import { NadbarService } from '../../services/NadbarService';
 import { useLocationStore } from '../../stores/locationStore';
 import { MergedNadbar, NadbarMerger } from '../../utils/NadbarMerger';
 import { TargetToNadbarMapper } from '../../utils/TargetToNadbarMapper';
+import Button from './Button';
 import NadbarRenderer from './NadbarRenderer';
 import { TargetSelectorModal } from './TargetSelectorModal';
 import { NadbarTemplate } from './nadbarTypes';
@@ -29,7 +30,7 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
     const loadNadbar = async () => {
       try {
         setLoading(true);
-        
+
         if (params.nadbarId) {
           // Load existing nadbar
           const nadbarData = await NadbarService.getNadbar(params.nadbarId as string);
@@ -62,7 +63,7 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
     try {
       if (!mergedNadbar) return;
       const values = NadbarMerger.extractValues(mergedNadbar, mergedNadbar.values);
-      
+
       if (!mergedNadbar.id) {
         // Create new nadbar in storage
         const newNadbarData = await NadbarService.saveNadbar({
@@ -70,11 +71,11 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
           targetId: mergedNadbar.targetId,
           values: values
         });
-        
+
         // Update with the real saved nadbar
         const savedMerged = NadbarMerger.merge(template, newNadbarData);
         setMergedNadbar(savedMerged);
-        
+
         Alert.alert('הצלחה', 'הנדבר נשמר בהצלחה');
       } else {
         // Update existing nadbar
@@ -95,9 +96,9 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
 
     // Create entity temporarily just to get computed values
     const entity = TargetEntity.fromTargetData(target, selfLocation);
-    
+
     const updatedNadbar = { ...mergedNadbar };
-    
+
     updatedNadbar.elements = updatedNadbar.elements.map(element => ({
       ...element,
       data: element.data.map(field => {
@@ -121,13 +122,13 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
 
       // Update nadbar with targetId
       await NadbarService.updateNadbar(mergedNadbar.id, { targetId: target.id });
-      
+
       // Update merged nadbar
       setMergedNadbar(prev => prev ? { ...prev, targetId: target.id } : null);
-      
+
       // Copy target values statically
       populateFieldsWithTargetData(target);
-      
+
       console.log('Selected target:', target);
     } catch (error) {
       console.error('[NadbarEditor] Failed to process selected target:', error);
@@ -138,7 +139,7 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Button title="טוען..." disabled />
+        <Button title="טוען..." disabled onPress={() => { }} />
       </View>
     );
   }
@@ -146,7 +147,7 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
   if (!mergedNadbar) {
     return (
       <View style={styles.errorContainer}>
-        <Button title="שגיאה בטעינת הנדבר" disabled />
+        <Button title="שגיאה בטעינת הנדבר" disabled onPress={() => { }} />
       </View>
     );
   }
@@ -154,15 +155,20 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.stickyButtonContainer}>
-        <Button title="שמור" onPress={handleSave} />
+        <Button
+          title="שמור"
+          onPress={handleSave}
+          theme="primary"
+          small
+        />
         <TargetSelectorModal onChooseTarget={handleChooseTarget} />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
-          <NadbarRenderer 
-            nadbar={mergedNadbar} 
-            onChange={handleChange} 
-            onError={handleError} 
+          <NadbarRenderer
+            nadbar={mergedNadbar}
+            onChange={handleChange}
+            onError={handleError}
           />
         </View>
       </ScrollView>
@@ -183,8 +189,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   stickyButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 24,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from 'react-native';
 import TargetsListSelector from '../../app/screens/targetList/TargetsListSelector';
+import Button from './Button';
 import { Modal } from './Modal';
 
 interface TargetSelectorModalProps {
@@ -24,6 +24,8 @@ export const TargetSelectorModal: React.FC<TargetSelectorModalProps> = ({
       <Button 
         title={buttonTitle} 
         onPress={() => setIsModalVisible(true)} 
+        theme={'success'}
+        small
       />
       
       <Modal

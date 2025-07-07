@@ -2,32 +2,9 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { NadbarService } from '../../services/NadbarService';
+import { getNadbarName, getNadbarRoute } from '../../utils/nadbarRegistry';
 import LinkButton from '../common/LinkButton';
 import { NadbarData } from '../common/nadbarTypes';
-import { EXAMPLE_TEMPLATE } from '../nadbars/example/exampleTemplate';
-import { DEFAULT_MASKAR_TEMPLATE } from '../nadbars/maskar/maskarTemplate';
-
-// Template registry for getting nadbar names
-const TEMPLATE_REGISTRY = {
-  [DEFAULT_MASKAR_TEMPLATE.id]: DEFAULT_MASKAR_TEMPLATE,
-  [EXAMPLE_TEMPLATE.id]: EXAMPLE_TEMPLATE,
-};
-
-function getNadbarRoute(nadbar: NadbarData): string | null {
-  switch (nadbar.templateId) {
-    case DEFAULT_MASKAR_TEMPLATE.id:
-      return '/TargetPage/Maskar';
-    case EXAMPLE_TEMPLATE.id:
-      return '/TargetPage/ExampleNadbar';
-    default:
-      return null;
-  }
-}
-
-function getNadbarName(nadbar: NadbarData): string {
-  const template = TEMPLATE_REGISTRY[nadbar.templateId];
-  return template ? template.name : 'נדבר לא ידוע';
-}
 
 interface TargetNadbarsSectionProps {
   targetId: string;

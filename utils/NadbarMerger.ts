@@ -64,7 +64,6 @@ export class NadbarMerger {
     return {
       id: data.id,
       name: template.name,
-      type: template.type,
       templateId: template.id,
       targetId: data.targetId,
       elements: mergedElements,
@@ -96,11 +95,11 @@ export class NadbarMerger {
    */
   static extractValues(mergedNadbar: MergedNadbar, valuesMap?: Record<string, string>): Record<string, string> {
     const values: Record<string, string> = {};
-    const variableValues = valuesMap || {};
+    const variableValues = valuesMap || mergedNadbar.values || {};
     mergedNadbar.elements.forEach(element => {
       if (element.type === 'form') {
         element.data.forEach(field => {
-          values[field.fieldId] = field.value || '';
+          values[field.fieldId] = variableValues[field.fieldId] || '';
         });
       } else if (element.type === 'text') {
         parseVariableString(element.data).forEach(part => {

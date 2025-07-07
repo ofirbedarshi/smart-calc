@@ -1,6 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
-import { Modal as RNModal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Modal as RNModal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface ModalProps {
   visible: boolean;
@@ -27,9 +27,9 @@ export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children,
             <Text style={styles.modalTitle}>{title}</Text>
           </View>
           {fullScreen ? (
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.modalBody} bounces={false}>
+            <View style={{ flex: 1 }}>
               {children}
-            </ScrollView>
+            </View>
           ) : (
             <View style={styles.modalBody}>
               {children}

@@ -64,7 +64,28 @@ export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
         {
           type: 'they',
           data: "ציפור __ ממסק״ר, חיובי מוכן/שלילי, __ דק"
-        }
+        },
+        {
+          type: 'me',
+          data: "ביצוע על מטרה {{con_target}} בקסום {{kasoom}}"
+        },
+        {
+          type: 'they',
+          data: "ביצוע על מטרה __, בקסום __ זמן מעוף __ , רשאי ללזור."
+        },
+        {
+          type: 'me',
+          data: "קיבלתי זמן מעוף {{con_aoof}} רשאי ללזור מסק״ר מציפור {{con_tzipor3}} למטרה {{con_target2}} - שגר"
+        },
+        {
+          type: 'they',
+          data: "שוגר, __ שניות"
+        },
+        {
+          type: 'me',
+          data: `דיווח תוצאות - ״קבל פגיעה/לא פגיאה״ + המלצות להשלמה אם נדרש`
+        },
+        
       ]
     },
   ]

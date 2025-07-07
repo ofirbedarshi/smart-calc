@@ -61,8 +61,7 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
   const handleSave = async () => {
     try {
       if (!mergedNadbar) return;
-      
-      const values = NadbarMerger.extractValues(mergedNadbar);
+      const values = NadbarMerger.extractValues(mergedNadbar, mergedNadbar.values);
       
       if (!mergedNadbar.id) {
         // Create new nadbar in storage

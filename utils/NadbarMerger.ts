@@ -31,6 +31,7 @@ export interface MergedNadbar {
   elements: MergedNadbarElement[];
   createdAt: number;
   updatedAt: number;
+  values: Record<string, string>;
 }
 
 export class NadbarMerger {
@@ -68,8 +69,9 @@ export class NadbarMerger {
       targetId: data.targetId,
       elements: mergedElements,
       createdAt: data.createdAt,
-      updatedAt: data.updatedAt
-    };
+      updatedAt: data.updatedAt,
+      values: { ...data.values }
+    } as MergedNadbar & { values: Record<string, string> };
   }
 
   /**
@@ -86,38 +88,36 @@ export class NadbarMerger {
       updatedAt: Date.now()
     };
     
-    return this.merge(template, tempData);
+    return { ...this.merge(template, tempData), values: { ...emptyValues } } as MergedNadbar & { values: Record<string, string> };
   }
 
   /**
    * Extracts values from a merged nadbar back to data format
    */
-  static extractValues(mergedNadbar: MergedNadbar): Record<string, string> {
+  static extractValues(mergedNadbar: MergedNadbar, valuesMap?: Record<string, string>): Record<string, string> {
     const values: Record<string, string> = {};
-    
+    const variableValues = valuesMap || {};
     mergedNadbar.elements.forEach(element => {
       if (element.type === 'form') {
         element.data.forEach(field => {
           values[field.fieldId] = field.value || '';
         });
       } else if (element.type === 'text') {
-        // Extract variable values from text
         parseVariableString(element.data).forEach(part => {
           if (part.type === 'var') {
-            values[part.fieldId!] = values[part.fieldId!] || '';
+            values[part.fieldId!] = variableValues[part.fieldId!] || '';
           }
         });
       } else if (element.type === 'conversation') {
         element.data.forEach(msg => {
           parseVariableString(msg.data).forEach(part => {
             if (part.type === 'var') {
-              values[part.fieldId!] = values[part.fieldId!] || '';
+              values[part.fieldId!] = variableValues[part.fieldId!] || '';
             }
           });
         });
       }
     });
-    
     return values;
   }
 

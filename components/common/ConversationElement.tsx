@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import VariableStringInput, { VariableStringInputValueMap } from './VariableStringInput';
 
 interface ConversationElementProps {
   element: {
@@ -7,9 +8,12 @@ interface ConversationElementProps {
     header?: string;
     data: { type: 'me' | 'they'; data: string }[];
   };
+  variableValues: VariableStringInputValueMap;
+  onVariableChange: (fieldId: string, value: string) => void;
+  editable?: boolean;
 }
 
-const ConversationElement: React.FC<ConversationElementProps> = ({ element }) => {
+const ConversationElement: React.FC<ConversationElementProps> = ({ element, variableValues, onVariableChange, editable = true }) => {
   return (
     <View style={styles.card}>
       {element.header && <Text style={styles.header}>{element.header}</Text>}
@@ -28,7 +32,12 @@ const ConversationElement: React.FC<ConversationElementProps> = ({ element }) =>
                 msg.type === 'me' ? styles.meBubble : styles.theyBubble
               ]}
             >
-              <Text style={styles.messageText}>{msg.data}</Text>
+              <VariableStringInput
+                template={msg.data}
+                values={variableValues}
+                onChange={onVariableChange}
+                editable={editable}
+              />
             </View>
           </View>
         ))}

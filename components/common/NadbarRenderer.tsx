@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { MergedNadbar, MergedNadbarElement } from '../../utils/NadbarMerger';
 import ConversationElement from './ConversationElement';
 import FormElement from './FormElement';
 import TextElement from './TextElement';
+import { VariableStringInputValueMap } from './VariableStringInput';
 
 interface NadbarRendererProps {
   nadbar: MergedNadbar;
@@ -12,6 +13,22 @@ interface NadbarRendererProps {
 }
 
 const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onError }) => {
+  // Gather all variable values from nadbar.values
+  const variableValues: VariableStringInputValueMap = (nadbar as any).values || {};
+
+  // Handle variable value change
+  const handleVariableChange = useCallback((fieldId: string, value: string) => {
+    if (!onChange) return;
+    const updatedNadbar = {
+      ...nadbar,
+      values: {
+        ...variableValues,
+        [fieldId]: value,
+      },
+    };
+    onChange(updatedNadbar);
+  }, [nadbar, onChange, variableValues]);
+
   const handleFormFieldChange = (elementIdx: number, fieldId: string, value: string) => {
     const element = nadbar.elements[elementIdx];
     if (!element) {
@@ -51,13 +68,21 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
             case 'text':
               return (
                 <View key={idx} style={styles.elementWrapper}>
-                  <TextElement element={element} />
+                  <TextElement
+                    element={element}
+                    variableValues={variableValues}
+                    onVariableChange={handleVariableChange}
+                  />
                 </View>
               );
             case 'conversation':
               return (
                 <View key={idx} style={styles.elementWrapper}>
-                  <ConversationElement element={element} />
+                  <ConversationElement
+                    element={element}
+                    variableValues={variableValues}
+                    onVariableChange={handleVariableChange}
+                  />
                 </View>
               );
             default:

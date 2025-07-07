@@ -1,4 +1,5 @@
 import { NadbarData, NadbarFormField, NadbarTemplate } from '../components/common/nadbarTypes';
+import { parseVariableString } from '../components/common/VariableStringInput';
 
 export interface MergedNadbarField extends NadbarFormField {
   value: string;
@@ -46,7 +47,11 @@ export class NadbarMerger {
             value: data.values[field.fieldId] || ''
           }))
         };
-      } else if (element.type === 'text' || element.type === 'conversation') {
+      } else if (element.type === 'text') {
+        return {
+          ...element
+        };
+      } else if (element.type === 'conversation') {
         return {
           ...element
         };
@@ -95,6 +100,21 @@ export class NadbarMerger {
         element.data.forEach(field => {
           values[field.fieldId] = field.value || '';
         });
+      } else if (element.type === 'text') {
+        // Extract variable values from text
+        parseVariableString(element.data).forEach(part => {
+          if (part.type === 'var') {
+            values[part.fieldId!] = values[part.fieldId!] || '';
+          }
+        });
+      } else if (element.type === 'conversation') {
+        element.data.forEach(msg => {
+          parseVariableString(msg.data).forEach(part => {
+            if (part.type === 'var') {
+              values[part.fieldId!] = values[part.fieldId!] || '';
+            }
+          });
+        });
       }
     });
     
@@ -111,6 +131,20 @@ export class NadbarMerger {
       if (element.type === 'form') {
         element.data.forEach(field => {
           values[field.fieldId] = '';
+        });
+      } else if (element.type === 'text') {
+        parseVariableString(element.data).forEach(part => {
+          if (part.type === 'var') {
+            values[part.fieldId!] = '';
+          }
+        });
+      } else if (element.type === 'conversation') {
+        element.data.forEach(msg => {
+          parseVariableString(msg.data).forEach(part => {
+            if (part.type === 'var') {
+              values[part.fieldId!] = '';
+            }
+          });
         });
       }
     });

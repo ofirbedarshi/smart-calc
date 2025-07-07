@@ -97,23 +97,20 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
     // Create entity temporarily just to get computed values
     const entity = TargetEntity.fromTargetData(target, selfLocation);
 
-    const updatedNadbar = { ...mergedNadbar };
+    // Build new values object based on targetField mapping
+    const newValues = { ...mergedNadbar.values };
+    mergedNadbar.elements.forEach(element => {
+      if (element.type === 'form' && Array.isArray(element.data)) {
+        element.data.forEach(field => {
+          if ('targetField' in field && field.targetField) {
+            const targetValue = TargetToNadbarMapper.getValue(field.targetField, entity);
+            newValues[field.fieldId] = targetValue;
+          }
+        });
+      }
+    });
 
-    updatedNadbar.elements = updatedNadbar.elements.map(element => ({
-      ...element,
-      data: element.data.map(field => {
-        if (field.targetField) {
-          const targetValue = TargetToNadbarMapper.getValue(field.targetField, entity);
-          return {
-            ...field,
-            value: targetValue
-          };
-        }
-        return field;
-      })
-    }));
-
-    setMergedNadbar(updatedNadbar);
+    setMergedNadbar({ ...mergedNadbar, values: newValues });
   };
 
   const handleChooseTarget = async (target: any) => {

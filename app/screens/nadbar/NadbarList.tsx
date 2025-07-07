@@ -5,6 +5,11 @@ import { NadbarData } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import SelectableList from '../../../components/common/SelectableList';
 import { EXAMPLE_TEMPLATE } from '../../../components/nadbars/example/exampleTemplate';
+import { DEFAULT_KRAV_BARKAT_TEMPLATE } from '../../../components/nadbars/krav/kravBarkatTemplate';
+import { DEFAULT_KRAV_LASER_LOAL_TEMPLATE } from '../../../components/nadbars/krav/kravLaserLoalTemplate';
+import { DEFAULT_KRAV_LASER_LOBL_TEMPLATE } from '../../../components/nadbars/krav/kravLaserLoblTemplate';
+import { DEFAULT_KRAV_LINE6_TEMPLATE } from '../../../components/nadbars/krav/kravLine6Template';
+import { DEFAULT_KRAV_SADURA_LASER_TEMPLATE } from '../../../components/nadbars/krav/kravSaduraLaserTemplate';
 import { DEFAULT_MASKAR_LOAL_TEMPLATE } from '../../../components/nadbars/maskar/maskarLoalTemplate';
 import { DEFAULT_MASKAR_TEMPLATE } from '../../../components/nadbars/maskar/maskarTemplate';
 import { NadbarService } from '../../../services/NadbarService';
@@ -15,6 +20,11 @@ const TEMPLATE_REGISTRY = {
   [DEFAULT_MASKAR_TEMPLATE.id]: DEFAULT_MASKAR_TEMPLATE,
   [DEFAULT_MASKAR_LOAL_TEMPLATE.id]: DEFAULT_MASKAR_LOAL_TEMPLATE,
   [EXAMPLE_TEMPLATE.id]: EXAMPLE_TEMPLATE,
+  [DEFAULT_KRAV_BARKAT_TEMPLATE.id]: DEFAULT_KRAV_BARKAT_TEMPLATE,
+  [DEFAULT_KRAV_SADURA_LASER_TEMPLATE.id]: DEFAULT_KRAV_SADURA_LASER_TEMPLATE,
+  [DEFAULT_KRAV_LASER_LOBL_TEMPLATE.id]: DEFAULT_KRAV_LASER_LOBL_TEMPLATE,
+  [DEFAULT_KRAV_LINE6_TEMPLATE.id]: DEFAULT_KRAV_LINE6_TEMPLATE,
+  [DEFAULT_KRAV_LASER_LOAL_TEMPLATE.id]: DEFAULT_KRAV_LASER_LOAL_TEMPLATE,
   // Add more templates here as needed:
   // 'custom_template_id': CUSTOM_TEMPLATE,
 };
@@ -27,7 +37,16 @@ function getNadbarRoute(nadbar: NadbarData): string | null {
       return '/TargetPage/MaskarLoal';
     case EXAMPLE_TEMPLATE.id:
       return '/TargetPage/ExampleNadbar';
-    // Add more cases for other nadbar types/screens as needed
+    case DEFAULT_KRAV_BARKAT_TEMPLATE.id:
+      return '/TargetPage/KravBarkat';
+    case DEFAULT_KRAV_SADURA_LASER_TEMPLATE.id:
+      return '/TargetPage/KravSaduraLaser';
+    case DEFAULT_KRAV_LASER_LOBL_TEMPLATE.id:
+      return '/TargetPage/KravLaserLobl';
+    case DEFAULT_KRAV_LINE6_TEMPLATE.id:
+      return '/TargetPage/KravLine6';
+    case DEFAULT_KRAV_LASER_LOAL_TEMPLATE.id:
+      return '/TargetPage/KravLaserLoal';
     default:
       return null;
   }

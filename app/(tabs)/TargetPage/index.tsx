@@ -7,6 +7,7 @@ const TargetPage = () => {
 
   const targetItems = [
     { label: 'מסקר', route: 'MaskarOptions' },
+    { label: 'קרב', route: 'KravOptions' },
   ];
 
   const handleNavigate = (route: string) => {

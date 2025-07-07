@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { MergedNadbar, MergedNadbarElement } from '../../utils/NadbarMerger';
+import { MergedNadbar } from '../../utils/NadbarMerger';
 import ConversationElement from './ConversationElement';
 import FormElement from './FormElement';
 import TextElement from './TextElement';
@@ -16,7 +16,7 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
   // Gather all variable values from nadbar.values
   const variableValues: VariableStringInputValueMap = (nadbar as any).values || {};
 
-  // Handle variable value change
+  // Handle variable value change (for both form and variable string inputs)
   const handleVariableChange = useCallback((fieldId: string, value: string) => {
     if (!onChange) return;
     const updatedNadbar = {
@@ -25,30 +25,25 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
         ...variableValues,
         [fieldId]: value,
       },
+      // Also update all form fields with this fieldId
+      elements: nadbar.elements.map(element => {
+        if (element.type === 'form') {
+          return {
+            ...element,
+            data: element.data.map(field =>
+              field.fieldId === fieldId ? { ...field, value } : field
+            ),
+          };
+        }
+        return element;
+      }),
     };
     onChange(updatedNadbar);
   }, [nadbar, onChange, variableValues]);
 
-  const handleFormFieldChange = (elementIdx: number, fieldId: string, value: string) => {
-    const element = nadbar.elements[elementIdx];
-    if (!element) {
-      onError?.('Element not found at index', { elementIdx });
-      return;
-    }
-    if (element.type !== 'form') {
-      onError?.('Element at index is not of type "form"', { elementIdx, type: element.type });
-      return;
-    }
-    const updatedElement: MergedNadbarElement = {
-      ...element,
-      data: element.data.map(field =>
-        field.fieldId === fieldId ? { ...field, value } : field
-      ),
-    };
-    const updatedElements = [...nadbar.elements];
-    updatedElements[elementIdx] = updatedElement;
-    const updatedNadbar = { ...nadbar, elements: updatedElements };
-    onChange?.(updatedNadbar);
+  // Updated form field change handler to use handleVariableChange
+  const handleFormFieldChange = (fieldId: string, value: string) => {
+    handleVariableChange(fieldId, value);
   };
 
   return (
@@ -60,8 +55,14 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
               return (
                 <View key={idx} style={styles.elementWrapper}>
                   <FormElement
-                    element={element}
-                    onFieldChange={(fieldId: string, value: string) => handleFormFieldChange(idx, fieldId, value)}
+                    element={{
+                      ...element,
+                      data: element.data.map(field => ({
+                        ...field,
+                        value: variableValues[field.fieldId] || '',
+                      })),
+                    }}
+                    onFieldChange={handleFormFieldChange}
                   />
                 </View>
               );

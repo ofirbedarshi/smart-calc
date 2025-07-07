@@ -1,9 +1,8 @@
-import { NadbarTemplate, NadbarType } from '../../common/nadbarTypes';
+import { NadbarTemplate } from '../../common/nadbarTypes';
 
 export const DEFAULT_MASKAR_TEMPLATE: NadbarTemplate = {
   id: 'maskar_v1',
-  name: 'מסק״ר',
-  type: NadbarType.Maskar,
+  name: 'מסקר',
   version: '1.0',
   elements: [
     {

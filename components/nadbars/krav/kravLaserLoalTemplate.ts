@@ -1,9 +1,8 @@
-import { NadbarTemplate, NadbarType } from '../../common/nadbarTypes';
+import { NadbarTemplate } from '../../common/nadbarTypes';
 
 export const DEFAULT_KRAV_LASER_LOAL_TEMPLATE: NadbarTemplate = {
   id: 'krav_laser_loal_v1',
   name: 'קרב ברד לייזר loal',
-  type: NadbarType.Maskar,
   version: '1.0',
   elements: [
     {

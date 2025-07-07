@@ -1,9 +1,8 @@
-import { NadbarTemplate, NadbarType } from '../../common/nadbarTypes';
+import { NadbarTemplate } from '../../common/nadbarTypes';
 
 export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
   id: 'maskar_loal_v1',
   name: 'מסק״ר Loal',
-  type: NadbarType.Maskar,
   version: '1.0',
   elements: [
     {

@@ -1,6 +1,6 @@
 // Nadbar types for template + data separation
 
-export type InputType = 'text' | 'textArea' | 'number' | 'dropdown';
+type InputType = 'text' | 'textArea' | 'number' | 'dropdown';
 
 export type InputOptions = {
   dropdown?: string[];
@@ -43,7 +43,6 @@ export type NadbarElement = NadbarFormElement | NadbarTextElement | NadbarConver
 export type NadbarTemplate = {
   id: string;
   name: string;
-  type: NadbarType;
   version: string;
   elements: NadbarElement[];
 };
@@ -57,7 +56,3 @@ export type NadbarData = {
   createdAt: number;
   updatedAt: number;
 };
-
-export enum NadbarType {
-  Maskar = 'Maskar'
-}

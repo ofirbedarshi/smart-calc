@@ -1,9 +1,8 @@
-import { NadbarTemplate, NadbarType } from '../../common/nadbarTypes';
+import { NadbarTemplate } from '../../common/nadbarTypes';
 
 export const EXAMPLE_TEMPLATE: NadbarTemplate = {
   id: 'example_v1',
-  name: 'תבנית לדוגמה',
-  type: NadbarType.Maskar, // You can create new types in the enum
+  name: 'דוגמה',
   version: '1.0',
   elements: [
     {

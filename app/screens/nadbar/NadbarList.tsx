@@ -5,6 +5,7 @@ import { NadbarData } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import SelectableList from '../../../components/common/SelectableList';
 import { EXAMPLE_TEMPLATE } from '../../../components/nadbars/example/exampleTemplate';
+import { DEFAULT_MASKAR_LOAL_TEMPLATE } from '../../../components/nadbars/maskar/maskarLoalTemplate';
 import { DEFAULT_MASKAR_TEMPLATE } from '../../../components/nadbars/maskar/maskarTemplate';
 import { NadbarService } from '../../../services/NadbarService';
 import { formatDate } from '../../../utils/dateUtils';
@@ -12,6 +13,7 @@ import { formatDate } from '../../../utils/dateUtils';
 // Template registry - add new templates here
 const TEMPLATE_REGISTRY = {
   [DEFAULT_MASKAR_TEMPLATE.id]: DEFAULT_MASKAR_TEMPLATE,
+  [DEFAULT_MASKAR_LOAL_TEMPLATE.id]: DEFAULT_MASKAR_LOAL_TEMPLATE,
   [EXAMPLE_TEMPLATE.id]: EXAMPLE_TEMPLATE,
   // Add more templates here as needed:
   // 'custom_template_id': CUSTOM_TEMPLATE,
@@ -21,6 +23,8 @@ function getNadbarRoute(nadbar: NadbarData): string | null {
   switch (nadbar.templateId) {
     case DEFAULT_MASKAR_TEMPLATE.id:
       return '/TargetPage/Maskar';
+    case DEFAULT_MASKAR_LOAL_TEMPLATE.id:
+      return '/TargetPage/MaskarLoal';
     case EXAMPLE_TEMPLATE.id:
       return '/TargetPage/ExampleNadbar';
     // Add more cases for other nadbar types/screens as needed
@@ -62,8 +66,7 @@ const NadbarList: React.FC = () => {
     if (route) {
       router.push({ pathname: route as any, params: { nadbarId: nadbar.id } });
     } else {
-      // fallback: just log
-      console.log('No route for nadbar:', nadbar);
+      Alert.alert('שגיאה', 'לא ניתן לפתוח נדבר זה');
     }
   };
 

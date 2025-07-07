@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { MergedNadbar, MergedNadbarElement } from '../../utils/NadbarMerger';
+import ConversationElement from './ConversationElement';
 import FormElement from './FormElement';
 import TextElement from './TextElement';
 
@@ -51,6 +52,12 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
               return (
                 <View key={idx} style={styles.elementWrapper}>
                   <TextElement element={element} />
+                </View>
+              );
+            case 'conversation':
+              return (
+                <View key={idx} style={styles.elementWrapper}>
+                  <ConversationElement element={element} />
                 </View>
               );
             default:

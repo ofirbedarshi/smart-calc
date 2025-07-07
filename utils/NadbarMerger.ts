@@ -14,6 +14,11 @@ export type MergedNadbarElement =
       type: 'text';
       header?: string;
       data: string;
+    }
+  | {
+      type: 'conversation';
+      header?: string;
+      data: { type: 'me' | 'they'; data: string }[];
     };
 
 export interface MergedNadbar {
@@ -41,7 +46,7 @@ export class NadbarMerger {
             value: data.values[field.fieldId] || ''
           }))
         };
-      } else if (element.type === 'text') {
+      } else if (element.type === 'text' || element.type === 'conversation') {
         return {
           ...element
         };

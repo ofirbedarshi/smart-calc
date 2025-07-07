@@ -152,19 +152,21 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <Button title="שמור" onPress={handleSave} />
-          <TargetSelectorModal onChooseTarget={handleChooseTarget} />
-        </View>
-        <NadbarRenderer 
-          nadbar={mergedNadbar} 
-          onChange={handleChange} 
-          onError={handleError} 
-        />
+    <View style={{ flex: 1 }}>
+      <View style={styles.stickyButtonContainer}>
+        <Button title="שמור" onPress={handleSave} />
+        <TargetSelectorModal onChooseTarget={handleChooseTarget} />
       </View>
-    </ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.container}>
+          <NadbarRenderer 
+            nadbar={mergedNadbar} 
+            onChange={handleChange} 
+            onError={handleError} 
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -173,13 +175,29 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   container: {
-    marginTop: 24,
     padding: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 16,
+  },
+  stickyButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 24,
+    paddingBottom: 12,
+    backgroundColor: '#fff',
+    zIndex: 10,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   loadingContainer: {
     flex: 1,

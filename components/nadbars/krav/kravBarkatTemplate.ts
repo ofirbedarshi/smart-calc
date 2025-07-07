@@ -8,12 +8,34 @@ export const DEFAULT_KRAV_BARKAT_TEMPLATE: NadbarTemplate = {
     {
       type: 'form',
       data: [
-        { label: 'שדה דוגמה', fieldId: 'exampleField', inputType: 'text' },
-      ],
+        { label: 'תדר', fieldId: 'freq', inputType: 'text' },
+        { label: 'או״ק חוליה', fieldId: 'ok_team', inputType: 'text' },
+        { label: 'אזימוט', fieldId: 'azimuth', inputType: 'text', targetField: 'azimuth' },
+        { label: 'טווח', fieldId: 'distance', inputType: 'text', targetField: 'distance' }
+      ]
+    },
+    {
+      type: 'form',
+      data: [
+        { label: 'שם ותיאור מטרה', fieldId: 'targetName', inputType: 'text', targetField: 'description' },
+        { label: 'נ.צ GEO צפוני', fieldId: 'con_geoNorth', inputType: 'text' },
+        { label: 'נ.צ GEO מזרחי', fieldId: 'con_geoEast', inputType: 'text' },
+        { label: 'כיוון כניסה מומלץ', fieldId: 'enterence'},
+        { label: 'קסום', fieldId: 'kasoom', inputType: 'text' },
+        { label: 'עננות', fieldId: 'clouds', inputType: 'text' },
+        { label: 'גובה עננים', fieldId: 'cloudsHeight', inputType: 'text' }
+      ]
     },
     {
       type: 'text',
-      data: 'טקסט דוגמה לקרב ברקת',
+      header: 'חוזר על הנתונים לאימות',
+      data: ""
     },
-  ],
+    {
+      type: 'form',
+      data: [
+        { label: 'תיאור נוסף', fieldId: 'additional_desc', inputType: 'textArea' } 
+      ]
+    },
+  ]
 }; 

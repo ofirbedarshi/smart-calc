@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { MergedNadbar, MergedNadbarElement } from '../../utils/NadbarMerger';
 import FormElement from './FormElement';
+import TextElement from './TextElement';
 
 interface NadbarRendererProps {
   nadbar: MergedNadbar;
@@ -44,6 +45,12 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
                     element={element}
                     onFieldChange={(fieldId: string, value: string) => handleFormFieldChange(idx, fieldId, value)}
                   />
+                </View>
+              );
+            case 'text':
+              return (
+                <View key={idx} style={styles.elementWrapper}>
+                  <TextElement element={element} />
                 </View>
               );
             default:

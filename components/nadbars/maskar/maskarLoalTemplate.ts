@@ -17,7 +17,7 @@ export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
     },
     {
       type: 'form',
-      header: 'לחיצת ידיים - Loal',
+      header: 'לחיצת ידיים',
       data: [
         { 
           label: 'עבודה על עזר', 
@@ -32,7 +32,7 @@ export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
     },
     {
       type: 'form',
-      header: 'נתונים כלליים - Loal',
+      header: 'נתונים כלליים',
       data: [
         { label: 'שם ותיאור מטרה', fieldId: 'targetName', inputType: 'text', targetField: 'description' },
         { label: 'נ.צ UTM', fieldId: 'natza', inputType: 'text', targetField: 'coords' },
@@ -44,29 +44,15 @@ export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
           inputType: 'dropdown', 
           inputOptions: { dropdown: ['מומלץ', 'מאפשר'] } 
         },
-        { label: 'קסום', fieldId: 'kasoom', inputType: 'text' }
+        { label: 'קסום', fieldId: 'kasoom', inputType: 'text' },
+        { label: 'עננים + גובה', fieldId: 'clouds', inputType: 'text' },
+        { label: 'הסתרים אחרונים', fieldId: 'lastH', inputType: 'text' }
       ]
     },
     {
-      type: 'form',
-      header: 'אצע״ד ק״מ - Loal',
-      data: [
-        { label: 'אימות על העזר', fieldId: 'confirm', inputType: 'text' },
-        { label: 'צביעת שטח', fieldId: 'areaPaint', inputType: 'text' },
-        { label: 'עצמים בולטים', fieldId: 'bigObjects', inputType: 'text' },
-        { label: 'דקירת מטרה', fieldId: 'targetPoint', inputType: 'text' },
-        { label: 'קונטרסטיות', fieldId: 'Kon', inputType: 'text' },
-        { label: 'מידע עדכני', fieldId: 'info', inputType: 'text' }
-      ]
+      type: 'text',
+      header: 'היתכנות לירי',
+      data: "ציפור __ ממסק״ר יש/אין היתכנות לירי, אזימוט מסק״ר למטרה __. כיוון תקיפה/גובה עננות/הפרש ירי עמדת ירי- מטרה/תקשורת/הסתרים"
     },
-    {
-      type: 'form',
-      header: 'הולכת שטח - Loal',
-      data: [
-        { label: 'עוגן', fieldId: 'ogen', inputType: 'text' },
-        { label: 'הולכה', fieldId: 'holacha', inputType: 'textArea' },
-        { label: 'הישג נדרש', fieldId: 'requiredAchievment', inputType: 'text' }
-      ]
-    }
   ]
 }; 

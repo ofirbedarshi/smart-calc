@@ -4,11 +4,17 @@ export interface MergedNadbarField extends NadbarFormField {
   value: string;
 }
 
-export interface MergedNadbarElement {
-  type: 'form';
-  header?: string;
-  data: MergedNadbarField[];
-}
+export type MergedNadbarElement =
+  | {
+      type: 'form';
+      header?: string;
+      data: MergedNadbarField[];
+    }
+  | {
+      type: 'text';
+      header?: string;
+      data: string;
+    };
 
 export interface MergedNadbar {
   id: string;
@@ -26,13 +32,23 @@ export class NadbarMerger {
    * Merges a template with data to create a complete nadbar for rendering
    */
   static merge(template: NadbarTemplate, data: NadbarData): MergedNadbar {
-    const mergedElements = template.elements.map(element => ({
-      ...element,
-      data: element.data.map(field => ({
-        ...field,
-        value: data.values[field.fieldId] || ''
-      }))
-    }));
+    const mergedElements = template.elements.map(element => {
+      if (element.type === 'form') {
+        return {
+          ...element,
+          data: element.data.map(field => ({
+            ...field,
+            value: data.values[field.fieldId] || ''
+          }))
+        };
+      } else if (element.type === 'text') {
+        return {
+          ...element
+        };
+      } else {
+        return element as any;
+      }
+    });
 
     return {
       id: data.id,
@@ -70,9 +86,11 @@ export class NadbarMerger {
     const values: Record<string, string> = {};
     
     mergedNadbar.elements.forEach(element => {
-      element.data.forEach(field => {
-        values[field.fieldId] = field.value || '';
-      });
+      if (element.type === 'form') {
+        element.data.forEach(field => {
+          values[field.fieldId] = field.value || '';
+        });
+      }
     });
     
     return values;
@@ -85,9 +103,11 @@ export class NadbarMerger {
     const values: Record<string, string> = {};
     
     template.elements.forEach(element => {
-      element.data.forEach(field => {
-        values[field.fieldId] = '';
-      });
+      if (element.type === 'form') {
+        element.data.forEach(field => {
+          values[field.fieldId] = '';
+        });
+      }
     });
     
     return values;

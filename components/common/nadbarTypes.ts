@@ -14,11 +14,19 @@ export type NadbarFormField = {
   targetField?: string; // optional, maps to target entity field
 };
 
-export type NadbarElement = {
+export type NadbarFormElement = {
   type: 'form';
   header?: string; // optional header for form sections
   data: NadbarFormField[];
 };
+
+export type NadbarTextElement = {
+  type: 'text';
+  header?: string;
+  data: string;
+};
+
+export type NadbarElement = NadbarFormElement | NadbarTextElement;
 
 // Template - static structure (for now, just the default maskar template)
 export type NadbarTemplate = {

@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { MergedNadbar } from '../../utils/NadbarMerger';
 import ConversationElement from './ConversationElement';
 import FormElement from './FormElement';
+import NadbarHeader from './NadbarHeader';
 import TextElement from './TextElement';
 import { VariableStringInputValueMap } from './VariableStringInput';
 
@@ -84,6 +85,12 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
                     variableValues={variableValues}
                     onVariableChange={handleVariableChange}
                   />
+                </View>
+              );
+            case 'header':
+              return (
+                <View key={idx} style={styles.elementWrapper}>
+                  <NadbarHeader data={element.data} />
                 </View>
               );
             default:

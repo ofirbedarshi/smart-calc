@@ -37,7 +37,12 @@ export type NadbarConversationElement = {
   data: NadbarConversationMessage[];
 };
 
-export type NadbarElement = NadbarFormElement | NadbarTextElement | NadbarConversationElement;
+export type NadbarHeaderElement = {
+  type: 'header';
+  data: string; // The header text to display
+};
+
+export type NadbarElement = NadbarFormElement | NadbarTextElement | NadbarConversationElement | NadbarHeaderElement;
 
 // Template - static structure (for now, just the default maskar template)
 export type NadbarTemplate = {

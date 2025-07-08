@@ -20,6 +20,10 @@ export type MergedNadbarElement =
       type: 'conversation';
       header?: string;
       data: { type: 'me' | 'they'; data: string }[];
+    }
+  | {
+      type: 'header';
+      data: string;
     };
 
 export interface MergedNadbar {
@@ -53,6 +57,10 @@ export class NadbarMerger {
           ...element
         };
       } else if (element.type === 'conversation') {
+        return {
+          ...element
+        };
+      } else if (element.type === 'header') {
         return {
           ...element
         };

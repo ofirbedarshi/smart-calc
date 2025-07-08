@@ -27,15 +27,19 @@ export const DEFAULT_KRAV_BARKAT_TEMPLATE: NadbarTemplate = {
       ]
     },
     {
-      type: 'text',
-      header: 'חוזר על הנתונים לאימות',
-      data: ""
+      type: 'header',
+      data: 'חוזר על הנתונים לאימות',
     },
     {
       type: 'form',
       data: [
         { label: 'תיאור נוסף', fieldId: 'additional_desc', inputType: 'textArea' } 
       ]
+    },
+    {
+      type: 'text',
+      header: 'יעף לבן',
+      data: `<b> שדר בזמנך להפעל קסום</b><br>קבל הפעל קסם<br><b>שדר מופעל קסום+ קוד ציון</b><br>קבל מזהה ירוקה<br>קבל הפסק<br><b>שדר הופסק קסום+קוד ציון</b>`
     },
   ]
 }; 

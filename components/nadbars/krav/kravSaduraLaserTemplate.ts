@@ -8,12 +8,29 @@ export const DEFAULT_KRAV_SADURA_LASER_TEMPLATE: NadbarTemplate = {
     {
       type: 'form',
       data: [
-        { label: 'שדה דוגמה', fieldId: 'exampleField', inputType: 'text' },
-      ],
+        { label: 'תדר', fieldId: 'freq', inputType: 'text' },
+        { label: 'או״ק חוליה', fieldId: 'ok_team', inputType: 'text' },
+        { label: 'אזימוט', fieldId: 'azimuth', inputType: 'text', targetField: 'azimuth' },
+        { label: 'טווח', fieldId: 'distance', inputType: 'text', targetField: 'distance' }
+      ]
+    },
+    {
+      type: 'form',
+      data: [
+        { label: 'שם ותיאור מטרה (ק+מפנה הלזירה)', fieldId: 'targetName', inputType: 'text', targetField: 'description' },
+        { label: 'גובה עננים', fieldId: 'cloudsHeight', inputType: 'text' },
+        { label: 'קסום', fieldId: 'kasoom', inputType: 'text' },
+        { label: 'עננות', fieldId: 'clouds', inputType: 'text' }
+      ]
     },
     {
       type: 'text',
-      data: 'טקסט דוגמה לקרב סדורה ברד לייזר',
+      header: 'יעף לבן',
+      data: `יציבות נעילה - תקינות ציון, תנאים מאפשרים, מדידת זמן יעף +הטלה<br> סידור רכיבים במרחב המטרה - קבלת אימות אחרון`
+    },
+    {
+      type: 'text',
+      data: `קבל יוצא כיוון ליעף ברד לייזר על __ זמן מעוף פצצה שוער __ (נווט)<br>קבל הפעל קסום (נווט)<br><b>שדר מופעל קסום על __רשאי להטיל ברד לייזר (מטרה בתנועה - שדר נ״צ_גובה של נקודת פגיעה צפויה)</b><br>קבל דקה להטלה (טייס)<br>קבל אישור להטלה (נווט)<br>קבל הוטל __ שניות<br>קבל ספירת שניות לאחור (טייס)<br><b>שדר BDA</b>`
     },
   ],
 }; 

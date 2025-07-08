@@ -20,6 +20,7 @@ export const DEFAULT_KRAV_BARKAT_TEMPLATE: NadbarTemplate = {
         { label: 'שם ותיאור מטרה', fieldId: 'targetName', inputType: 'text', targetField: 'description' },
         { label: 'נ.צ GEO צפוני', fieldId: 'con_geoNorth', inputType: 'text' },
         { label: 'נ.צ GEO מזרחי', fieldId: 'con_geoEast', inputType: 'text' },
+        { label: 'גובה מטרה - רגל', fieldId: 'heightRegel'},
         { label: 'כיוון כניסה מומלץ', fieldId: 'enterence'},
         { label: 'קסום', fieldId: 'kasoom', inputType: 'text' },
         { label: 'עננות', fieldId: 'clouds', inputType: 'text' },

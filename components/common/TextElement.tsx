@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import RenderHTML from 'react-native-render-html';
 import InputCard from './InputCard';
 import VariableStringInput, { VariableStringInputValueMap } from './VariableStringInput';
 
@@ -14,19 +15,31 @@ interface TextElementProps {
   editable?: boolean;
 }
 
+const isHtml = (str: string) => /<[^>]+>/.test(str);
+
 const TextElement: React.FC<TextElementProps> = ({ element, variableValues, onVariableChange, editable = true }) => {
+  const { width } = useWindowDimensions();
   return (
     <InputCard style={styles.card}>
       <View style={styles.container}>
         {element.header && (
           <Text style={styles.header}>{element.header}</Text>
         )}
-        <VariableStringInput
-          template={element.data}
-          values={variableValues}
-          onChange={onVariableChange}
-          editable={editable}
-        />
+        {isHtml(element.data) ? (
+          <RenderHTML
+            contentWidth={width - 48}
+            source={{ html: element.data }}
+            baseStyle={{ color: '#333', fontSize: 16, textAlign: 'right' }}
+            tagsStyles={{ b: { fontWeight: 'bold' }, br: { height: 0 } }}
+          />
+        ) : (
+          <VariableStringInput
+            template={element.data}
+            values={variableValues}
+            onChange={onVariableChange}
+            editable={editable}
+          />
+        )}
       </View>
     </InputCard>
   );

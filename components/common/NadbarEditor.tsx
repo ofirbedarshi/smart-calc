@@ -108,6 +108,13 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
           }
         });
       }
+      // NEW: Also support conversation/text elements with targetFields
+      if ((element.type === 'conversation' || element.type === 'text') && 'targetFields' in element && Array.isArray(element.targetFields)) {
+        element.targetFields.forEach(varName => {
+          const targetValue = TargetToNadbarMapper.getValue(varName, entity);
+          newValues[varName] = targetValue;
+        });
+      }
     });
 
     setMergedNadbar({ ...mergedNadbar, values: newValues });

@@ -36,6 +36,7 @@ export type NadbarConversationElement = {
   type: 'conversation';
   header?: string;
   data: NadbarConversationMessage[];
+  targetFields?: string[]; // optional, for linking variables to target fields
 };
 
 export type NadbarHeaderElement = {

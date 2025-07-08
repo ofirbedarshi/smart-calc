@@ -1,9 +1,11 @@
+import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { MergedNadbarElement, MergedNadbarField } from '../../utils/NadbarMerger';
 import { BaseInput } from './BaseInput';
 import { Dropdown } from './Dropdown';
 import InputCard from './InputCard';
+import Tooltip from './Tooltip';
 
 interface FormElementProps {
   element: Extract<MergedNadbarElement, { type: 'form' }>;
@@ -47,7 +49,12 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
             <View style={styles.inputWrapper}>
               {renderInput(field)}
             </View>
+            <View style={styles.labelInlineRow}>
             <Text style={styles.label}>{field.label}</Text>
+              {field.targetField && <Tooltip content={'המידע הנ״ל נטען מהמטרה אוטומטית'} direction='left'>
+                <FontAwesome name="info-circle" size={14} color="#007AFF" style={styles.infoIcon} />
+              </Tooltip> }          
+          </View>
           </View>
         ))}
       </View>
@@ -58,6 +65,13 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
 const styles = StyleSheet.create({
   card: {
     width: '100%',
+  },
+  labelInlineRow: {
+    flex: 1,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    marginLeft: 8,
+    gap: 4,
   },
   container: {
     marginVertical: 8,
@@ -90,6 +104,9 @@ const styles = StyleSheet.create({
     width: 160,
     minWidth: 100,
     maxWidth: 220,
+  },
+  infoIcon: {
+    marginLeft: 4,
   },
 });
 

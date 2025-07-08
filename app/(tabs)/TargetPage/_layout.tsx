@@ -8,6 +8,7 @@ export default function TargetPageLayout() {
       <Stack.Screen name="MaskarOptions" />
       <Stack.Screen name="Maskar" />
       <Stack.Screen name="MaskarLoal" />
+      <Stack.Screen name="Chemam" />
     </Stack>
   );
 } 

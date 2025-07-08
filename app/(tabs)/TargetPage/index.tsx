@@ -9,6 +9,8 @@ const TargetPage = () => {
     { label: 'מסקר', route: 'MaskarOptions' },
     { label: 'קרב', route: 'KravOptions' },
     { label: 'חמ"מ', route: 'Chemam' },
+    { label: 'להט', route: 'Lehat' },
+    { label: 'עוקץ פלדה', route: 'OketzPlada' },
   ];
 
   const handleNavigate = (route: string) => {

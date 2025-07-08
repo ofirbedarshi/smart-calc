@@ -1,6 +1,6 @@
 // Nadbar types for template + data separation
 
-type InputType = 'text' | 'textArea' | 'number' | 'dropdown';
+type InputType = 'text' | 'textArea' | 'number' | 'dropdown' | 'none';
 
 export type InputOptions = {
   dropdown?: string[];
@@ -12,6 +12,7 @@ export type NadbarFormField = {
   inputType?: InputType; // optional, defaults to 'text'
   inputOptions?: InputOptions; // optional, for dropdown options etc.
   targetField?: string; // optional, maps to target entity field
+  constantText?: string; // optional, for inputType 'none'
 };
 
 export type NadbarFormElement = {

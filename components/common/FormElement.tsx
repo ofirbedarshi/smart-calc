@@ -14,6 +14,9 @@ interface FormElementProps {
 
 const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => {
   const renderInput = (field: MergedNadbarField) => {
+    if (field.inputType === 'none' && field.constantText) {
+      return <Text style={styles.constantText}>{field.constantText}</Text>;
+    }
     if (field.inputType === 'dropdown' && field.inputOptions?.dropdown) {
       const options = field.inputOptions.dropdown.map(option => ({
         label: option,
@@ -51,7 +54,7 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
             </View>
             <View style={styles.labelInlineRow}>
             <Text style={styles.label}>{field.label}</Text>
-              {field.targetField && <Tooltip content={'המידע הנ״ל נטען מהמטרה אוטומטית'} direction='left'>
+              {field.targetField && <Tooltip content={'המידע הנ״ל נטען מהמטרה'} direction='left'>
                 <FontAwesome name="info-circle" size={14} color="#007AFF" style={styles.infoIcon} />
               </Tooltip> }          
           </View>
@@ -107,6 +110,12 @@ const styles = StyleSheet.create({
   },
   infoIcon: {
     marginLeft: 4,
+  },
+  constantText: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'right',
+    paddingVertical: 8,
   },
 });
 

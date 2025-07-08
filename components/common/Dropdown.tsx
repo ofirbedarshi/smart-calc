@@ -36,7 +36,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange }) 
       selectedItemLabelStyle={styles.selectedItemLabel}
       placeholder="בחר..."
       placeholderStyle={styles.placeholder}
-      listMode="SCROLLVIEW"
+      listMode="MODAL"
     />
   );
 };

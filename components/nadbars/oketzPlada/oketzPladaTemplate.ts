@@ -43,7 +43,7 @@ export const DEFAULT_OKETZ_PLADA_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data:  "קבל המאפיין מטרה: "
+          data:  'קבל המאפיין מטרה: {{targetFeature|dropdown:חי"ר גלוי,חי"ר בביצורים,חי"ר מחופר,רכב רך,מבנה חזית,מבנה גג}}'
         },
         {
           type: 'they',
@@ -59,7 +59,7 @@ export const DEFAULT_OKETZ_PLADA_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "שלילי/חיובי - גובה הסתר ומרחק מהמטרה"
+          data: "{{mukiStatus|dropdown:חיובי,שלילי}} - כמה קטנות"
         },
         {
           type: 'they',

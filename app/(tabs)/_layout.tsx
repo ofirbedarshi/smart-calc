@@ -1,61 +1,51 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { TabList, TabSlot, TabTrigger, Tabs as UITabs } from 'expo-router/ui';
 import React from 'react';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
   const { bottom } = useSafeAreaInsets();
 
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarLabelPosition: 'below-icon',
-        tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopWidth: 0,
-          elevation: 0,
-          shadowOpacity: 0,
-          height: 60 + bottom,
-          paddingBottom: bottom,
-        },
+    <UITabs>
+      <TabSlot />
+      <TabList style={{
+        backgroundColor: '#ffffff',
+        borderTopWidth: 0,
+        elevation: 0,
+        shadowOpacity: 0,
+        height: 60 + bottom,
+        paddingBottom: bottom,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
       }}>
-        <Tabs.Screen
-        name="library"
-        options={{
-          title: 'ספרייה',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="book" size={size} color={color} />
-          ),
-        }}
-      />
-        <Tabs.Screen
-        name="TargetPage"
-        options={{
-          title: 'דף מטרה',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="bullseye" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="TargetsList"
-        options={{
-          title: 'בנק מטרות',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="map-marker" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="calculator"
-        options={{
-          title: 'מחשבון',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="calculator" size={size} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+        <TabTrigger name="library" href="/library">
+          <View style={{ alignItems: 'center' }}>
+            <FontAwesome name="book" size={24} color="#333" />
+            <Text style={{ fontSize: 12, color: '#333', marginTop: 2 }}>ספרייה</Text>
+          </View>
+        </TabTrigger>
+        <TabTrigger name="TargetPage" href="/TargetPage" reset="always">
+          <View style={{ alignItems: 'center' }}>
+            <FontAwesome name="bullseye" size={24} color="#333" />
+            <Text style={{ fontSize: 12, color: '#333', marginTop: 2 }}>דף מטרה</Text>
+          </View>
+        </TabTrigger>
+        <TabTrigger name="TargetsList" href="/TargetsList">
+          <View style={{ alignItems: 'center' }}>
+            <FontAwesome name="map-marker" size={24} color="#333" />
+            <Text style={{ fontSize: 12, color: '#333', marginTop: 2 }}>בנק מטרות</Text>
+          </View>
+        </TabTrigger>
+        <TabTrigger name="calculator" href="/calculator">
+          <View style={{ alignItems: 'center' }}>
+            <FontAwesome name="calculator" size={24} color="#333" />
+            <Text style={{ fontSize: 12, color: '#333', marginTop: 2 }}>מחשבון</Text>
+          </View>
+        </TabTrigger>
+      </TabList>
+    </UITabs>
   );
 }

@@ -19,7 +19,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קבל, קו״צ __, כמו כן, גור __ מעל פני הים."
+          data: "קבל, קו״צ {{kotz3}}, כמו כן, גור {{goor3}} מעל פני הים."
         },
         {
           type: 'they',
@@ -43,7 +43,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קיבלתי, אמורה __ במעלות. קבל אמורה תקינה/לא תקינה- שפר ל__ במעלות"
+          data: "קיבלתי, אמורה {{amoora8}} במעלות. קבל אמורה תקינה/לא תקינה - שפר ל{{angle8}} במעלות"
         },
         {
           type: 'me',
@@ -67,7 +67,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "שלילי/חיובי - גובה הסתר ומרחק מהמטרה קבל למטרה __ הללויה"
+          data: "שלילי/חיובי - גובה הסתר ומרחק מהמטרה קבל למטרה {{target14}} הללויה"
         },
         {
           type: 'they',
@@ -75,7 +75,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "למטרה __ אושר אושר"
+          data: "למטרה {{target16}} אושר אושר"
         },
         {
           type: 'they',
@@ -83,7 +83,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קבל למטרה __ פרגול/הפוכה כמו כן - יש צורך בטוניס/אין צורך בטוניס. קבל נתוני השיגור זהים/שונים (פירוט)."
+          data: "קבל למטרה {{target18}} פרגול/הפוכה כמו כן - יש צורך בטוניס/אין צורך בטוניס. קבל נתוני השיגור זהים/שונים (פירוט)."
         }
       ]
     },

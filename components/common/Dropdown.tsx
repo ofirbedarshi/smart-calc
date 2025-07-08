@@ -11,9 +11,10 @@ interface DropdownProps {
   options: DropdownOption[];
   value: string;
   onChange: (value: string) => void;
+  small?: boolean;
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange }) => {
+export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange, small = false }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -28,9 +29,11 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange }) 
           onChange(newValue);
         }
       }}
-      style={styles.dropdown}
-      textStyle={styles.dropdownText}
-      dropDownContainerStyle={styles.dropdownContainer}
+      style={[styles.dropdown, small && styles.smallDropdown]}
+      textStyle={[styles.dropdownText, small && styles.smallDropdownText]}
+      dropDownContainerStyle={[styles.dropdownContainer, small && styles.smallDropdownContainer]}
+      containerStyle={small ? styles.smallDropdownOuter : undefined}
+      labelStyle={small ? styles.smallDropdownLabel : undefined}
       listItemContainerStyle={styles.listItemContainer}
       selectedItemContainerStyle={styles.selectedItemContainer}
       selectedItemLabelStyle={styles.selectedItemLabel}
@@ -50,10 +53,48 @@ const styles = StyleSheet.create({
     minHeight: 40,
     zIndex: 1000,
   },
+  smallDropdown: {
+    minHeight: 24,
+    height: 24,
+    borderRadius: 0,
+    fontSize: 16,
+    paddingVertical: 0,
+    paddingHorizontal: 2,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: '#aaa',
+    marginVertical: 0,
+    marginHorizontal: 2,
+    alignSelf: 'center',
+    shadowColor: 'transparent',
+    elevation: 0,
+  },
+  smallDropdownOuter: {
+    minHeight: 24,
+    height: 24,
+    maxWidth: 100,
+    alignSelf: 'center',
+    marginHorizontal: 2,
+    backgroundColor: 'transparent',
+  },
+  smallDropdownLabel: {
+    fontSize: 16,
+    paddingVertical: 0,
+    paddingHorizontal: 2,
+    textAlign: 'right',
+    backgroundColor: 'transparent',
+  },
   dropdownText: {
     fontSize: 14,
     color: '#333',
     textAlign: 'right',
+  },
+  smallDropdownText: {
+    fontSize: 16,
+    backgroundColor: 'transparent',
+    paddingVertical: 0,
+    paddingHorizontal: 2,
   },
   dropdownContainer: {
     backgroundColor: '#fff',
@@ -61,6 +102,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     zIndex: 1000,
+  },
+  smallDropdownContainer: {
+    borderRadius: 0,
+    minHeight: 24,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: '#aaa',
+    shadowColor: 'transparent',
+    elevation: 0,
   },
   listItemContainer: {
     height: 40,

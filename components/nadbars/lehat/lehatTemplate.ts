@@ -43,7 +43,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קיבלתי, אמורה {{amoora8}} במעלות. קבל אמורה תקינה/לא תקינה - שפר ל{{angle8}} במעלות"
+          data: "קיבלתי, אמורה {{amoora8}} במעלות. קבל אמורה {{validAmoora|dropdown:תקינה,לא תקינה}} - שפר ל{{angle8}} במעלות"
         },
         {
           type: 'me',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import AutoGrowingInput from './AutoGrowingInput';
+import { Dropdown } from './Dropdown';
 
 export type VariableStringInputValueMap = Record<string, string>;
 
@@ -13,9 +14,10 @@ export interface VariableStringInputProps {
 
 export type VariableStringPart =
   | { type: 'text'; value: string }
-  | { type: 'var'; value: string; fieldId: string };
+  | { type: 'var'; value: string; fieldId: string }
+  | { type: 'dropdown'; fieldId: string; options: string[] };
 
-// Utility to parse a string and return an array of { type: 'text' | 'var', value: string, fieldId?: string }
+// Utility to parse a string and return an array of { type: 'text' | 'var' | 'dropdown', ... }
 export function parseVariableString(template: string): VariableStringPart[] {
   const regex = /{{(.*?)}}/g;
   const result: VariableStringPart[] = [];
@@ -26,11 +28,19 @@ export function parseVariableString(template: string): VariableStringPart[] {
     if (match.index > lastIndex) {
       result.push({ type: 'text', value: template.slice(lastIndex, match.index) });
     }
-    const varName = match[1].trim();
-    varCount[varName] = (varCount[varName] || 0) + 1;
-    // Make each instance unique by appending _1, _2, etc. if needed
-    const fieldId = varCount[varName] > 1 ? `${varName}_${varCount[varName]}` : varName;
-    result.push({ type: 'var', value: '', fieldId });
+    const raw = match[1].trim();
+    // Check for dropdown syntax: varName|dropdown:opt1,opt2
+    const dropdownMatch = raw.match(/^([\w\d_]+)\|dropdown:(.+)$/);
+    if (dropdownMatch) {
+      const fieldId = dropdownMatch[1];
+      const options = dropdownMatch[2].split(',').map(opt => opt.trim());
+      result.push({ type: 'dropdown', fieldId, options });
+    } else {
+      const varName = raw;
+      varCount[varName] = (varCount[varName] || 0) + 1;
+      const fieldId = varCount[varName] > 1 ? `${varName}_${varCount[varName]}` : varName;
+      result.push({ type: 'var', value: '', fieldId });
+    }
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < template.length) {
@@ -46,6 +56,16 @@ const VariableStringInput: React.FC<VariableStringInputProps> = ({ template, val
       {parsed.map((part, idx) => {
         if (part.type === 'text') {
           return <Text key={idx} style={styles.text}>{part.value}</Text>;
+        } else if (part.type === 'dropdown') {
+          return (
+            <Dropdown
+              key={idx}
+              options={part.options.map(opt => ({ label: opt, value: opt }))}
+              value={values[part.fieldId] ?? ''}
+              onChange={(val: string) => onChange(part.fieldId, val)}
+              small={true}
+            />
+          );
         } else {
           return (
             <AutoGrowingInput

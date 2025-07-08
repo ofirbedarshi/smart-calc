@@ -111,14 +111,14 @@ export class NadbarMerger {
         });
       } else if (element.type === 'text') {
         parseVariableString(element.data).forEach(part => {
-          if (part.type === 'var') {
+          if (part.type === 'var' || part.type === 'dropdown') {
             values[part.fieldId!] = variableValues[part.fieldId!] || '';
           }
         });
       } else if (element.type === 'conversation') {
         element.data.forEach(msg => {
           parseVariableString(msg.data).forEach(part => {
-            if (part.type === 'var') {
+            if (part.type === 'var' || part.type === 'dropdown') {
               values[part.fieldId!] = variableValues[part.fieldId!] || '';
             }
           });
@@ -141,14 +141,14 @@ export class NadbarMerger {
         });
       } else if (element.type === 'text') {
         parseVariableString(element.data).forEach(part => {
-          if (part.type === 'var') {
+          if (part.type === 'var' || part.type === 'dropdown') {
             values[part.fieldId!] = '';
           }
         });
       } else if (element.type === 'conversation') {
         element.data.forEach(msg => {
           parseVariableString(msg.data).forEach(part => {
-            if (part.type === 'var') {
+            if (part.type === 'var' || part.type === 'dropdown') {
               values[part.fieldId!] = '';
             }
           });

@@ -11,6 +11,8 @@ export default function TargetPageLayout() {
       <Stack.Screen name="Chemam" />
       <Stack.Screen name="Lehat" />
       <Stack.Screen name="OketzPlada" />
+      <Stack.Screen name="Artillery" />
+      <Stack.Screen name="Mortars" />
     </Stack>
   );
 } 

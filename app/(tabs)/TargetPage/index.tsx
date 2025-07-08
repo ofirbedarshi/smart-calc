@@ -11,6 +11,8 @@ const TargetPage = () => {
     { label: 'חמ"מ', route: 'Chemam' },
     { label: 'להט', route: 'Lehat' },
     { label: 'עוקץ פלדה', route: 'OketzPlada' },
+    { label: 'ארטילריה', route: 'Artillery' },
+    { label: 'מרגמות', route: 'Mortars' },
   ];
 
   const handleNavigate = (route: string) => {

@@ -6,22 +6,13 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
   version: '1.0',
   elements: [
     {
-      type: 'form',
-      header: 'פרטי להט',
+      type: 'conversation',
       data: [
-        { label: 'סוג להט', fieldId: 'lehatType', inputType: 'dropdown', inputOptions: { dropdown: ['סוג א', 'סוג ב', 'אחר'] } },
-        { label: 'מספר סידורי', fieldId: 'serialNumber', inputType: 'text' },
-        { label: 'תיאור', fieldId: 'description', inputType: 'textArea' },
-        { label: 'מיקום', fieldId: 'location', inputType: 'text' },
-        { label: 'סטטוס', fieldId: 'status', inputType: 'dropdown', inputOptions: { dropdown: ['פעיל', 'לא פעיל', 'נבדק'] } },
+        {
+          type: 'me',
+          data: "קבל מטרה {{name}} נדרש מסלול קשתי ללא/ימני/שמאלי היסט מהנקודה ל (ללא/ימין/שמאל/למעלה/למטה). השהייה מסוג ללא/קצרה/ארוכה"
+        }
       ]
     },
-    {
-      type: 'form',
-      header: 'הערות נוספות',
-      data: [
-        { label: 'הערות', fieldId: 'notes', inputType: 'textArea' }
-      ]
-    }
   ]
 }; 

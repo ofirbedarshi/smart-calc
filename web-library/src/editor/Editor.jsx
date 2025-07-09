@@ -26,7 +26,7 @@ const ACCORDION_HTML = `
     כותרת
     <span class="arrow" style="display: inline-block; transition: transform 0.3s ease; font-size: 1.2rem;">▸</span>
   </summary>
-  <div style="margin-top: 1rem; color: #333; line-height: 1.6;">
+  <div style="margin-top: 1rem; color: #333; line-height: 1.6;overflow-x: auto; max-width: 100%; direction: rtl;">
     <p>הוסף תוכן כאן</p>
   </div>
 </details>
@@ -121,7 +121,7 @@ export default function Editor({ content, onChange, readOnly = false }) {
     // Remove 'open' from all <details> tags for read mode
     const safeContent = stripDetailsOpen(content);
     return (
-      <div style={{ maxWidth: 600, margin: '40px auto' }}>
+      <div style={{ width: '100%', margin: '40px auto' }}>
         <div
           style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
           dangerouslySetInnerHTML={{ __html: safeContent }}
@@ -153,7 +153,7 @@ export default function Editor({ content, onChange, readOnly = false }) {
 
   return (
     <div>
-      <div style={{ maxWidth: 600, margin: '40px auto' }}>
+      <div style={{ width: '100%', margin: '40px auto' }}>
         <TinyMCEEditor
           value={content}
           onEditorChange={onChange}

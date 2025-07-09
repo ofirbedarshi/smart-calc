@@ -3,7 +3,7 @@ import React from 'react';
 import SimpleNavigationMenu from '../../../components/common/SimpleNavigationMenu';
 
 const spectroItems = [
-  { label: "צ'ק ליסט", route: 'SpectroCheckList' },
+  { label: "סד״פים", route: 'SpectroCheckList' },
   { label: 'רשמ"צ', route: 'SpectroEquiList' },
 ];
 

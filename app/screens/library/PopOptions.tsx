@@ -3,7 +3,7 @@ import React from 'react';
 import SimpleNavigationMenu from '../../../components/common/SimpleNavigationMenu';
 
 const popItems = [
-  { label: 'צק ליסט', route: 'PopCheckList' },
+  { label: 'סד״פ הרכבה', route: 'PopCheckList' },
   { label: 'רשמצ', route: 'PopEquiList' },
   { label: 'תקלות', route: 'PopErrors' },
 ];

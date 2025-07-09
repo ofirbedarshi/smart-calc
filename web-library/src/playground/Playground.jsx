@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { checkListHtml } from '../../../app/screens/webview/pages/checkListHtml';
+import { spectroEquiListHtml } from '../../../app/screens/webview/pages/spectroEquiListHtml';
 import Editor from '../editor/Editor';
  
 
 export default function Playground() {
-  const [value, setValue] = useState(checkListHtml);
+  const [value, setValue] = useState(spectroEquiListHtml);
 
   return (
     <div>

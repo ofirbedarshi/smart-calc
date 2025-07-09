@@ -1,9 +1,15 @@
 import React from 'react';
-import NadbarEditor from '../../common/NadbarEditor';
+import GenericWebViewController from '../../../app/screens/webview/controllers/GenericWebViewController';
 import { DEFAULT_MORTARS_TEMPLATE } from './mortarsTemplate';
 
-const Mortars: React.FC = () => {
-  return <NadbarEditor template={DEFAULT_MORTARS_TEMPLATE} />;
+const Artillery: React.FC = () => {
+  const htmlElment = DEFAULT_MORTARS_TEMPLATE.elements[0]
+  const html = htmlElment.data as string;
+  return  <GenericWebViewController
+  storageKey={`html_${DEFAULT_MORTARS_TEMPLATE.id}`}
+  fallbackHtml={html}
+  allowEdit={false}
+/>;
 };
 
-export default Mortars; 
+export default Artillery; 

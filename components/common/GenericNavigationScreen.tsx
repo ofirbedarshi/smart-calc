@@ -12,6 +12,7 @@ interface NavigationScreen {
   storageKey?: string;
   fallbackHtml?: string;
   allowEdit?: boolean;
+  editAccess?: string;
 }
 
 interface GenericNavigationScreenProps {

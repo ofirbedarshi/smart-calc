@@ -10,6 +10,7 @@ export default function ContentEditorScreen() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [allowEdit, setAllowEdit] = useState(false);
+  const [editAccess, setEditAccess] = useState('Admin');
   contentRef.current = content;
 
   useEffect(() => {
@@ -24,6 +25,9 @@ export default function ContentEditorScreen() {
           appendLog('[document] SET_CONTENT');
           setContent(data.html);
           setAllowEdit(!!data.allowEdit);
+          if (!!data.editAccess) {
+            setEditAccess(data.editAccess);
+          }
         }
       } catch (e) {
         // Optionally keep error logs for debugging
@@ -90,10 +94,10 @@ export default function ContentEditorScreen() {
       )}
       <Editor content={content} onChange={setContent} readOnly={!isEditMode} />
       
-      {!isEditMode && (
+      {!isEditMode && allowEdit && (
         <button
           onClick={() => {
-            if (allowEdit) {
+            if (editAccess === 'All') {
               setIsEditMode(true);
             } else {
               setShowAdminModal(true);

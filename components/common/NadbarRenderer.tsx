@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import GenericWebViewController from '../../app/screens/webview/controllers/GenericWebViewController';
 import { MergedNadbar } from '../../utils/NadbarMerger';
-import ConversationElement from './ConversationElement';
-import FormElement from './FormElement';
-import NadbarHeader from './NadbarHeader';
-import TextElement from './TextElement';
 import { VariableStringInputValueMap } from './VariableStringInput';
 
 interface NadbarRendererProps {
@@ -48,58 +45,79 @@ const NadbarRenderer: React.FC<NadbarRendererProps> = ({ nadbar, onChange, onErr
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        {nadbar.elements.map((element, idx) => {
-          switch (element.type) {
-            case 'form':
-              return (
-                <View key={idx} style={styles.elementWrapper}>
-                  <FormElement
-                    element={{
-                      ...element,
-                      data: element.data.map(field => ({
-                        ...field,
-                        value: variableValues[field.fieldId] || '',
-                      })),
-                    }}
-                    onFieldChange={handleFormFieldChange}
-                  />
-                </View>
-              );
-            case 'text':
-              return (
-                <View key={idx} style={styles.elementWrapper}>
-                  <TextElement
-                    element={element}
-                    variableValues={variableValues}
-                    onVariableChange={handleVariableChange}
-                  />
-                </View>
-              );
-            case 'conversation':
-              return (
-                <View key={idx} style={styles.elementWrapper}>
-                  <ConversationElement
-                    element={element}
-                    variableValues={variableValues}
-                    onVariableChange={handleVariableChange}
-                  />
-                </View>
-              );
-            case 'header':
-              return (
-                <View key={idx} style={styles.elementWrapper}>
-                  <NadbarHeader data={element.data} />
-                </View>
-              );
-            default:
-              onError?.('Unsupported element type', { elementIdx: idx, type: element.type });
-              return null;
-          }
-        })}
-      </View>
-    </ScrollView>
+    <View style={{ flex: 1, minHeight: 900 }}>
+      {nadbar.elements.map((element, idx) =>
+        element.type === 'html' ? (
+            <GenericWebViewController
+              storageKey={element.header || `html_${idx}`}
+              fallbackHtml={element.data}
+            />
+          ) : null
+      )}
+    </View>
+    // <ScrollView contentContainerStyle={styles.scrollContainer} style={{ flex: 1 }}>
+    //   <View style={[styles.container, { flex: 1 }]}>
+    //     {nadbar.elements.map((element, idx) => {
+    //       switch (element.type) {
+    //         case 'form':
+    //           return (
+    //             <View key={idx} style={styles.elementWrapper}>
+    //               <FormElement
+    //                 element={{
+    //                   ...element,
+    //                   data: element.data.map(field => ({
+    //                     ...field,
+    //                     value: variableValues[field.fieldId] || '',
+    //                   })),
+    //                 }}
+    //                 onFieldChange={handleFormFieldChange}
+    //               />
+    //             </View>
+    //           );
+    //         case 'text':
+    //           return (
+    //             <View key={idx} style={styles.elementWrapper}>
+    //               <TextElement
+    //                 element={element}
+    //                 variableValues={variableValues}
+    //                 onVariableChange={handleVariableChange}
+    //               />
+    //             </View>
+    //           );
+    //         case 'conversation':
+    //           return (
+    //             <View key={idx} style={styles.elementWrapper}>
+    //               <ConversationElement
+    //                 element={element}
+    //                 variableValues={variableValues}
+    //                 onVariableChange={handleVariableChange}
+    //               />
+    //             </View>
+    //           );
+    //         case 'header':
+    //           return (
+    //             <View key={idx} style={styles.elementWrapper}>
+    //               <NadbarHeader data={element.data} />
+    //             </View>
+    //           );
+    //         case 'html':
+    //           const htmlElement = element as NadbarHtmlElement;
+    //           return (
+    //             <View key={idx} style={[styles.elementWrapper, { flex: 1, minHeight: 800}]}>
+    //               {/* <GenericWebViewController
+    //                 storageKey={htmlElement.header || `html_${idx}`}
+    //                 fallbackHtml={htmlElement.data}
+    //               /> */}
+    //             <View style={{ backgroundColor: 'green', width: '100%', height: 100, borderRadius: 8 }} />
+    //             </View>
+    //           );
+    //         default:
+    //           onError?.('Unsupported element type', { elementIdx: idx, type: element.type });
+    //           return null;
+    //       }
+    //     })}
+    //   </View>
+    // </ScrollView>
   );
 };
 

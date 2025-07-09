@@ -7,7 +7,7 @@ const TzagonPhotos = () => {
     <GenericWebViewController
       storageKey="tzagonPhotos"
       fallbackHtml={tzagonPhotosHtml}
-      allowEdit={true}
+      editAccess="All"
     />
   );
 };

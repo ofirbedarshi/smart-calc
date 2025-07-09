@@ -44,7 +44,14 @@ export type NadbarHeaderElement = {
   data: string; // The header text to display
 };
 
-export type NadbarElement = NadbarFormElement | NadbarTextElement | NadbarConversationElement | NadbarHeaderElement;
+// Add html element type
+export type NadbarHtmlElement = {
+  type: 'html';
+  header?: string;
+  data: string; // HTML content
+};
+
+export type NadbarElement = NadbarFormElement | NadbarTextElement | NadbarConversationElement | NadbarHeaderElement | NadbarHtmlElement;
 
 // Template - static structure (for now, just the default maskar template)
 export type NadbarTemplate = {

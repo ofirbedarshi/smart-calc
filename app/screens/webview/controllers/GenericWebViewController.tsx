@@ -5,16 +5,17 @@ import { WebView } from 'react-native-webview';
 import LibraryContentService from '../../../services/LibraryContentService';
 
 const WEBAPP_URL = Platform.OS === 'android'
-  ? (__DEV__ ? 'http://192.168.1.134:5173' : 'file:///android_asset/web-content/index.html')
+  ? (__DEV__ ? 'http://192.168.30.91:5173' : 'file:///android_asset/web-content/index.html')
   : (__DEV__ ? 'http://localhost:5173' : 'file:///web-content/index.html');
 
 interface GenericWebViewControllerProps {
   storageKey: string;
   fallbackHtml: string;
   allowEdit?: boolean;
+  editAccess?: string;
 }
 
-function GenericWebViewController({ storageKey, fallbackHtml, allowEdit }: GenericWebViewControllerProps) {
+function GenericWebViewController({ storageKey, fallbackHtml, allowEdit = true, editAccess = 'Admin'}: GenericWebViewControllerProps) {
   const webViewRef = useRef<WebViewType>(null);
   const [logs, setLogs] = useState('');
   const [initialHtml, setInitialHtml] = useState<string | null>(null);
@@ -37,7 +38,7 @@ function GenericWebViewController({ storageKey, fallbackHtml, allowEdit }: Gener
   const sendContentToWeb = () => {
     if (!initialHtml) return;
     setLogs((prev) => prev + '\nSending content to webapp');
-    const message = JSON.stringify({ type: 'SET_CONTENT', html: initialHtml, allowEdit });
+    const message = JSON.stringify({ type: 'SET_CONTENT', html: initialHtml, allowEdit, editAccess });
     webViewRef.current?.postMessage(message);
   };
 

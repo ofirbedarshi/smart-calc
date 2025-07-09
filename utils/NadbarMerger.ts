@@ -24,6 +24,11 @@ export type MergedNadbarElement =
   | {
       type: 'header';
       data: string;
+    }
+  | {
+      type: 'html';
+      header?: string;
+      data: string;
     };
 
 export interface MergedNadbar {
@@ -61,6 +66,10 @@ export class NadbarMerger {
           ...element
         };
       } else if (element.type === 'header') {
+        return {
+          ...element
+        };
+      } else if (element.type === 'html') {
         return {
           ...element
         };

@@ -7,6 +7,7 @@ import { useLocationStore } from '../../stores/locationStore';
 import { MergedNadbar, NadbarMerger } from '../../utils/NadbarMerger';
 import { TargetToNadbarMapper } from '../../utils/TargetToNadbarMapper';
 import Button from './Button';
+import Header from './Header';
 import NadbarRenderer from './NadbarRenderer';
 import { TargetSelectorModal } from './TargetSelectorModal';
 import { NadbarTemplate } from './nadbarTypes';
@@ -168,6 +169,9 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
         <TargetSelectorModal onChooseTarget={handleChooseTarget} />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {mergedNadbar && (
+        <Header title={mergedNadbar.name} style={{marginBottom: 0, paddingBottom: 0, padding: 8}} />
+      )}
         <View style={styles.container}>
           <NadbarRenderer
             nadbar={mergedNadbar}

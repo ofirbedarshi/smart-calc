@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { TargetEntity } from '../../entities';
 import { NadbarService } from '../../services/NadbarService';
 import { useLocationStore } from '../../stores/locationStore';
@@ -158,29 +158,38 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.stickyButtonContainer}>
-        <Button
-          title="שמור"
-          onPress={handleSave}
-          theme="primary"
-          small
-        />
-        <TargetSelectorModal onChooseTarget={handleChooseTarget} />
-      </View>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {mergedNadbar && (
-        <Header title={mergedNadbar.name} style={{marginBottom: 0, paddingBottom: 0, padding: 8}} />
-      )}
-        <View style={styles.container}>
-          <NadbarRenderer
-            nadbar={mergedNadbar}
-            onChange={handleChange}
-            onError={handleError}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={80} // adjust if you have a header
+    >
+      <View style={{ flex: 1 }}>
+        <View style={styles.stickyButtonContainer}>
+          <Button
+            title="שמור"
+            onPress={handleSave}
+            theme="primary"
+            small
           />
+          <TargetSelectorModal onChooseTarget={handleChooseTarget} />
         </View>
-      </ScrollView>
-    </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          {mergedNadbar && (
+            <Header title={mergedNadbar.name} style={{marginBottom: 0, paddingBottom: 0, padding: 8}} />
+          )}
+          <View style={styles.container}>
+            <NadbarRenderer
+              nadbar={mergedNadbar}
+              onChange={handleChange}
+              onError={handleError}
+            />
+          </View>
+        </ScrollView>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -22,22 +22,34 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
         label: option,
         value: option,
       }));
-      
       return (
-        <Dropdown
-          options={options}
-          value={field.value}
-          onChange={value => onFieldChange(field.fieldId, value)}
-        />
+        <View style={styles.fullWidth}>
+          <Dropdown
+            options={options}
+            value={field.value}
+            onChange={value => onFieldChange(field.fieldId, value)}
+          />
+        </View>
       );
     }
-    
+
+    // Info icon above input if needed
     return (
-      <BaseInput
-        value={field.value}
-        onChange={value => onFieldChange(field.fieldId, value)}
-        textArea={field.inputType === 'textArea'}
-      />
+      <View style={styles.fullWidth}>
+        <View style={styles.labelRow}>
+          <Text style={styles.label}>{field.label}</Text>
+          {field.targetField && (
+            <Tooltip content={'המידע הנ״ל נטען מהמטרה'} direction='left'>
+              <FontAwesome name="info-circle" size={14} color="#007AFF" style={styles.infoIcon} />
+            </Tooltip>
+          )}
+        </View>
+        <BaseInput
+          value={field.value}
+          onChange={value => onFieldChange(field.fieldId, value)}
+          autoGrowVertically={true}
+        />
+      </View>
     );
   };
 
@@ -48,16 +60,8 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
           <Text style={styles.header}>{element.header}</Text>
         )}
         {element.data.map((field: MergedNadbarField) => (
-          <View key={field.fieldId} style={styles.row}>
-            <View style={styles.inputWrapper}>
-              {renderInput(field)}
-            </View>
-            <View style={styles.labelInlineRow}>
-            <Text style={styles.label}>{field.label}</Text>
-              {field.targetField && <Tooltip content={'המידע הנ״ל נטען מהמטרה'} direction='left'>
-                <FontAwesome name="info-circle" size={14} color="#007AFF" style={styles.infoIcon} />
-              </Tooltip> }          
-          </View>
+          <View key={field.fieldId} style={styles.fieldBlock}>
+            {renderInput(field)}
           </View>
         ))}
       </View>
@@ -68,13 +72,6 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
 const styles = StyleSheet.create({
   card: {
     width: '100%',
-  },
-  labelInlineRow: {
-    flex: 1,
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    marginLeft: 8,
-    gap: 4,
   },
   container: {
     marginVertical: 8,
@@ -87,26 +84,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: 'right',
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: 12,
+  fieldBlock: {
     width: '100%',
     marginBottom: 4,
+  },
+  labelRow: {
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    gap: 4,
+    marginBottom: 2,
   },
   label: {
     fontSize: 16,
     color: '#666',
     textAlign: 'right',
-    flex: 1,
     flexShrink: 1,
-    maxWidth: '60%',
-  },
-  inputWrapper: {
-    width: 160,
-    minWidth: 100,
-    maxWidth: 220,
   },
   infoIcon: {
     marginLeft: 4,
@@ -116,6 +108,11 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'right',
     paddingVertical: 8,
+  },
+  fullWidth: {
+    width: '100%',
+    minWidth: 0,
+    maxWidth: '100%',
   },
 });
 

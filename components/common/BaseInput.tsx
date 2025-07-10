@@ -18,6 +18,7 @@ export interface BaseInputProps {
   onBlur?: () => void;
   onFocus?: () => void;
   textArea?: boolean;
+  autoGrowVertically?: boolean;
 }
 
 export const BaseInput: React.FC<BaseInputProps> = ({
@@ -35,7 +36,10 @@ export const BaseInput: React.FC<BaseInputProps> = ({
   onBlur,
   onFocus,
   textArea = false,
+  autoGrowVertically = false,
 }) => {
+  const [inputHeight, setInputHeight] = React.useState(40);
+
   const handleInputChange = (text: string) => {
     if (type === 'number') {
       const numericValue = text.replace(/[^0-9.-]/g, '');
@@ -51,6 +55,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
       styles.mainInput,
       disabled && styles.inputDisabled,
       textArea && styles.textArea,
+      autoGrowVertically && { height: inputHeight, minHeight: 40 },
     ],
     value,
     onChangeText: handleInputChange,
@@ -60,8 +65,11 @@ export const BaseInput: React.FC<BaseInputProps> = ({
     editable: !disabled,
     onBlur,
     onFocus,
-    multiline: textArea,
-    numberOfLines: textArea ? 4 : 1,
+    multiline: autoGrowVertically || textArea,
+    numberOfLines: autoGrowVertically ? undefined : (textArea ? 4 : 1),
+    onContentSizeChange: autoGrowVertically
+      ? (e: any) => setInputHeight(Math.max(40, e.nativeEvent.contentSize.height))
+      : undefined,
   };
 
   const prefixInputProps = {

@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const buttons = [
   { text: 'המרת נ.צ', route: '/calculator/CoordinateConversion', color: '#939c80' },
@@ -10,11 +10,19 @@ const buttons = [
   { text: 'המרת יחידות', route: '/calculator/UnitConversion', color: '#d8d1c3' },
 ];
 
+const iconSources = [
+  require('../assets/icons/nav1icon.png'),
+  require('../assets/icons/nav2icon.png'),
+  require('../assets/icons/nav3icon.png'),
+  require('../assets/icons/nav4icon.png'),
+  require('../assets/icons/nav5icon.png'),
+];
+
 export const CalculatorNavigation: React.FC = () => {
   const router = useRouter();
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Image
         source={require('../assets/images/maglanSymbol.jpeg')}
         style={styles.logo}
@@ -27,11 +35,14 @@ export const CalculatorNavigation: React.FC = () => {
             style={[styles.button, { backgroundColor: button.color }]}
             onPress={() => router.push(button.route)}
           >
-            <Text style={styles.buttonText}>{button.text}</Text>
+            <Image source={iconSources[index]} style={styles.buttonIcon} resizeMode="contain" />
+            <View style={styles.buttonContent}>
+              <Text style={styles.buttonText}>{button.text}</Text>
+            </View>
           </TouchableOpacity>
         ))}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -39,6 +50,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#fff',
   },
   logo: {
     width: '100%',
@@ -46,7 +58,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   buttonContainer: {
-    gap: 16,
+    flex: 1,
+    justifyContent: 'space-evenly',
   },
   button: {
     padding: 16,
@@ -60,6 +73,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+    position: 'relative', // Make button relative for absolute icon
+  },
+  buttonContent: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row', // Only for text centering
+  },
+  buttonIcon: {
+    position: 'absolute',
+    right: 16,
+    width: 56,
+    height: 56,
+    zIndex: 1,
   },
   buttonText: {
     fontSize: 18,

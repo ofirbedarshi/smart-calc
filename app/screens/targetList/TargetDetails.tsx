@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, View } from 'react-native';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import Button from '../../../components/common/Button';
 import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
 import TargetNadbarsSection from '../../../components/targetList/TargetNadbarsSection';
@@ -96,49 +96,56 @@ export default function TargetDetails() {
   };
 
   return (
-    <>
-      <FlatList
-        data={[1]}
-        renderItem={() => (
-          <>
-            <FieldSection
-              targetFields={targetEntity.data}
-              isEditMode={isEditMode}
-              onFieldChange={handleFieldChange}
-              computed={computed}
-              onToggleEdit={() => setIsEditMode(!isEditMode)}
-            />
-            {targetEntity.id && (
-              <TargetNadbarsSection targetId={targetEntity.id} />
-            )}
-          </>
-        )}
-        keyExtractor={() => '1'}
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      />
-      <View style={styles.saveContainerRow}>
-        <Button
-          title="שמור"
-          onPress={handleSave}
-          disabled={loading}
-          small
-          theme="primary"
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={80} // adjust if you have a header
+    >
+      <>
+        <FlatList
+          data={[1]}
+          renderItem={() => (
+            <>
+              <FieldSection
+                targetFields={targetEntity.data}
+                isEditMode={isEditMode}
+                onFieldChange={handleFieldChange}
+                computed={computed}
+                onToggleEdit={() => setIsEditMode(!isEditMode)}
+              />
+              {targetEntity.id && (
+                <TargetNadbarsSection targetId={targetEntity.id} />
+              )}
+            </>
+          )}
+          keyExtractor={() => '1'}
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+          keyboardShouldPersistTaps="handled"
         />
-        {targetEntity.id && (
-          <DeleteButtonWithConfirm
-            items={[typeof targetEntity.name === 'string' ? targetEntity.name : '']}
-            onDelete={handleDelete}
-            buttonProps={{
-              title: 'מחיקה',
-              theme: 'danger',
-              small: true,
-              onPress: () => {},
-            }}
+        <View style={styles.saveContainerRow}>
+          <Button
+            title="שמור"
+            onPress={handleSave}
+            disabled={loading}
+            small
+            theme="primary"
           />
-        )}
-      </View>
-    </>
+          {targetEntity.id && (
+            <DeleteButtonWithConfirm
+              items={[typeof targetEntity.name === 'string' ? targetEntity.name : '']}
+              onDelete={handleDelete}
+              buttonProps={{
+                title: 'מחיקה',
+                theme: 'danger',
+                small: true,
+                onPress: () => {},
+              }}
+            />
+          )}
+        </View>
+      </>
+    </KeyboardAvoidingView>
   );
 }
 

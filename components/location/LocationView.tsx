@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row-reverse',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     flexWrap: 'wrap',
     alignItems: 'center',
     marginTop: 4,
@@ -77,6 +77,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     fontStyle: 'italic',
-    textAlign: 'right',
+    textAlign: 'center',
   },
 }); 

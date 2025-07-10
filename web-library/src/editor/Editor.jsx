@@ -1,5 +1,5 @@
 import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // --- Constants ---
 const ACCORDION_HTML = `
@@ -114,17 +114,83 @@ function stripDetailsOpen(html) {
   return html.replace(/(<details\b[^>]*?)\sopen(=(["'])?open\3)?/gi, '$1');
 }
 
-export default function Editor({ content, onChange, readOnly = false }) {
+export default function Editor({ content, onChange, readOnly = false, onSave }) {
   const editorRef = useRef(null);
+  const [logs, setLogs] = useState([]);
+  const [safeContent, setSafeContent] = useState(content);
+
+  function log(msg) {
+    setLogs(prev => [...prev, msg]);
+  }
+
+  function handleReadOnlyCheckboxClick(e) {
+    log('Checkbox click event');
+    if (e.target && e.target.classList.contains('mce-checkbox')) {
+      // log('Clicked a .mce-checkbox');
+      // Clone the DOM to manipulate
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = e.currentTarget.innerHTML;
+      // Find all checkboxes in the real DOM
+      const realCheckboxes = Array.from(e.currentTarget.querySelectorAll('.mce-checkbox'));
+      // Find all checkboxes in the cloned DOM
+      const checkboxes = wrapper.querySelectorAll('.mce-checkbox');
+      log(`Found ${checkboxes.length} checkboxes in cloned DOM`);
+      // Find the index of the clicked checkbox in the real DOM
+      const clickedIndex = realCheckboxes.findIndex(cb => cb === e.target);
+      log(`Clicked index: ${clickedIndex}`);
+      if (clickedIndex !== -1) {
+        // Toggle the checked attribute in the HTML
+        const cb = checkboxes[clickedIndex];
+        log(`Checkbox before: checked=${cb.hasAttribute('checked')}`);
+        if (cb.hasAttribute('checked')) {
+          cb.removeAttribute('checked');
+        } else {
+          cb.setAttribute('checked', 'true');
+        }
+        log(`Checkbox after: checked=${cb.hasAttribute('checked')}`);
+        // Update the HTML and call onChange
+        onChange && onChange(wrapper.innerHTML);
+        setSafeContent(wrapper.innerHTML)
+        log('Called onChange with updated HTML');
+        // Call onSave if provided, pass the new HTML
+        if (onSave) {
+          log('Calling onSave after checkbox change');
+          onSave(wrapper.innerHTML, true); // silent save
+        }
+      } else {
+        log('Clicked checkbox not found in cloned DOM');
+      }
+    }
+  }
+  
+
+  // Only close <details> on mount (or remount) and set safeContent
+  useEffect(() => {
+    if (readOnly) {
+      setSafeContent(stripDetailsOpen(content));
+    } else {
+      setSafeContent(content);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   if (readOnly) {
-    // Remove 'open' from all <details> tags for read mode
-    const safeContent = stripDetailsOpen(content);
     return (
       <div style={{ width: '100%', margin: '40px auto' }}>
+        {/* Render logs at the top */}
+        {/* <div style={{ background: '#eee', color: '#333', fontSize: 12, padding: 8, marginBottom: 8, borderRadius: 4, maxHeight: 120, overflow: 'auto' }}>
+          <strong>Logs:</strong>
+          <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+            {logs.map((log, i) => (
+              <li key={i}>{log}</li>
+            ))}
+          </ul>
+        </div> */}
         <div
+          ref={editorRef}
           style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
           dangerouslySetInnerHTML={{ __html: safeContent }}
+          onClick={handleReadOnlyCheckboxClick}
         />
       </div>
     );

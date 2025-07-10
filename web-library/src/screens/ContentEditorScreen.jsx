@@ -4,6 +4,7 @@ import Editor from '../editor/Editor';
 
 export default function ContentEditorScreen() {
   const [content, setContent] = useState('Loading...');
+  const [contentId, setContentId] = useState(null);
   const contentRef = useRef(content);
   // Only keep logs in state for debugging, not shown in UI
   const [logs, setLogs] = useState('');
@@ -18,11 +19,14 @@ export default function ContentEditorScreen() {
       setLogs((prev) => prev + '\n' + msg);
     }
     function handleDocumentMessage(event) {
-      appendLog('[document] handleMessage: ' + event.data);
+      // appendLog('[document] handleMessage: ' + event.data);
       try {
         const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
         if (data && data.type === 'SET_CONTENT' && typeof data.html === 'string') {
-          appendLog('[document] SET_CONTENT');
+          appendLog('[document] SET_CONTENT'+ data.id);
+          if (data.id) {
+            setContentId(data.id);
+          }
           setContent(data.html);
           setAllowEdit(!!data.allowEdit);
           if (!!data.editAccess) {
@@ -48,10 +52,11 @@ export default function ContentEditorScreen() {
     };
   }, []);
 
-  const handleSave = () => {
+  const handleSave = (newHtml, silent = false) => {
+    const htmlToSave = newHtml || content;
     if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
       window.ReactNativeWebView.postMessage(
-        JSON.stringify({ type: 'SAVE_CONTENT', html: content })
+        JSON.stringify({ type: 'SAVE_CONTENT', html: htmlToSave, silent })
       );
     }
   };
@@ -92,8 +97,17 @@ export default function ContentEditorScreen() {
           </button>
         </div>
       )}
-      <Editor content={content} onChange={setContent} readOnly={!isEditMode} />
-      
+      {/* Only render Editor if content exists */}
+      {/* {logs} */}
+      {content && content !== 'Loading...' && contentId && (
+        <Editor
+          key={contentId}
+          content={content}
+          onChange={setContent}
+          readOnly={!isEditMode}
+          onSave={handleSave}
+        />
+      )}
       {!isEditMode && allowEdit && (
         <button
           onClick={() => {
@@ -115,7 +129,6 @@ export default function ContentEditorScreen() {
           ערוך
         </button>
       )}
-      
       <AdminModeModal
         isOpen={showAdminModal}
         onClose={() => setShowAdminModal(false)}

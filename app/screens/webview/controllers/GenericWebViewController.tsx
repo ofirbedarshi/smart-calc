@@ -37,8 +37,8 @@ function GenericWebViewController({ storageKey, fallbackHtml, allowEdit = true, 
 
   const sendContentToWeb = () => {
     if (!initialHtml) return;
-    setLogs((prev) => prev + '\nSending content to webapp');
-    const message = JSON.stringify({ type: 'SET_CONTENT', html: initialHtml, allowEdit, editAccess });
+    setLogs((prev) => prev + '\nSending content to webapp' + storageKey);
+    const message = JSON.stringify({ type: 'SET_CONTENT', html: initialHtml, allowEdit, editAccess, id: storageKey });
     webViewRef.current?.postMessage(message);
   };
 
@@ -54,7 +54,7 @@ function GenericWebViewController({ storageKey, fallbackHtml, allowEdit = true, 
         try {
           await LibraryContentService.setContent(storageKey, data.html);
           setLogs((prev) => prev + '\nSaved content to LibraryContentService');
-          Alert.alert('הצלחה', 'התוכן נשמר בהצלחה');
+          !data.silent && Alert.alert('הצלחה', 'התוכן נשמר בהצלחה');
         } catch (err) {
           setLogs((prev) => prev + '\nFailed to save content: ' + err);
           Alert.alert('שגיאה', 'שמירת התוכן נכשלה, נסה שוב');

@@ -32,7 +32,7 @@ const libraryItems = [
 function MainLibraryScreen({ navigation }: { navigation: any }) {
   return (
     <SimpleNavigationMenu
-      title="ספרייה"
+      title="ספריה"
       items={libraryItems}
       backgroundColor="#f7f4ef"
       buttonColor="#baaf9d"

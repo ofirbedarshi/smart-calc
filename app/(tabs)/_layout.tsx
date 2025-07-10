@@ -29,7 +29,7 @@ export default function TabLayout() {
             return (
               <View style={{ alignItems: 'center', backgroundColor: active ? '#e0e7ef' : 'transparent', borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6 }}>
                 <FontAwesome name="book" size={24} color="#333" />
-                <Text style={{ fontSize: 12, color: '#333', marginTop: 2 }}>ספרייה</Text>
+                <Text style={{ fontSize: 12, color: '#333', marginTop: 2 }}>ספריה</Text>
               </View>
             );
           })() as unknown as React.ReactNode}

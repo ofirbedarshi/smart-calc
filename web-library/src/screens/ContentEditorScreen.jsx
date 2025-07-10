@@ -3,7 +3,9 @@ import AdminModeModal from '../components/AdminModeModal';
 import Editor from '../editor/Editor';
 
 export default function ContentEditorScreen() {
+  // Canonical HTML content for the current document
   const [content, setContent] = useState('Loading...');
+  // Unique id for the content, used as key to force Editor remount on content change
   const [contentId, setContentId] = useState(null);
   const contentRef = useRef(content);
   // Only keep logs in state for debugging, not shown in UI
@@ -100,6 +102,7 @@ export default function ContentEditorScreen() {
       {/* Only render Editor if content exists */}
       {/* {logs} */}
       {content && content !== 'Loading...' && contentId && (
+        // Key ensures Editor remounts and closes accordions for new content
         <Editor
           key={contentId}
           content={content}

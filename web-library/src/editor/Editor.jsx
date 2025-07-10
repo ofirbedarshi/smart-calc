@@ -117,6 +117,7 @@ function stripDetailsOpen(html) {
 export default function Editor({ content, onChange, readOnly = false, onSave }) {
   const editorRef = useRef(null);
   const [logs, setLogs] = useState([]);
+  // Derived state: HTML with accordions closed, set only once per mount/remount
   const [safeContent, setSafeContent] = useState(content);
 
   function log(msg) {
@@ -175,17 +176,41 @@ export default function Editor({ content, onChange, readOnly = false, onSave }) 
   }, []);
 
   if (readOnly) {
+    // Check if there is at least one checkbox in the content
+    const hasCheckbox = /<input[^>]+type=["']checkbox["'][^>]*>/i.test(safeContent);
+
+    // Handler to clear all checkboxes
+    const handleClearCheckboxes = () => {
+      // Parse the HTML, uncheck all checkboxes
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = safeContent;
+      const checkboxes = wrapper.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(cb => { cb.checked = false; cb.removeAttribute('checked'); });
+      // Use only the inner HTML of the original content, not the wrapper div
+      const newHtml = wrapper.innerHTML;
+      onChange && onChange(newHtml);
+      setSafeContent(newHtml)
+      onSave && onSave(newHtml, true); // silent save
+    };
     return (
       <div style={{ width: '100%', margin: '40px auto' }}>
-        {/* Render logs at the top */}
-        {/* <div style={{ background: '#eee', color: '#333', fontSize: 12, padding: 8, marginBottom: 8, borderRadius: 4, maxHeight: 120, overflow: 'auto' }}>
-          <strong>Logs:</strong>
-          <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-            {logs.map((log, i) => (
-              <li key={i}>{log}</li>
-            ))}
-          </ul>
-        </div> */}
+        {/* Show button only if there is at least one checkbox */}
+        {hasCheckbox && (
+          <button
+            onClick={handleClearCheckboxes}
+            style={{
+              marginBottom: 12,
+              padding: '8px 16px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              background: '#f0f0f0',
+              cursor: 'pointer',
+              fontSize: 14,
+            }}
+          >
+            נקה סימונים
+          </button>
+        )}
         <div
           ref={editorRef}
           style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}

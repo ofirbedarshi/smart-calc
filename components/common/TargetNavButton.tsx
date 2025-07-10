@@ -19,8 +19,8 @@ const TargetNavButton: React.FC<TargetNavButtonProps> = ({
   onPress, 
   backgroundColor = '#cfddde',
   minHeight = 90,
-  flexBasis = '48%',
-  maxWidth = 150
+  flexBasis = undefined,
+  maxWidth = undefined
 }) => (
   <TouchableOpacity
     key={screen.routeName}
@@ -28,9 +28,8 @@ const TargetNavButton: React.FC<TargetNavButtonProps> = ({
       styles.gridButton, 
       { 
         backgroundColor, 
-        minHeight, 
-        flexBasis, 
-        maxWidth 
+        width: 150,
+        height: 90,
       }
     ]}
     onPress={onPress}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Header from './Header';
 import TargetNavButton from './TargetNavButton';
 import WideButton from './WideButton';
@@ -30,8 +30,13 @@ const SimpleNavigationMenu: React.FC<SimpleNavigationMenuProps> = ({
   wideButton,
   onNavigate,
 }) => {
+  // Group items into rows of two
+  const rows = [];
+  for (let i = 0; i < items.length; i += 2) {
+    rows.push(items.slice(i, i + 2));
+  }
   return (
-    <ScrollView style={[styles.container, { backgroundColor }]}>
+    <View style={[styles.container, { backgroundColor }]}> 
       <Header title={title} />
       {wideButton && (
         <WideButton 
@@ -41,16 +46,23 @@ const SimpleNavigationMenu: React.FC<SimpleNavigationMenuProps> = ({
         />
       )}
       <View style={styles.flexGrid}>
-        {items.map((item) => (
-          <TargetNavButton
-            key={item.route}
-            screen={{ navigationCtaLabel: item.label, routeName: item.route }}
-            onPress={() => onNavigate(item.route)}
-            backgroundColor={buttonColor}
-          />
+        {rows.map((row, rowIndex) => (
+          <View style={styles.row} key={rowIndex}>
+            {row.map((item) => (
+              <View style={styles.buttonWrapper} key={item.route}>
+                <TargetNavButton
+                  screen={{ navigationCtaLabel: item.label, routeName: item.route }}
+                  onPress={() => onNavigate(item.route)}
+                  backgroundColor={buttonColor}
+                />
+              </View>
+            ))}
+            {/* Filler for odd items */}
+            {row.length < 2 && <View style={[styles.buttonWrapper, { opacity: 0 }]} />}
+          </View>
         ))}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -60,12 +72,23 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   flexGrid: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'stretch',
+  },
+  row: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
-    marginTop: 16,
-    marginBottom: 16,
-    justifyContent: 'center'
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    width: '100%',
+  },
+  buttonWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    minWidth: 150,
   },
 });
 

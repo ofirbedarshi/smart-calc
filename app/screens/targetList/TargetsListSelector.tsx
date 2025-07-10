@@ -79,7 +79,12 @@ export default function TargetsListSelector({
           keyExtractor={item => item.id || ''}
           renderItemContent={item => (
             <>
-              <Text style={styles.name}>{item.name}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.name}>{item.name}</Text>
+                {item.description ? (
+                  <Text style={styles.description}>{item.description}</Text>
+                ) : null}
+              </View>
               <View style={styles.updatedAtContainer}>
                 <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
                 <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
@@ -110,6 +115,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#222',
     textAlign: 'right',
+  },
+  description: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'right',
+    marginBottom: 2,
   },
   updatedAtContainer: {
     alignItems: 'flex-start',

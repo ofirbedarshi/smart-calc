@@ -70,10 +70,10 @@ const TabNavigator = () => (
       headerShown: false,
     })}
   >
+    <Tab.Screen name="Calculator" component={CalculatorScreen} options={{ tabBarLabel: () => null }} />
     <Tab.Screen name="Library" component={LibraryScreen} options={{ tabBarLabel: () => null }} />
     <Tab.Screen name="TargetPage" component={TargetPageScreen} options={{ tabBarLabel: () => null }} />
     <Tab.Screen name="TargetsList" component={TargetsListScreen} options={{ tabBarLabel: () => null }} />
-    <Tab.Screen name="Calculator" component={CalculatorScreen} options={{ tabBarLabel: () => null }} />
   </Tab.Navigator>
 );
 

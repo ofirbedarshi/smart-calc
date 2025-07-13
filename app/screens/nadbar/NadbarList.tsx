@@ -4,21 +4,21 @@ import { NadbarData } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import SelectableList from '../../../components/common/SelectableList';
 import { useNavigation } from '../../../hooks/useNavigation';
-import { TargetFields, TargetService } from '../../../services/TargetService';
 import { useNadbarStore } from '../../../stores/nadbarStore';
+import { useTargetStore } from '../../../stores/targetStore';
 import { formatDate } from '../../../utils/dateUtils';
 import { getNadbarName, getNadbarRoute } from '../../../utils/nadbarRegistry';
 
 const NadbarList: React.FC = () => {
   const { nadbars, loadNadbars, loading: nadbarLoading, deleteNadbar } = useNadbarStore();
-  const [targets, setTargets] = useState<TargetFields[]>([]);
+  const { targets, loadTargets } = useTargetStore();
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState<NadbarData[]>([]);
   const navigation = useNavigation();
 
   useEffect(() => {
     loadNadbars();
-    TargetService.getTargets().then(setTargets);
+    loadTargets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -35,7 +35,7 @@ const NadbarList: React.FC = () => {
 
   const getTargetName = (targetId?: string): string => {
     if (!targetId) return 'אין מטרה מקושרת';
-    const target = targets.find((t: TargetFields) => t.id === targetId);
+    const target = targets.find((t: any) => t.id === targetId);
     return target?.name || 'אין שם למטרה המקושרת';
   };
 
@@ -49,7 +49,6 @@ const NadbarList: React.FC = () => {
   const handleNavigate = (nadbar: NadbarData) => {
     const route = getNadbarRoute(nadbar);
     if (route) {
-      console.log("route", nadbar.id)
       navigation.navigate(route as any, { nadbarId: nadbar.id });
     } else {
       Alert.alert('שגיאה', 'לא ניתן לפתוח נדבר זה');

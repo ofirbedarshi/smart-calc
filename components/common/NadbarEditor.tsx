@@ -31,13 +31,11 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }: Nadba
 
   // Load existing nadbar or create new one in memory
   useEffect(() => {
-    console.log('nadbarId', resolvedNadbarId)
     const loadNadbar = async () => {
       try {
         await loadNadbars();
         const nadbarData = resolvedNadbarId ? getNadbarById(resolvedNadbarId) : undefined;
         if (nadbarData) {
-          console.log('nadbarData', nadbarData)
           const merged = NadbarMerger.merge(template, nadbarData);
           setMergedNadbar(merged);
         } else if (!resolvedNadbarId) {
@@ -62,7 +60,6 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }: Nadba
     try {
       if (!mergedNadbar) return;
       const values = NadbarMerger.extractValues(mergedNadbar, mergedNadbar.values);
-      console.log('mergedNadbar.targetId', mergedNadbar.targetId)
       const upserted = await upsertNadbar({
         id: mergedNadbar.id || undefined,
         templateId: template.id,
@@ -103,10 +100,6 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }: Nadba
     });
     return newValues;
   };
-
-  useEffect(()=> {
-    mergedNadbar && console.log('use effect merged', mergedNadbar.targetId)
-  }, [mergedNadbar])
 
   const handleChooseTarget = async (target: any) => {
     try {

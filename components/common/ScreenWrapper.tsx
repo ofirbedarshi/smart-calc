@@ -1,21 +1,25 @@
 import React from 'react';
-import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-interface ScreenWrapperProps extends ScrollViewProps {
+interface ScreenWrapperProps {
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, ...props }) => {
+const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, ...props }: ScreenWrapperProps) => {
   return (
-    <ScrollView
+    <KeyboardAwareScrollView
       style={[styles.container, style]}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
+      enableOnAndroid
+      extraScrollHeight={80}
       {...props}
     >
       {children}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 };
 

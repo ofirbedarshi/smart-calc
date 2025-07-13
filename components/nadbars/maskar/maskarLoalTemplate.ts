@@ -25,7 +25,7 @@ export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
           inputOptions: { dropdown: ['אורטופוטו', 'אורטופוטו שליטה'] } 
         },
         { label: 'מיקום עצמי - נצ״א', fieldId: 'natza', inputType: 'text' },
-        { label: 'ק אחרון כוחותינו', fieldId: 'ourForces', inputType: 'text' },
+        { label: 'קו אחרון כוחותינו', fieldId: 'ourForces', inputType: 'text' },
         { label: 'מודיעין ואיומים', fieldId: 'threats', inputType: 'text' }
       ]
     },
@@ -82,7 +82,7 @@ export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: `דיווח תוצאות - ״קבל פגיעה/לא פגיאה״ + המלצות להשלמה אם נדרש`
+          data: `דיווח תוצאות - ״קבל פגיעה/לא פגיעה״ + המלצות להשלמה אם נדרש`
         },
         
       ]

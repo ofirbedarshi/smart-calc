@@ -8,7 +8,7 @@ export const DEFAULT_KRAV_LINE6_TEMPLATE: NadbarTemplate = {
     {
       type: 'form',
       data: [
-        { label: 'שם מטרה', fieldId: 'targetName', inputType: 'text' },
+        { label: 'שם מטרה (דג_212_תאריך_שעה)', fieldId: 'targetName', inputType: 'text' },
         { label: 'נ.צ UTM', fieldId: 'natza', inputType: 'text', targetField: 'coords' },
         { label: 'מהות ורכיבים לתקיפה', fieldId: 'attack', inputType: 'none', constantText: 'בניין ק+1, חוליית נ״ט בקומה העליונה' },
         { label: 'כיוון/טווח כוחותינו', fieldId: 'ourTeam', inputType: 'none', constantText: 'כוחותינו 650 מ׳ דר׳ מז׳' },

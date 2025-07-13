@@ -71,7 +71,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'they',
-          data: "קיבלתי, הללויה. קבל למטרה __ זמן מעוך משוער __, כמו כן מוקד"
+          data: "קיבלתי, הללויה. קבל למטרה __ זמן מעוף משוער __, כמו כן מוקד"
         },
         {
           type: 'me',

@@ -122,7 +122,10 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }) => {
 
   const handleChooseTarget = async (target: any) => {
     try {
-      if (!mergedNadbar) return;
+      
+      if (!mergedNadbar) {
+        throw new Error('Nadbar is missing')
+      }
 
       // Update nadbar with targetId
       await NadbarService.updateNadbar(mergedNadbar.id, { targetId: target.id });

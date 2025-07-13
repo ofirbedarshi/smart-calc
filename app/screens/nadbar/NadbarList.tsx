@@ -5,22 +5,42 @@ import { NadbarData } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import SelectableList from '../../../components/common/SelectableList';
 import { NadbarService } from '../../../services/NadbarService';
+import { TargetFields, TargetService } from '../../../services/TargetService';
 import { formatDate } from '../../../utils/dateUtils';
 import { getNadbarName, getNadbarRoute } from '../../../utils/nadbarRegistry';
 
 const NadbarList: React.FC = () => {
   const [nadbars, setNadbars] = useState<NadbarData[]>([]);
+  const [targets, setTargets] = useState<TargetFields[]>([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState<NadbarData[]>([]);
   const router = useRouter();
 
   useEffect(() => {
-    NadbarService.getNadbars().then(setNadbars);
+    const loadData = async () => {
+      try {
+        const [nadbarsData, targetsData] = await Promise.all([
+          NadbarService.getNadbars(),
+          TargetService.getTargets()
+        ]);
+        setNadbars(nadbarsData);
+        setTargets(targetsData);
+      } catch (error) {
+        console.error('[NadbarList] Failed to load data:', error);
+      }
+    };
+    loadData();
   }, []);
 
   useEffect(() => {
     NadbarService.filterNadbars(search).then(setFiltered);
   }, [search, nadbars]);
+
+  const getTargetName = (targetId?: string): string => {
+    if (!targetId) return 'אין מטרה מקושרת';
+    const target = targets.find(t => t.id === targetId);
+    return target?.name || 'אין שם למטרה המקושרת';
+  };
 
   const handleDelete = async (ids: string[]) => {
     for (const id of ids) {
@@ -51,7 +71,15 @@ const NadbarList: React.FC = () => {
           keyExtractor={item => item.id}
           renderItemContent={item => (
             <>
-              <Text style={styles.name}>{getNadbarName(item)}</Text>
+              <View style={styles.contentContainer}>
+                <Text style={styles.name}>{getNadbarName(item)}</Text>
+                
+                  <Text style={styles.targetName}>
+                    <Text style={styles.targetLabel}>מטרה: </Text>
+                    <Text style={styles.targetNameBold}>{getTargetName(item.targetId)}</Text>
+                  </Text>
+                
+              </View>
               <View style={styles.updatedAtContainer}>
                 <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
                 <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
@@ -79,10 +107,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#888',
   },
+  contentContainer: {
+    flex: 1,
+  },
   name: {
     fontSize: 18,
     color: '#222',
     textAlign: 'right',
+  },
+  targetName: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'right',
+    marginTop: 4,
+  },
+  targetLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  targetNameBold: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: 'bold',
   },
   updatedAtContainer: {
     alignItems: 'flex-start',

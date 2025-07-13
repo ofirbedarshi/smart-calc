@@ -27,11 +27,11 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קבל למטרה {{name}} מרעום {{eastCoord}} (ספרה ספרה) צפע {{northCoord}} (ספרה ספרה)"
+          data: "קבל למטרה {{name}} מרעום {{eastCoord}}  צפע {{northCoord}} "
         },
         {
           type: 'they',
-          data: "קיבלתי, למטרה __ (מספר שלם) מרעום __ (ספרה ספרה) צפע __ (ספרה ספרה)"
+          data: "קיבלתי, למטרה __ (מספר שלם) מרעום __  צפע __ "
         },
         {
           type: 'me',

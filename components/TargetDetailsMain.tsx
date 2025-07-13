@@ -1,6 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import FieldSection from '../app/screens/targetList/FieldSection';
 import { TargetEntity } from '../entities';
 import { TargetFields } from '../services/TargetService';
@@ -32,7 +33,7 @@ export default function TargetDetailsMain() {
   // Update target entity when self location changes
   useEffect(() => {
     if (selfLocation) {
-      setTargetEntity(prev => {
+      setTargetEntity((prev: TargetEntity) => {
         const updated = new TargetEntity(prev.data, selfLocation);
         return updated;
       });
@@ -48,7 +49,7 @@ export default function TargetDetailsMain() {
 
   // Field change handler
   const handleFieldChange = (field: keyof TargetFields, value: string) => {
-    setTargetEntity(prev => {
+    setTargetEntity((prev: TargetEntity) => {
       const updated = new TargetEntity(prev.data, selfLocation);
       updated.updateField(field, value);
       return updated;
@@ -104,56 +105,47 @@ export default function TargetDetailsMain() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={80}
-    >
-      <>
-        <FlatList
-          data={[1]}
-          renderItem={() => (
-            <>
-              <FieldSection
-                targetFields={targetEntity.data}
-                isEditMode={isEditMode}
-                onFieldChange={handleFieldChange}
-                computed={computed}
-                onToggleEdit={() => setIsEditMode(!isEditMode)}
-              />
-              {targetEntity.id && (
-                <TargetNadbarsSection targetId={targetEntity.id} />
-              )}
-            </>
-          )}
-          keyExtractor={() => '1'}
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-          keyboardShouldPersistTaps="handled"
+    <View style={{ flex: 1 }}>
+      <KeyboardAwareScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        enableOnAndroid
+        extraScrollHeight={120}
+        keyboardShouldPersistTaps="handled"
+      >
+        <FieldSection
+          targetFields={targetEntity.data}
+          isEditMode={isEditMode}
+          onFieldChange={handleFieldChange}
+          computed={computed}
+          onToggleEdit={() => setIsEditMode(!isEditMode)}
         />
-        <View style={styles.saveContainerRow}>
-          <Button
-            title="שמור"
-            onPress={handleSave}
-            disabled={loading}
-            small
-            theme="primary"
+        {targetEntity.id && (
+          <TargetNadbarsSection targetId={targetEntity.id} />
+        )}
+      </KeyboardAwareScrollView>
+      <View style={styles.saveContainerRow}>
+        <Button
+          title="שמור"
+          onPress={handleSave}
+          disabled={loading}
+          small
+          theme="primary"
+        />
+        {targetEntity.id && (
+          <DeleteButtonWithConfirm
+            items={[typeof targetEntity.name === 'string' ? targetEntity.name : '']}
+            onDelete={handleDelete}
+            buttonProps={{
+              title: 'מחיקה',
+              theme: 'danger',
+              small: true,
+              onPress: () => {},
+            }}
           />
-          {targetEntity.id && (
-            <DeleteButtonWithConfirm
-              items={[typeof targetEntity.name === 'string' ? targetEntity.name : '']}
-              onDelete={handleDelete}
-              buttonProps={{
-                title: 'מחיקה',
-                theme: 'danger',
-                small: true,
-                onPress: () => {},
-              }}
-            />
-          )}
-        </View>
-      </>
-    </KeyboardAvoidingView>
+        )}
+      </View>
+    </View>
   );
 }
 

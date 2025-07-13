@@ -1,6 +1,7 @@
 import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { TargetEntity } from '../../entities';
 import { useLocationStore } from '../../stores/locationStore';
 import { useNadbarStore } from '../../stores/nadbarStore';
@@ -131,38 +132,34 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }: Nadba
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={80} // adjust if you have a header
-    >
-      <View style={{ flex: 1 }}>
-        <View style={styles.stickyButtonContainer}>
-          <Button
-            title="שמור"
-            onPress={handleSave}
-            theme="primary"
-            small
-          />
-          <TargetSelectorModal onChooseTarget={handleChooseTarget} />
-        </View>
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          keyboardShouldPersistTaps="handled"
-        >
-          {mergedNadbar && (
-            <Header title={mergedNadbar.name} style={{marginBottom: 0, paddingBottom: 0, padding: 8}} />
-          )}
-          <View style={styles.container}>
-            <NadbarRenderer
-              nadbar={mergedNadbar}
-              onChange={handleChange}
-              onError={handleError}
-            />
-          </View>
-        </ScrollView>
+    <View style={{ flex: 1 }}>
+      <View style={styles.stickyButtonContainer}>
+        <Button
+          title="שמור"
+          onPress={handleSave}
+          theme="primary"
+          small
+        />
+        <TargetSelectorModal onChooseTarget={handleChooseTarget} />
       </View>
-    </KeyboardAvoidingView>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scrollContainer}
+        enableOnAndroid
+        extraScrollHeight={120}
+        keyboardShouldPersistTaps="handled"
+      >
+        {mergedNadbar && (
+          <Header title={mergedNadbar.name} style={{marginBottom: 0, paddingBottom: 0, padding: 8}} />
+        )}
+        <View style={styles.container}>
+          <NadbarRenderer
+            nadbar={mergedNadbar}
+            onChange={handleChange}
+            onError={handleError}
+          />
+        </View>
+      </KeyboardAwareScrollView>
+    </View>
   );
 };
 

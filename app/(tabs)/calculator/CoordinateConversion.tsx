@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { ConversionResults } from '../../../components/calculators/ConversionResults';
@@ -10,6 +9,7 @@ import Header from '../../../components/common/Header';
 import InputCard from '../../../components/common/InputCard';
 import ScreenWrapper from '../../../components/common/ScreenWrapper';
 import { SelfLocation } from '../../../components/SelfLocation';
+import { useNavigation } from '../../../hooks/useNavigation';
 import {
   ConversionResults as ConversionResultsType,
   CoordsConversionCalc,
@@ -20,6 +20,7 @@ import { CalculatorField } from '../../../types/calculator';
 
 export default function CoordinateConversion() {
   const { locationData: selfLocation } = useLocationStore();
+  const navigation = useNavigation();
   const [isReversed, setIsReversed] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
 
@@ -164,12 +165,7 @@ export default function CoordinateConversion() {
       height: isReversed ? results.height : coordsData.height,
     };
 
-    router.push({
-      pathname: '/TargetsList/TargetDetails',
-      params: {
-        target: JSON.stringify(target),
-      },
-    });
+    navigation.navigate('TargetDetails', { targetId: JSON.stringify(target) });
   };
 
   const isCalculateDisabled =

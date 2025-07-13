@@ -1,8 +1,8 @@
 import React from 'react';
-import { useNavigation } from '../../../hooks/useNavigation';
-import TargetsListSelector from './TargetsListSelector';
+import TargetsListSelector from '../app/screens/targetList/TargetsListSelector';
+import { useNavigation } from '../hooks/useNavigation';
 
-export default function TargetsList() {
+const TargetsListMain = () => {
   const navigation = useNavigation();
 
   const handleNavigate = (target: any) => {
@@ -20,4 +20,6 @@ export default function TargetsList() {
       onAddPress={handleAddPress}
     />
   );
-} 
+};
+
+export default TargetsListMain; 

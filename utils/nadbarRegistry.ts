@@ -32,31 +32,31 @@ export const TEMPLATE_REGISTRY = {
 export function getNadbarRoute(nadbar: NadbarData): string | null {
   switch (nadbar.templateId) {
     case DEFAULT_MASKAR_TEMPLATE.id:
-      return '/TargetPage/Maskar';
+      return 'Maskar';
     case DEFAULT_MASKAR_LOAL_TEMPLATE.id:
-      return '/TargetPage/MaskarLoal';
+      return 'MaskarLoal';
     case EXAMPLE_TEMPLATE.id:
-      return '/TargetPage/ExampleNadbar';
+      return 'ExampleNadbar';
     case DEFAULT_KRAV_BARKAT_TEMPLATE.id:
-      return '/TargetPage/KravBarkat';
+      return 'KravBarkat';
     case DEFAULT_KRAV_SADURA_LASER_TEMPLATE.id:
-      return '/TargetPage/KravSaduraLaser';
+      return 'KravSaduraLaser';
     case DEFAULT_KRAV_LASER_LOBL_TEMPLATE.id:
-      return '/TargetPage/KravLaserLobl';
+      return 'KravLaserLobl';
     case DEFAULT_KRAV_LINE6_TEMPLATE.id:
-      return '/TargetPage/KravLine6';
+      return 'KravLine6';
     case DEFAULT_KRAV_LASER_LOAL_TEMPLATE.id:
-      return '/TargetPage/KravLaserLoal';
+      return 'KravLaserLoal';
     case DEFAULT_OKETZ_PLADA_TEMPLATE.id:
-      return '/TargetPage/OketzPlada';
+      return 'OketzPlada';
     case DEFAULT_MORTARS_TEMPLATE.id:
-      return '/TargetPage/Mortars';
+      return 'Mortars';
     case DEFAULT_CHEMAM_TEMPLATE.id:
-      return '/TargetPage/Chemam';
+      return 'Chemam';
     case DEFAULT_LEHAT_TEMPLATE.id:
-      return '/TargetPage/Lehat';
+      return 'Lehat';
     case DEFAULT_ARTILLERY_TEMPLATE.id:
-      return '/TargetPage/Artillery';
+      return 'Artillery';
     default:
       return null;
   }

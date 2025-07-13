@@ -1,6 +1,6 @@
-import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { useNavigation } from '../../hooks/useNavigation';
 import { NadbarService } from '../../services/NadbarService';
 import { getNadbarName, getNadbarRoute } from '../../utils/nadbarRegistry';
 import LinkButton from '../common/LinkButton';
@@ -13,7 +13,7 @@ interface TargetNadbarsSectionProps {
 const TargetNadbarsSection: React.FC<TargetNadbarsSectionProps> = ({ targetId }) => {
   const [nadbars, setNadbars] = useState<NadbarData[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadNadbars = async () => {
@@ -35,7 +35,7 @@ const TargetNadbarsSection: React.FC<TargetNadbarsSectionProps> = ({ targetId })
   const handleNadbarPress = (nadbar: NadbarData) => {
     const route = getNadbarRoute(nadbar);
     if (route) {
-      router.push({ pathname: route as any, params: { nadbarId: nadbar.id } });
+      navigation.navigate(route as any, { nadbarId: nadbar.id });
     }
   };
 

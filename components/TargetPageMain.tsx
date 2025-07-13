@@ -1,9 +1,9 @@
-import { useRouter } from 'expo-router';
 import React from 'react';
-import SimpleNavigationMenu from '../../../components/common/SimpleNavigationMenu';
+import { useNavigation } from '../hooks/useNavigation';
+import SimpleNavigationMenu from './common/SimpleNavigationMenu';
 
-const TargetPage = () => {
-  const router = useRouter();
+const TargetPageMain = () => {
+  const navigation = useNavigation();
 
   const targetItems = [
     { label: 'מסקר', route: 'MaskarOptions' },
@@ -16,7 +16,7 @@ const TargetPage = () => {
   ];
 
   const handleNavigate = (route: string) => {
-    router.push(`/TargetPage/${route}` as any);
+    navigation.navigate(route as any);
   };
 
   return (
@@ -35,4 +35,4 @@ const TargetPage = () => {
   );
 };
 
-export default TargetPage; 
+export default TargetPageMain; 

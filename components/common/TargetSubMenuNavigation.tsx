@@ -1,6 +1,6 @@
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { useNavigation } from '../../hooks/useNavigation';
 import Header from './Header';
 import TargetNavButton from './TargetNavButton';
 
@@ -12,12 +12,11 @@ interface SubMenuOption {
 
 interface TargetSubMenuNavigationProps {
   title: string;
-  options: SubMenuOption[];
+  options: { routeName: string; navigationCtaLabel: string }[];
 }
 
 const TargetSubMenuNavigation: React.FC<TargetSubMenuNavigationProps> = ({ title, options }) => {
-  const router = useRouter();
-
+  const navigation = useNavigation();
   return (
     <ScrollView style={styles.container}>
       <Header title={title} />
@@ -26,7 +25,7 @@ const TargetSubMenuNavigation: React.FC<TargetSubMenuNavigationProps> = ({ title
           <TargetNavButton
             key={option.routeName}
             screen={option}
-            onPress={() => router.push(`/TargetPage/${option.routeName}` as any)}
+            onPress={() => navigation.navigate(option.routeName as any)}
             backgroundColor="#baaf9d"
           />
         ))}

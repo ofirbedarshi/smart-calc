@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import React, { useRef } from 'react';
 import { Animated, GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '../../hooks/useNavigation';
 import { TargetFields } from '../../services/TargetService';
 import { formatDate } from '../../utils/dateUtils';
 
@@ -14,16 +14,11 @@ interface TargetItemListProps {
 }
 
 const TargetItemList: React.FC<TargetItemListProps> = ({ target, onLongPress, showCheckbox, isMarked, onMark }) => {
-  const router = useRouter();
+  const navigation = useNavigation();
   const shakeAnim = useRef(new Animated.Value(0)).current;
 
   const handlePress = () => {
-    router.push({
-      pathname: '/TargetsList/TargetDetails',
-      params: {
-        target: JSON.stringify(target),
-      },
-    });
+    navigation.navigate({ name: 'TargetDetails', params: { targetId: target.id } });
   };
 
   const handleLongPress = () => {

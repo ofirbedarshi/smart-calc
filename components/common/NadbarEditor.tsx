@@ -1,4 +1,3 @@
-import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { TargetEntity } from '../../entities';
@@ -18,10 +17,10 @@ const handleError = (message: string, params?: any) => {
 
 interface NadbarEditorProps {
   template: NadbarTemplate;
+  nadbarId?: string;
 }
 
-const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
-  const params = useLocalSearchParams();
+const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }) => {
   const { locationData: selfLocation } = useLocationStore();
   const [mergedNadbar, setMergedNadbar] = useState<MergedNadbar | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,9 +31,9 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
       try {
         setLoading(true);
 
-        if (params.nadbarId) {
+        if (nadbarId) {
           // Load existing nadbar
-          const nadbarData = await NadbarService.getNadbar(params.nadbarId as string);
+          const nadbarData = await NadbarService.getNadbar(nadbarId);
           if (nadbarData) {
             const merged = NadbarMerger.merge(template, nadbarData);
             setMergedNadbar(merged);
@@ -53,7 +52,7 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template }) => {
     };
 
     loadNadbar();
-  }, [params.nadbarId, template]);
+  }, [nadbarId, template]);
 
   const handleChange = (updatedNadbar: MergedNadbar) => {
     // Just update the state, don't save to storage

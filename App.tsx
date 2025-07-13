@@ -1,18 +1,18 @@
 import { useFonts } from 'expo-font';
-import { SplashScreen } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
 import { I18nManager } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import AppNavigator from './navigation/AppNavigator';
 
-interface RootLayoutWrapperProps {
-  children: React.ReactNode;
-}
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
-const RootLayoutWrapper: React.FC<RootLayoutWrapperProps> = ({ children }) => {
+export default function App() {
   const [loaded] = useFonts({
-    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require('./assets/fonts/SpaceMono-Regular.ttf'),
   });
 
   // Force LTR globally
@@ -35,12 +35,8 @@ const RootLayoutWrapper: React.FC<RootLayoutWrapperProps> = ({ children }) => {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-          {children}
-        </SafeAreaView>
+        <AppNavigator />
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
-};
-
-export default RootLayoutWrapper; 
+} 

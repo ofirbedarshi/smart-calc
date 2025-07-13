@@ -1,6 +1,6 @@
-import { useRouter } from 'expo-router';
 import React from 'react';
 import SimpleNavigationMenu from '../../../components/common/SimpleNavigationMenu';
+import { useNavigation } from '../../../hooks/useNavigation';
 
 const kravItems = [
   { label: 'קרב ברקת', route: 'KravBarkat' },
@@ -11,10 +11,9 @@ const kravItems = [
 ];
 
 const KravOptions = () => {
-  const router = useRouter();
-
+  const navigation = useNavigation();
   const handleNavigate = (route: string) => {
-    router.push(`/TargetPage/${route}` as any);
+    navigation.navigate(route as any);
   };
 
   return (

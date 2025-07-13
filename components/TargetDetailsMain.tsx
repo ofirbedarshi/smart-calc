@@ -1,25 +1,33 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
-import Button from '../../../components/common/Button';
-import DeleteButtonWithConfirm from '../../../components/common/DeleteButtonWithConfirm';
-import TargetNadbarsSection from '../../../components/targetList/TargetNadbarsSection';
-import { TargetEntity } from '../../../entities';
-import { TargetFields } from '../../../services/TargetService';
-import { useLocationStore } from '../../../stores/locationStore';
-import { useTargetStore } from '../../../stores/targetStore';
-import FieldSection from './FieldSection';
+import FieldSection from '../app/screens/targetList/FieldSection';
+import { TargetEntity } from '../entities';
+import { TargetFields } from '../services/TargetService';
+import { useLocationStore } from '../stores/locationStore';
+import { useTargetStore } from '../stores/targetStore';
+import Button from './common/Button';
+import DeleteButtonWithConfirm from './common/DeleteButtonWithConfirm';
+import TargetNadbarsSection from './targetList/TargetNadbarsSection';
 
-export default function TargetDetails() {
-  const params = useLocalSearchParams();
-  const target = JSON.parse(params.target as string) as TargetFields;
+type RouteParams = {
+  targetId?: string;
+};
+
+export default function TargetDetailsMain() {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const params = route.params as RouteParams;
+  
+  // Parse the target data from the route params
+  const target = params?.targetId ? JSON.parse(params.targetId) as TargetFields : {} as TargetFields;
+  
   const { locationData: selfLocation, loadLocation } = useLocationStore();
   const { addTarget, updateTarget, deleteTarget, loading } = useTargetStore();
   const [isEditMode, setIsEditMode] = useState(false);
   const [targetEntity, setTargetEntity] = useState<TargetEntity>(() => 
     TargetEntity.fromTargetData(target, selfLocation)
   );
-  const router = useRouter();
 
   // Update target entity when self location changes
   useEffect(() => {
@@ -81,7 +89,7 @@ export default function TargetDetails() {
       if (!targetEntity.id) return;
       await deleteTarget(targetEntity.id);
       Alert.alert('מחיקה', 'המטרה נמחקה בהצלחה');
-      router.push('/TargetsList');
+      navigation.goBack();
     } catch (e) {
       console.log(e);
       Alert.alert('שגיאה', 'אירעה שגיאה במחיקה, נסה שוב');
@@ -99,7 +107,7 @@ export default function TargetDetails() {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={80} // adjust if you have a header
+      keyboardVerticalOffset={80}
     >
       <>
         <FlatList

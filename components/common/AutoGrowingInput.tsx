@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   rtlContainer: {
     flexDirection: 'row-reverse',
     alignItems: 'center',
-    direction: 'rtl',
+    writingDirection: 'rtl',
     position: 'relative',
   },
   input: {

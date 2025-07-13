@@ -1,13 +1,14 @@
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '../hooks/useNavigation';
+import { SelfLocation } from './SelfLocation';
 
 const buttons = [
-  { text: 'המרת נ.צ', route: '/calculator/CoordinateConversion', color: '#939c80' },
-  { text: 'חיתוך לאחור', route: '/calculator/BackAzimuth', color: '#b7bd9e' },
-  { text: 'חישוב גודל כתם', route: '/calculator/StainSizeCalculation', color: '#b3b8bd' },
-  { text: 'חישוב יעילות', route: '/calculator/EfficiencyCalculation', color: '#baaf9d' },
-  { text: 'המרת יחידות', route: '/calculator/UnitConversion', color: '#d8d1c3' },
+  { text: 'המרת נ.צ', route: 'CoordinateConversion', color: '#939c80' },
+  { text: 'חיתוך לאחור', route: 'BackAzimuth', color: '#b7bd9e' },
+  { text: 'חישוב גודל כתם', route: 'StainSizeCalculation', color: '#b3b8bd' },
+  { text: 'חישוב יעילות', route: 'EfficiencyCalculation', color: '#baaf9d' },
+  { text: 'המרת יחידות', route: 'UnitConversion', color: '#d8d1c3' },
 ];
 
 const iconSources = [
@@ -18,11 +19,16 @@ const iconSources = [
   require('../assets/icons/nav5icon.png'),
 ];
 
-export const CalculatorNavigation: React.FC = () => {
-  const router = useRouter();
+const CalculatorMain = () => {
+  const navigation = useNavigation();
+
+  const handleNavigate = (route: string) => {
+    navigation.navigate(route as any);
+  };
 
   return (
     <View style={styles.container}>
+      <SelfLocation />
       <Image
         source={require('../assets/images/maglanSymbol.jpeg')}
         style={styles.logo}
@@ -33,7 +39,7 @@ export const CalculatorNavigation: React.FC = () => {
           <TouchableOpacity
             key={index}
             style={[styles.button, { backgroundColor: button.color }]}
-            onPress={() => router.push(button.route)}
+            onPress={() => handleNavigate(button.route)}
           >
             <Image source={iconSources[index]} style={styles.buttonIcon} resizeMode="contain" />
             <View style={styles.buttonContent}>
@@ -73,13 +79,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
-    position: 'relative', // Make button relative for absolute icon
+    position: 'relative',
   },
   buttonContent: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row', // Only for text centering
+    flexDirection: 'row',
   },
   buttonIcon: {
     position: 'absolute',
@@ -93,4 +99,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-}); 
+});
+
+export default CalculatorMain; 

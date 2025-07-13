@@ -1,9 +1,9 @@
-import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { NadbarData } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import SelectableList from '../../../components/common/SelectableList';
+import { useNavigation } from '../../../hooks/useNavigation';
 import { NadbarService } from '../../../services/NadbarService';
 import { TargetFields, TargetService } from '../../../services/TargetService';
 import { formatDate } from '../../../utils/dateUtils';
@@ -14,7 +14,7 @@ const NadbarList: React.FC = () => {
   const [targets, setTargets] = useState<TargetFields[]>([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState<NadbarData[]>([]);
-  const router = useRouter();
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadData = async () => {
@@ -54,7 +54,7 @@ const NadbarList: React.FC = () => {
   const handleNavigate = (nadbar: NadbarData) => {
     const route = getNadbarRoute(nadbar);
     if (route) {
-      router.push({ pathname: route as any, params: { nadbarId: nadbar.id } });
+      navigation.navigate(route as any, { nadbarId: nadbar.id });
     } else {
       Alert.alert('שגיאה', 'לא ניתן לפתוח נדבר זה');
     }

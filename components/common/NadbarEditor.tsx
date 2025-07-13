@@ -1,8 +1,9 @@
+import { useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { TargetEntity } from '../../entities';
-import { NadbarService } from '../../services/NadbarService';
 import { useLocationStore } from '../../stores/locationStore';
+import { useNadbarStore } from '../../stores/nadbarStore';
 import { MergedNadbar, NadbarMerger } from '../../utils/NadbarMerger';
 import { TargetToNadbarMapper } from '../../utils/TargetToNadbarMapper';
 import Button from './Button';
@@ -20,25 +21,26 @@ interface NadbarEditorProps {
   nadbarId?: string;
 }
 
-const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }) => {
+const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }: NadbarEditorProps) => {
+  const route = useRoute();
+  // Prefer prop, fallback to route.params
+  const resolvedNadbarId = nadbarId ?? (route.params && (route.params as any).nadbarId);
   const { locationData: selfLocation } = useLocationStore();
+  const { loadNadbars, getNadbarById, upsertNadbar, loading: nadbarLoading } = useNadbarStore();
   const [mergedNadbar, setMergedNadbar] = useState<MergedNadbar | null>(null);
-  const [loading, setLoading] = useState(true);
 
   // Load existing nadbar or create new one in memory
   useEffect(() => {
+    console.log('nadbarId', resolvedNadbarId)
     const loadNadbar = async () => {
       try {
-        setLoading(true);
-
-        if (nadbarId) {
-          // Load existing nadbar
-          const nadbarData = await NadbarService.getNadbar(nadbarId);
-          if (nadbarData) {
-            const merged = NadbarMerger.merge(template, nadbarData);
-            setMergedNadbar(merged);
-          }
-        } else {
+        await loadNadbars();
+        const nadbarData = resolvedNadbarId ? getNadbarById(resolvedNadbarId) : undefined;
+        if (nadbarData) {
+          console.log('nadbarData', nadbarData)
+          const merged = NadbarMerger.merge(template, nadbarData);
+          setMergedNadbar(merged);
+        } else if (!resolvedNadbarId) {
           // Create new nadbar in memory only (not saved yet)
           const emptyNadbar = NadbarMerger.createEmptyNadbar(template);
           setMergedNadbar(emptyNadbar);
@@ -46,16 +48,13 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }) => {
       } catch (error) {
         console.error('[NadbarEditor] Failed to load nadbar:', error);
         Alert.alert('שגיאה', 'שגיאה בטעינת הנדבר');
-      } finally {
-        setLoading(false);
       }
     };
-
     loadNadbar();
-  }, [nadbarId, template]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedNadbarId, template]);
 
   const handleChange = (updatedNadbar: MergedNadbar) => {
-    // Just update the state, don't save to storage
     setMergedNadbar(updatedNadbar);
   };
 
@@ -63,87 +62,66 @@ const NadbarEditor: React.FC<NadbarEditorProps> = ({ template, nadbarId }) => {
     try {
       if (!mergedNadbar) return;
       const values = NadbarMerger.extractValues(mergedNadbar, mergedNadbar.values);
-
-      if (!mergedNadbar.id) {
-        // Create new nadbar in storage
-        const newNadbarData = await NadbarService.saveNadbar({
-          templateId: template.id,
-          targetId: mergedNadbar.targetId,
-          values: values
-        });
-
-        // Update with the real saved nadbar
-        const savedMerged = NadbarMerger.merge(template, newNadbarData);
-        setMergedNadbar(savedMerged);
-
-        Alert.alert('הצלחה', 'הנדבר נשמר בהצלחה');
-      } else {
-        // Update existing nadbar
-        await NadbarService.updateNadbar(mergedNadbar.id, { values });
-        Alert.alert('הצלחה', 'הנדבר עודכן בהצלחה');
-      }
+      console.log('mergedNadbar.targetId', mergedNadbar.targetId)
+      const upserted = await upsertNadbar({
+        id: mergedNadbar.id || undefined,
+        templateId: template.id,
+        targetId: mergedNadbar.targetId,
+        values
+      });
+      const savedMerged = NadbarMerger.merge(template, upserted);
+      setMergedNadbar(savedMerged);
+      Alert.alert('הצלחה', mergedNadbar.id ? 'הנדבר עודכן בהצלחה' : 'הנדבר נשמר בהצלחה');
     } catch (error) {
       console.error('[NadbarEditor] Failed to save nadbar:', error);
       Alert.alert('שגיאה', 'שגיאה בשמירת הנדבר');
     }
   };
 
-  const populateFieldsWithTargetData = (target: any) => {
+  const populateFieldsWithTargetData = (target: any): Record<string, string> | undefined => {
     if (!selfLocation || !mergedNadbar) {
       Alert.alert('שגיאה', 'מיקום עצמי או נדבר לא זמין');
       return;
     }
-
-    // Create entity temporarily just to get computed values
     const entity = TargetEntity.fromTargetData(target, selfLocation);
-
-    // Build new values object based on targetField mapping
     const newValues = { ...mergedNadbar.values };
-    mergedNadbar.elements.forEach(element => {
+    mergedNadbar.elements.forEach((element: any) => {
       if (element.type === 'form' && Array.isArray(element.data)) {
-        element.data.forEach(field => {
+        element.data.forEach((field: any) => {
           if ('targetField' in field && field.targetField) {
             const targetValue = TargetToNadbarMapper.getValue(field.targetField, entity);
             newValues[field.fieldId] = targetValue;
           }
         });
       }
-      // NEW: Also support conversation/text elements with targetFields
       if ((element.type === 'conversation' || element.type === 'text') && 'targetFields' in element && Array.isArray(element.targetFields)) {
-        element.targetFields.forEach(varName => {
+        element.targetFields.forEach((varName: any) => {
           const targetValue = TargetToNadbarMapper.getValue(varName, entity);
           newValues[varName] = targetValue;
         });
       }
     });
-
-    setMergedNadbar({ ...mergedNadbar, values: newValues });
+    return newValues;
   };
+
+  useEffect(()=> {
+    mergedNadbar && console.log('use effect merged', mergedNadbar.targetId)
+  }, [mergedNadbar])
 
   const handleChooseTarget = async (target: any) => {
     try {
-      
       if (!mergedNadbar) {
-        throw new Error('Nadbar is missing')
+        throw new Error('Nadbar is missing');
       }
-
-      // Update nadbar with targetId
-      await NadbarService.updateNadbar(mergedNadbar.id, { targetId: target.id });
-
-      // Update merged nadbar
-      setMergedNadbar(prev => prev ? { ...prev, targetId: target.id } : null);
-
-      // Copy target values statically
-      populateFieldsWithTargetData(target);
-
-      console.log('Selected target:', target);
+      const newValues = populateFieldsWithTargetData(target);
+      setMergedNadbar((prev: MergedNadbar | null) => prev ? { ...prev, targetId: target.id, values: newValues ?? prev.values } : null);
     } catch (error) {
       console.error('[NadbarEditor] Failed to process selected target:', error);
       Alert.alert('שגיאה', 'שגיאה בטעינת נתוני המטרה');
     }
   };
 
-  if (loading) {
+  if (nadbarLoading) {
     return (
       <View style={styles.loadingContainer}>
         <Button title="טוען..." disabled onPress={() => { }} />

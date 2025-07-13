@@ -9,6 +9,8 @@ interface NadbarStoreState {
   loadNadbars: () => Promise<void>;
   getNadbarById: (id: string) => NadbarData | undefined;
   saveNadbar: (nadbar: Omit<NadbarData, 'id' | 'createdAt' | 'updatedAt'>) => Promise<NadbarData>;
+  upsertNadbar: (nadbar: Partial<NadbarData> & { templateId: string; values: Record<string, string> }) => Promise<NadbarData>;
+  deleteNadbar: (id: string) => Promise<void>;
 }
 
 export const useNadbarStore = create<NadbarStoreState>((set, get) => ({
@@ -47,12 +49,16 @@ export const useNadbarStore = create<NadbarStoreState>((set, get) => ({
   upsertNadbar: async (nadbar: Partial<NadbarData> & { templateId: string; values: Record<string, string> }) => {
     set({ loading: true, error: null });
     try {
-      let result: NadbarData | undefined;
+      let result: NadbarData;
       if (nadbar.id) {
-        await NadbarService.updateNadbar(nadbar.id, { values: nadbar.values });
+        await NadbarService.updateNadbar(nadbar.id, { values: nadbar.values, targetId: nadbar.targetId });
         const nadbars = await NadbarService.getNadbars();
         set({ nadbars, loading: false });
-        result = nadbars.find(n => n.id === nadbar.id);
+        const updated = nadbars.find(n => n.id === nadbar.id);
+        if (!updated) {
+          throw new Error('Failed to find updated nadbar');
+        }
+        result = updated;
       } else {
         result = await NadbarService.saveNadbar({
           templateId: nadbar.templateId,
@@ -66,6 +72,17 @@ export const useNadbarStore = create<NadbarStoreState>((set, get) => ({
     } catch (err) {
       set({ error: 'שגיאה בשמירת/עדכון נדבר', loading: false });
       throw err;
+    }
+  },
+
+  deleteNadbar: async (id: string) => {
+    set({ loading: true, error: null });
+    try {
+      await NadbarService.deleteNadbar(id);
+      const nadbars = await NadbarService.getNadbars();
+      set({ nadbars, loading: false });
+    } catch (err) {
+      set({ error: 'שגיאה במחיקת נדבר', loading: false });
     }
   },
 })); 

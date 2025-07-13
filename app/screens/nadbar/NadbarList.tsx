@@ -4,56 +4,52 @@ import { NadbarData } from '../../../components/common/nadbarTypes';
 import SearchBar from '../../../components/common/SearchBar';
 import SelectableList from '../../../components/common/SelectableList';
 import { useNavigation } from '../../../hooks/useNavigation';
-import { NadbarService } from '../../../services/NadbarService';
 import { TargetFields, TargetService } from '../../../services/TargetService';
+import { useNadbarStore } from '../../../stores/nadbarStore';
 import { formatDate } from '../../../utils/dateUtils';
 import { getNadbarName, getNadbarRoute } from '../../../utils/nadbarRegistry';
 
 const NadbarList: React.FC = () => {
-  const [nadbars, setNadbars] = useState<NadbarData[]>([]);
+  const { nadbars, loadNadbars, loading: nadbarLoading, deleteNadbar } = useNadbarStore();
   const [targets, setTargets] = useState<TargetFields[]>([]);
   const [search, setSearch] = useState('');
   const [filtered, setFiltered] = useState<NadbarData[]>([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [nadbarsData, targetsData] = await Promise.all([
-          NadbarService.getNadbars(),
-          TargetService.getTargets()
-        ]);
-        setNadbars(nadbarsData);
-        setTargets(targetsData);
-      } catch (error) {
-        console.error('[NadbarList] Failed to load data:', error);
-      }
-    };
-    loadData();
+    loadNadbars();
+    TargetService.getTargets().then(setTargets);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    NadbarService.filterNadbars(search).then(setFiltered);
+    if (!search.trim()) {
+      setFiltered(nadbars);
+    } else {
+      const lower = search.toLowerCase();
+      setFiltered(
+        nadbars.filter(n => n.templateId && n.templateId.toLowerCase().includes(lower))
+      );
+    }
   }, [search, nadbars]);
 
   const getTargetName = (targetId?: string): string => {
     if (!targetId) return 'אין מטרה מקושרת';
-    const target = targets.find(t => t.id === targetId);
+    const target = targets.find((t: TargetFields) => t.id === targetId);
     return target?.name || 'אין שם למטרה המקושרת';
   };
 
   const handleDelete = async (ids: string[]) => {
     for (const id of ids) {
-      await NadbarService.deleteNadbar(id);
+      await deleteNadbar(id);
     }
     Alert.alert('מחיקה', 'הנדברים נמחקו בהצלחה');
-    const updated = await NadbarService.getNadbars();
-    setNadbars(updated);
   };
 
   const handleNavigate = (nadbar: NadbarData) => {
     const route = getNadbarRoute(nadbar);
     if (route) {
+      console.log("route", nadbar.id)
       navigation.navigate(route as any, { nadbarId: nadbar.id });
     } else {
       Alert.alert('שגיאה', 'לא ניתן לפתוח נדבר זה');
@@ -63,7 +59,9 @@ const NadbarList: React.FC = () => {
   return (
     <View style={styles.container}>
       <SearchBar onSearch={setSearch} placeholder="חפש נדבר לפי שם..." />
-      {filtered.length === 0 ? (
+      {nadbarLoading ? (
+        <Text style={styles.empty}>טוען...</Text>
+      ) : filtered.length === 0 ? (
         <Text style={styles.empty}>לא נמצאו נדברים</Text>
       ) : (
         <SelectableList

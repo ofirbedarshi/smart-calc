@@ -50,10 +50,20 @@ const TabNavigator = () => (
           iconName = 'question';
           label = 'Unknown';
         }
+        const activeColor = '#1976D2';
         return (
           <View style={{ alignItems: 'center' }}>
-            <FontAwesome name={iconName as any} size={size} color={color} />
-            <Text style={{ fontSize: 12, color: color, marginTop: 2 }}>{label}</Text>
+            <FontAwesome name={iconName as any} size={size} color={focused ? activeColor : color} />
+            <Text
+              style={{
+                fontSize: 12,
+                color: focused ? activeColor : color,
+                marginTop: 2,
+                fontWeight: focused ? 'bold' : 'normal',
+              }}
+            >
+              {label}
+            </Text>
           </View>
         );
       },

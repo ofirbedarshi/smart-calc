@@ -70,4 +70,13 @@ export class FirePlanService {
       throw err;
     }
   }
+
+  static async updateFirePlansOrder(newOrder: FirePlanData[]): Promise<void> {
+    try {
+      await AsyncStorage.setItem(FIRE_PLAN_KEY, JSON.stringify(newOrder));
+    } catch (err) {
+      console.error('[FirePlanService] Failed to update fire plans order', err);
+      throw err;
+    }
+  }
 } 

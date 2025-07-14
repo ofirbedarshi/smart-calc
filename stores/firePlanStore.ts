@@ -9,6 +9,7 @@ interface FirePlanStoreState {
   loadFirePlans: () => Promise<void>;
   upsertFirePlan: (firePlan: Partial<FirePlanData> & Omit<FirePlanData, 'createdAt' | 'updatedAt'>) => Promise<FirePlanData>;
   deleteFirePlan: (id: string) => Promise<void>;
+  updateFirePlansOrder: (newOrder: FirePlanData[]) => Promise<void>;
 }
 
 export const useFirePlanStore = create<FirePlanStoreState>((set, get) => ({
@@ -58,6 +59,15 @@ export const useFirePlanStore = create<FirePlanStoreState>((set, get) => ({
       set({ firePlans, loading: false });
     } catch (err) {
       set({ error: 'שגיאה במחיקת תוכנית אש', loading: false });
+    }
+  },
+  updateFirePlansOrder: async (newOrder) => {
+    set({ loading: true, error: null });
+    try {
+      await FirePlanService.updateFirePlansOrder(newOrder);
+      set({ firePlans: newOrder, loading: false });
+    } catch (err) {
+      set({ error: 'שגיאה בעדכון סדר תוכניות אש', loading: false });
     }
   },
 })); 

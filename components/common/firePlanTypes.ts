@@ -6,4 +6,5 @@ export type FirePlanData = {
   time: string; // זמן
   createdAt: number;
   updatedAt: number;
+  order?: number;
 }; 

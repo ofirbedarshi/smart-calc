@@ -9,7 +9,7 @@ import { useFirePlanStore } from '../../../../stores/firePlanStore';
 import { formatDate } from '../../../../utils/dateUtils';
 
 const FirePlan = () => {
-  const { firePlans, loadFirePlans, deleteFirePlan } = useFirePlanStore();
+  const { firePlans, loadFirePlans, deleteFirePlan, updateFirePlansOrder } = useFirePlanStore();
   const [showModal, setShowModal] = useState(false);
   const [selectedFirePlanId, setSelectedFirePlanId] = useState<string | undefined>(undefined);
 
@@ -39,7 +39,14 @@ const FirePlan = () => {
     setSelectedFirePlanId(undefined);
   };
 
-  const sortedFirePlans = [...firePlans].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  const handleReorder = async (newData: FirePlanData[]) => {
+    // Assign new order index to each item
+    const reordered = newData.map((item, idx) => ({ ...item, order: idx }));
+    await updateFirePlansOrder(reordered);
+    loadFirePlans();
+  };
+
+  const sortedFirePlans = [...firePlans].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
     <View style={styles.container}>
@@ -65,6 +72,8 @@ const FirePlan = () => {
           onDelete={handleDelete}
           itemLabel={(item: FirePlanData) => item.targetName}
           onItemPress={handleItemPress}
+          allowToReorder
+          onReorder={handleReorder}
         />
       )}
       <Modal

@@ -1,19 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useRef, useState } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { Animated, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import Button from './Button';
 import DeleteButtonWithConfirm from './DeleteButtonWithConfirm';
 
 interface SelectableListProps<T> {
   data: T[];
   keyExtractor: (item: T) => string;
-  renderItemContent: (item: T) => React.ReactNode;
+  renderItemContent: (item: T) => ReactNode;
   onDelete: (ids: string[]) => Promise<void>;
   itemLabel: (item: T) => string;
   onItemPress?: (item: T) => void;
+  allowToReorder?: boolean;
+  onReorder?: (newData: T[]) => void;
 }
 
-function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, itemLabel, onItemPress }: SelectableListProps<T>) {
+function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, itemLabel, onItemPress, allowToReorder = false, onReorder }: SelectableListProps<T>) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -32,8 +35,8 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
   };
 
   const handleMark = (id: string) => {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(selectedId => selectedId !== id) : [...prev, id]
+    setSelectedIds((prev: string[]) =>
+      prev.includes(id) ? prev.filter((selectedId: string) => selectedId !== id) : [...prev, id]
     );
   };
 
@@ -61,17 +64,106 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
     setShowDeleteModal(false);
   };
 
+  if (allowToReorder) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'space-between' }}>
+        <View style={{ flex: 1 }}>
+          <DraggableFlatList
+            data={data}
+            keyExtractor={keyExtractor}
+            renderItem={({ item, drag, isActive }: RenderItemParams<T>) => {
+              const id = keyExtractor(item);
+              if (!shakeAnim[id]) shakeAnim[id] = new Animated.Value(0);
+              const shake = shakeAnim[id].interpolate({ inputRange: [-1, 1], outputRange: [-8, 8] });
+              return (
+                <View style={styles.outerRow}>
+                  {/* @ts-expect-error Animated.View type issue */}
+                  <Animated.View style={[styles.card, { transform: [{ translateX: shake }] }]}> 
+                    <View style={styles.row}>
+                      {/* Drag handle (only in checkbox mode) */}
+                      {showCheckboxes && (
+                        <TouchableOpacity
+                          onPressIn={drag}
+                          style={styles.dragHandleTouchable}
+                          activeOpacity={0.7}
+                        >
+                          <Ionicons name="reorder-three" size={28} color="#888" style={styles.dragHandle} />
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity
+                        onPress={() => handlePress(item)}
+                        onLongPress={() => {
+                          if (!showCheckboxes) handleLongPress(id);
+                        }}
+                        activeOpacity={0.8}
+                        style={[styles.contentRow, { flex: 1 }]}
+                      >
+                        {renderItemContent(item)}
+                      </TouchableOpacity>
+                    </View>
+                  </Animated.View>
+                  {showCheckboxes && (
+                    <TouchableOpacity onPress={() => handleMark(id)} style={styles.checkboxTouchable} activeOpacity={0.7}>
+                      <Ionicons
+                        name={selectedIds.includes(id) ? 'checkbox' : 'square-outline'}
+                        size={28}
+                        color="#007AFF"
+                        style={styles.checkbox}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            }}
+            onDragEnd={({ data: newData }) => {
+              if (onReorder) onReorder(newData);
+            }}
+          />
+        </View>
+        {showCheckboxes && (
+          <View style={styles.actionBar}>
+            <DeleteButtonWithConfirm
+              items={data.filter(i => selectedIds.includes(keyExtractor(i))).map(itemLabel)}
+              onDelete={handleDeleteConfirm}
+              buttonProps={{
+                title: 'מחיקה',
+                theme: 'danger',
+                small: true,
+                disabled: selectedIds.length === 0,
+                onPress: () => {},
+              }}
+              confirmText="מחק"
+              cancelText="ביטול"
+              modalTitle="אישור מחיקה"
+              modalMessage="האם אתה בטוח שברצונך למחוק את הפריטים הבאים?"
+            />
+            <Button
+              title="ביטול"
+              onPress={() => {
+                setShowCheckboxes(false);
+                setSelectedIds([]);
+              }}
+              theme="primary"
+              small
+            />
+          </View>
+        )}
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
-        renderItem={({ item }) => {
+        renderItem={({ item }: { item: T }) => {
           const id = keyExtractor(item);
           if (!shakeAnim[id]) shakeAnim[id] = new Animated.Value(0);
           const shake = shakeAnim[id].interpolate({ inputRange: [-1, 1], outputRange: [-8, 8] });
           return (
             <View style={styles.outerRow}>
+              {/* @ts-expect-error Animated.View type issue */}
               <Animated.View style={[styles.card, { transform: [{ translateX: shake }] }]}> 
                 <TouchableOpacity
                   onPress={() => handlePress(item)}
@@ -176,6 +268,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
+  },
+  dragHandleTouchable: {
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dragHandle: {
+    marginLeft: 8,
+    marginRight: 8,
   },
 });
 

@@ -19,7 +19,6 @@ interface SelectableListProps<T> {
 function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, itemLabel, onItemPress, allowToReorder = false, onReorder }: SelectableListProps<T>) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showCheckboxes, setShowCheckboxes] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const shakeAnim = useRef<{ [id: string]: Animated.Value }>({}).current;
 
   const handleLongPress = (id: string) => {
@@ -49,152 +48,83 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
     }
   };
 
-  const handleDelete = async () => {
-    setShowDeleteModal(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    await onDelete(selectedIds);
-    setSelectedIds([]);
-    setShowCheckboxes(false);
-    setShowDeleteModal(false);
-  };
-
-  const handleDeleteCancel = () => {
-    setShowDeleteModal(false);
-  };
-
-  if (allowToReorder) {
+  // Unified row rendering
+  const renderRow = (item: T, drag?: () => void) => {
+    const id = keyExtractor(item);
+    if (!shakeAnim[id]) shakeAnim[id] = new Animated.Value(0);
+    const shake = shakeAnim[id].interpolate({ inputRange: [-1, 1], outputRange: [-8, 8] });
     return (
-      <View style={{ flex: 1, justifyContent: 'space-between' }}>
-        <View style={{ flex: 1 }}>
-          <DraggableFlatList
-            data={data}
-            keyExtractor={keyExtractor}
-            renderItem={({ item, drag, isActive }: RenderItemParams<T>) => {
-              const id = keyExtractor(item);
-              if (!shakeAnim[id]) shakeAnim[id] = new Animated.Value(0);
-              const shake = shakeAnim[id].interpolate({ inputRange: [-1, 1], outputRange: [-8, 8] });
-              return (
-                <View style={styles.outerRow}>
-                  {/* @ts-expect-error Animated.View type issue */}
-                  <Animated.View style={[styles.card, { transform: [{ translateX: shake }] }]}> 
-                    <View style={styles.row}>
-                      {/* Drag handle (only in checkbox mode) */}
-                      {showCheckboxes && (
-                        <TouchableOpacity
-                          onPressIn={drag}
-                          style={styles.dragHandleTouchable}
-                          activeOpacity={0.7}
-                        >
-                          <Ionicons name="reorder-three" size={28} color="#888" style={styles.dragHandle} />
-                        </TouchableOpacity>
-                      )}
-                      <TouchableOpacity
-                        onPress={() => handlePress(item)}
-                        onLongPress={() => {
-                          if (!showCheckboxes) handleLongPress(id);
-                        }}
-                        activeOpacity={0.8}
-                        style={[styles.contentRow, { flex: 1 }]}
-                      >
-                        {renderItemContent(item)}
-                      </TouchableOpacity>
-                    </View>
-                  </Animated.View>
-                  {showCheckboxes && (
-                    <TouchableOpacity onPress={() => handleMark(id)} style={styles.checkboxTouchable} activeOpacity={0.7}>
-                      <Ionicons
-                        name={selectedIds.includes(id) ? 'checkbox' : 'square-outline'}
-                        size={28}
-                        color="#007AFF"
-                        style={styles.checkbox}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              );
-            }}
-            onDragEnd={({ data: newData }) => {
-              if (onReorder) onReorder(newData);
-            }}
-          />
-        </View>
-        {showCheckboxes && (
-          <View style={styles.actionBar}>
-            <DeleteButtonWithConfirm
-              items={data.filter(i => selectedIds.includes(keyExtractor(i))).map(itemLabel)}
-              onDelete={handleDeleteConfirm}
-              buttonProps={{
-                title: 'מחיקה',
-                theme: 'danger',
-                small: true,
-                disabled: selectedIds.length === 0,
-                onPress: () => {},
+      <View style={styles.outerRow}>
+        {/* @ts-expect-error Animated.View type issue */}
+        <Animated.View style={[styles.card, { transform: [{ translateX: shake }] }]}> 
+          <View style={styles.row}>
+            {/* Drag handle only if reorder+checkboxes */}
+            {allowToReorder && showCheckboxes && drag && (
+              <TouchableOpacity
+                onPressIn={drag}
+                style={styles.dragHandleTouchable}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="reorder-three" size={28} color="#888" style={styles.dragHandle} />
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              onPress={() => handlePress(item)}
+              onLongPress={() => {
+                if (!showCheckboxes) handleLongPress(id);
               }}
-              confirmText="מחק"
-              cancelText="ביטול"
-              modalTitle="אישור מחיקה"
-              modalMessage="האם אתה בטוח שברצונך למחוק את הפריטים הבאים?"
-            />
-            <Button
-              title="ביטול"
-              onPress={() => {
-                setShowCheckboxes(false);
-                setSelectedIds([]);
-              }}
-              theme="primary"
-              small
-            />
+              activeOpacity={0.8}
+              style={[styles.contentRow, { flex: 1 }]}
+            >
+              {renderItemContent(item)}
+            </TouchableOpacity>
           </View>
+        </Animated.View>
+        {showCheckboxes && (
+          <TouchableOpacity onPress={() => handleMark(id)} style={styles.checkboxTouchable} activeOpacity={0.7}>
+            <Ionicons
+              name={selectedIds.includes(id) ? 'checkbox' : 'square-outline'}
+              size={28}
+              color="#007AFF"
+              style={styles.checkbox}
+            />
+          </TouchableOpacity>
         )}
       </View>
     );
-  }
+  };
+
+  // Choose list component
+  const ListComponent = allowToReorder ? DraggableFlatList : FlatList;
+  const listProps = allowToReorder
+    ? {
+        data,
+        keyExtractor,
+        renderItem: ({ item, drag }: RenderItemParams<T>) => renderRow(item, drag),
+        onDragEnd: ({ data: newData }: { data: T[] }) => {
+          if (onReorder) onReorder(newData);
+        },
+      }
+    : {
+        data,
+        keyExtractor,
+        renderItem: ({ item }: { item: T }) => renderRow(item),
+      };
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        data={data}
-        keyExtractor={keyExtractor}
-        renderItem={({ item }: { item: T }) => {
-          const id = keyExtractor(item);
-          if (!shakeAnim[id]) shakeAnim[id] = new Animated.Value(0);
-          const shake = shakeAnim[id].interpolate({ inputRange: [-1, 1], outputRange: [-8, 8] });
-          return (
-            <View style={styles.outerRow}>
-              {/* @ts-expect-error Animated.View type issue */}
-              <Animated.View style={[styles.card, { transform: [{ translateX: shake }] }]}> 
-                <TouchableOpacity
-                  onPress={() => handlePress(item)}
-                  onLongPress={() => handleLongPress(id)}
-                  activeOpacity={0.8}
-                  style={styles.row}
-                >
-                  <View style={styles.contentRow}>
-                    {renderItemContent(item)}
-                  </View>
-                </TouchableOpacity>
-              </Animated.View>
-              {showCheckboxes && (
-                <TouchableOpacity onPress={() => handleMark(id)} style={styles.checkboxTouchable} activeOpacity={0.7}>
-                  <Ionicons
-                    name={selectedIds.includes(id) ? 'checkbox' : 'square-outline'}
-                    size={28}
-                    color="#007AFF"
-                    style={styles.checkbox}
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-          );
-        }}
-      />
+    <View style={{ flex: 1, justifyContent: 'space-between' }}>
+      <View style={{ flex: 1 }}>
+        <ListComponent {...listProps} />
+      </View>
       {showCheckboxes && (
         <View style={styles.actionBar}>
           <DeleteButtonWithConfirm
             items={data.filter(i => selectedIds.includes(keyExtractor(i))).map(itemLabel)}
-            onDelete={handleDeleteConfirm}
+            onDelete={async () => {
+              await onDelete(selectedIds);
+              setSelectedIds([]);
+              setShowCheckboxes(false);
+            }}
             buttonProps={{
               title: 'מחיקה',
               theme: 'danger',
@@ -208,7 +138,7 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
             modalMessage="האם אתה בטוח שברצונך למחוק את הפריטים הבאים?"
           />
           <Button
-            title="ביטול"
+            title="סיים"
             onPress={() => {
               setShowCheckboxes(false);
               setSelectedIds([]);

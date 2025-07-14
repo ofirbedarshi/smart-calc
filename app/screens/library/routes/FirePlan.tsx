@@ -6,7 +6,6 @@ import { Modal } from '../../../../components/common/Modal';
 import SelectableList from '../../../../components/common/SelectableList';
 import FirePlanDetails from '../../../../components/FirePlanDetails';
 import { useFirePlanStore } from '../../../../stores/firePlanStore';
-import { formatDate } from '../../../../utils/dateUtils';
 
 const FirePlan = () => {
   const { firePlans, loadFirePlans, deleteFirePlan, updateFirePlansOrder } = useFirePlanStore();
@@ -60,12 +59,17 @@ const FirePlan = () => {
           keyExtractor={(item: FirePlanData) => item.id}
           renderItemContent={(item: FirePlanData) => (
             <View style={styles.itemContent}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.name}>{item.targetName}</Text>
+              <View style={styles.fieldColumn}>
+                <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">שם מטרה</Text>
+                <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.targetName}</Text>
               </View>
-              <View style={styles.updatedAtContainer}>
-                <Text style={styles.updatedAtLabel}>עודכן לאחרונה:</Text>
-                <Text style={styles.updatedAtDate}>{formatDate(Number(item.updatedAt))}</Text>
+              <View style={styles.fieldColumn}>
+                <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">זמן</Text>
+                <Text style={styles.time} numberOfLines={1} ellipsizeMode="tail">{item.time}</Text>
+              </View>
+              <View style={styles.fieldColumn}>
+                <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">חימוש</Text>
+                <Text style={styles.ammo} numberOfLines={1} ellipsizeMode="tail">{item.ammunition}</Text>
               </View>
             </View>
           )}
@@ -109,16 +113,45 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#888',
   },
+  itemContent: {
+    flex: 1,
+    flexDirection: 'row-reverse',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  fieldColumn: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    marginLeft: 12,
+    minWidth: 70,
+  },
+  fieldLabel: {
+    fontSize: 11,
+    color: '#888',
+    textAlign: 'right',
+    opacity: 0.7,
+    marginBottom: 2,
+    writingDirection: 'rtl',
+  },
   name: {
     fontSize: 18,
     color: '#222',
     textAlign: 'right',
+    marginLeft: 12,
+    writingDirection: 'rtl',
   },
-  itemContent: {
-    flex: 1,
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  time: {
+    fontSize: 16,
+    color: '#444',
+    textAlign: 'right',
+    marginLeft: 12,
+    writingDirection: 'rtl',
+  },
+  ammo: {
+    fontSize: 16,
+    color: '#444',
+    textAlign: 'right',
+    writingDirection: 'rtl',
   },
   updatedAtContainer: {
     alignItems: 'flex-start',

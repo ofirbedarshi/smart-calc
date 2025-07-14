@@ -101,6 +101,13 @@ export default function FirePlanDetails({ firePlanId, onDeleteSuccess }: FirePla
             editMode={isEditMode}
             placeholder="הזן שם מטרה"
           />
+           <EditableData
+            label="זמן"
+            value={firePlan.time}
+            onChange={(value: string) => handleFieldChange('time', value)}
+            editMode={isEditMode}
+            placeholder="הזן זמן"
+          />
           <EditableData
             label="חימוש"
             value={firePlan.ammunition}
@@ -115,13 +122,6 @@ export default function FirePlanDetails({ firePlanId, onDeleteSuccess }: FirePla
             editMode={isEditMode}
             placeholder="הזן הערה"
             textArea
-          />
-          <EditableData
-            label="זמן"
-            value={firePlan.time}
-            onChange={(value: string) => handleFieldChange('time', value)}
-            editMode={isEditMode}
-            placeholder="הזן זמן"
           />
         </View>
       </KeyboardAwareScrollView>

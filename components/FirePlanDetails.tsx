@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFirePlanStore } from '../stores/firePlanStore';
-import { EditableData } from './EditableData';
 import Button from './common/Button';
 import DeleteButtonWithConfirm from './common/DeleteButtonWithConfirm';
 import { FirePlanData } from './common/firePlanTypes';
+import { TargetSelectorModal } from './common/TargetSelectorModal';
+import { EditableData } from './EditableData';
 
 interface FirePlanDetailsProps {
   firePlanId?: string;
@@ -35,6 +36,12 @@ export default function FirePlanDetails({ firePlanId, onDeleteSuccess }: FirePla
 
   const [isEditMode, setIsEditMode] = useState(!firePlanId);
   const [firePlan, setFirePlan] = useState<FirePlanData | undefined>(getOriginalFirePlan());
+
+  const handleChooseTarget = (target: any) => {
+    if (target?.name) {
+      setFirePlan((prev: FirePlanData | undefined) => prev ? { ...prev, targetName: target.name } : prev);
+    }
+  };
 
   useEffect(() => {
     setFirePlan(getOriginalFirePlan());
@@ -84,6 +91,9 @@ export default function FirePlanDetails({ firePlanId, onDeleteSuccess }: FirePla
       >
         <View style={styles.section}>
           <View style={styles.headerActions}>
+            {isEditMode && (
+              <TargetSelectorModal onChooseTarget={handleChooseTarget} buttonTitle="בחר מטרה" />
+            )}
             {firePlanId && (
               <TouchableOpacity onPress={() => setIsEditMode((e: boolean) => !e)} style={styles.iconButton}>
                 <Ionicons
@@ -177,6 +187,8 @@ const styles = StyleSheet.create({
   headerActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: 8,
     marginBottom: 16,
   },
   iconButton: {

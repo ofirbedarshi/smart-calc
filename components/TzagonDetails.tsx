@@ -1,5 +1,6 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useTzagonPhotosStore } from '../stores/tzagonPhotosStore';
 import { EditableData } from './EditableData';
@@ -89,12 +90,13 @@ export default function TzagonDetails({ tzagonId, onDeleteSuccess }: TzagonDetai
         <View style={styles.section}>
           <View style={styles.headerActions}>
             {tzagonId && (
-              <Button
-                title={isEditMode ? 'ביטול' : 'ערוך'}
-                onPress={() => setIsEditMode((e: boolean) => !e)}
-                theme={isEditMode ? 'danger' : 'primary'}
-                small
-              />
+              <TouchableOpacity onPress={() => setIsEditMode((e: boolean) => !e)} style={styles.iconButton}>
+                <Ionicons
+                  name={isEditMode ? 'close' : 'pencil'}
+                  size={20}
+                  color={isEditMode ? '#FF3B30' : '#007AFF'}
+                />
+              </TouchableOpacity>
             )}
           </View>
           <EditableData
@@ -199,6 +201,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginBottom: 16,
+  },
+  iconButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#f5f5f5',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   saveContainerRow: {
     flexDirection: 'row-reverse',

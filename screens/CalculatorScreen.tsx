@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import SafeAreaScreen from '../components/common/SafeAreaScreen';
 
 // Import existing calculator components
 import BackAzimuth from '../app/(tabs)/calculator/BackAzimuth';
@@ -14,9 +15,11 @@ const Stack = createNativeStackNavigator();
 
 const CalculatorMainScreen = () => {
   return (
-    <View style={styles.container}>
-      <CalculatorMain />
-    </View>
+    <SafeAreaScreen>
+      <View style={styles.container}>
+        <CalculatorMain />
+      </View>
+    </SafeAreaScreen>
   );
 };
 
@@ -33,11 +36,11 @@ const CalculatorScreen = () => {
   );
 };
 
+export default CalculatorScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f8f4',
   },
-});
-
-export default CalculatorScreen; 
+}); 

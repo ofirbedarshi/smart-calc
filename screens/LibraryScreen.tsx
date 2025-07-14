@@ -1,34 +1,25 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import SafeAreaScreen from '../components/common/SafeAreaScreen';
 
 // Import existing library components
 import LibraryNavigation from '../app/screens/library/LibraryNavigation';
 
-const Stack = createNativeStackNavigator();
-
 const LibraryMainScreen = () => {
   return (
-    <View style={styles.container}>
-      <LibraryNavigation />
-    </View>
+    <SafeAreaScreen>
+      <View style={styles.container}>
+        <LibraryNavigation />
+      </View>
+    </SafeAreaScreen>
   );
 };
 
-const LibraryScreen = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="LibraryMain" component={LibraryMainScreen} />
-      {/* Add other library routes here as needed */}
-    </Stack.Navigator>
-  );
-};
+export default LibraryMainScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f8f4',
   },
-});
-
-export default LibraryScreen; 
+}); 

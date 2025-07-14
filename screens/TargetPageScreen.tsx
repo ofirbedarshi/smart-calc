@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import SafeAreaScreen from '../components/common/SafeAreaScreen';
 
 // Import existing TargetPage components
 import Artillery from '../app/(tabs)/TargetPage/Artillery';
@@ -24,35 +24,30 @@ const Stack = createNativeStackNavigator();
 
 const TargetPageScreen = () => {
   return (
-    <Stack.Navigator 
-      screenOptions={{ headerShown: false }}
-      initialRouteName="TargetPageMain"
-    >
-      <Stack.Screen name="TargetPageMain" component={TargetPageMain} />
-      <Stack.Screen name="MaskarOptions" component={MaskarOptions} />
-      <Stack.Screen name="KravOptions" component={KravOptions} />
-      <Stack.Screen name="Chemam" component={Chemam} />
-      <Stack.Screen name="Lehat" component={Lehat} />
-      <Stack.Screen name="OketzPlada" component={OketzPlada} />
-      <Stack.Screen name="Artillery" component={Artillery} />
-      <Stack.Screen name="Mortars" component={Mortars} />
-      <Stack.Screen name="Maskar" component={Maskar} />
-      <Stack.Screen name="MaskarLoal" component={MaskarLoal} />
-      <Stack.Screen name="KravLaserLoal" component={KravLaserLoal} />
-      <Stack.Screen name="KravLine6" component={KravLine6} />
-      <Stack.Screen name="KravLaserLobl" component={KravLaserLobl} />
-      <Stack.Screen name="KravSaduraLaser" component={KravSaduraLaser} />
-      <Stack.Screen name="KravBarkat" component={KravBarkat} />
-      <Stack.Screen name="NadbarListRoute" component={NadbarListRoute} />
-    </Stack.Navigator>
+    <SafeAreaScreen>
+      <Stack.Navigator 
+        screenOptions={{ headerShown: false }}
+        initialRouteName="TargetPageMain"
+      >
+        <Stack.Screen name="TargetPageMain" component={TargetPageMain} />
+        <Stack.Screen name="MaskarOptions" component={MaskarOptions} />
+        <Stack.Screen name="KravOptions" component={KravOptions} />
+        <Stack.Screen name="Chemam" component={Chemam} />
+        <Stack.Screen name="Lehat" component={Lehat} />
+        <Stack.Screen name="OketzPlada" component={OketzPlada} />
+        <Stack.Screen name="Artillery" component={Artillery} />
+        <Stack.Screen name="Mortars" component={Mortars} />
+        <Stack.Screen name="Maskar" component={Maskar} />
+        <Stack.Screen name="MaskarLoal" component={MaskarLoal} />
+        <Stack.Screen name="KravLaserLoal" component={KravLaserLoal} />
+        <Stack.Screen name="KravLine6" component={KravLine6} />
+        <Stack.Screen name="KravLaserLobl" component={KravLaserLobl} />
+        <Stack.Screen name="KravSaduraLaser" component={KravSaduraLaser} />
+        <Stack.Screen name="KravBarkat" component={KravBarkat} />
+        <Stack.Screen name="NadbarListRoute" component={NadbarListRoute} />
+      </Stack.Navigator>
+    </SafeAreaScreen>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9f8f4',
-  },
-});
 
 export default TargetPageScreen; 

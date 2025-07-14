@@ -4,6 +4,7 @@ import SimpleNavigationMenu from '../../../components/common/SimpleNavigationMen
 import PopOptions from './PopOptions';
 import Aim from './routes/Aim';
 import EvenRatler from './routes/EvenRatler';
+import FirePlan from './routes/FirePlan';
 import FuelCells from './routes/FuelCells';
 import PopCheckList from './routes/PopCheckList';
 import PopEquiList from './routes/PopEquiList';
@@ -23,6 +24,7 @@ const libraryItems = [
   { label: 'פקלון כוונים', route: 'Aim' },
   { label: 'טווחי בטיחות', route: 'SafeRanges' },
   { label: 'צילומי צגון', route: 'TzagonPhotos' },
+  { label: 'תוכנית אש', route: 'FirePlan' },
   { label: 'פופ', route: 'PopOptions' },
   { label: 'ספקטרו', route: 'SpectroOptions' },
   { label: 'איון ראטלר', route: 'EvenRatler' },
@@ -58,6 +60,7 @@ export default function LibraryNavigation() {
       <Stack.Screen name="SpectroEquiList" component={SpectroEquiList} />
       <Stack.Screen name="EvenRatler" component={EvenRatler} />
       <Stack.Screen name="Tevel" component={TevelRoute} />
+      <Stack.Screen name="FirePlan" component={FirePlan} />
     </Stack.Navigator>
   );
 } 

@@ -18,7 +18,7 @@ const TzagonPhotos = () => {
   }, [loadTzagons]);
 
   const handleAddPhoto = () => {
-    setSelectedTzagonId('new');
+    setSelectedTzagonId(undefined);
     setShowModal(true);
   };
 

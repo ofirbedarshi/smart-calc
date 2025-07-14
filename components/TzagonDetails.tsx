@@ -30,18 +30,18 @@ export default function TzagonDetails({ tzagonId, onDeleteSuccess }: TzagonDetai
 
   // Only recalculate originalTzagon when tzagonId changes
   const getOriginalTzagon = () => {
-    if (tzagonId && tzagonId !== 'new') {
+    if (tzagonId) {
       return tzagons.find(t => t.id === tzagonId) || blankTzagon;
     }
     return blankTzagon;
   };
 
-  const [isEditMode, setIsEditMode] = useState(tzagonId === 'new');
+  const [isEditMode, setIsEditMode] = useState(!tzagonId);
   const [tzagon, setTzagon] = useState<TzagonData | undefined>(getOriginalTzagon());
 
   useEffect(() => {
     setTzagon(getOriginalTzagon());
-    setIsEditMode(tzagonId === 'new');
+    setIsEditMode(!tzagonId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tzagonId]);
 
@@ -88,12 +88,14 @@ export default function TzagonDetails({ tzagonId, onDeleteSuccess }: TzagonDetai
       >
         <View style={styles.section}>
           <View style={styles.headerActions}>
-            <Button
-              title={isEditMode ? 'ביטול' : 'ערוך'}
-              onPress={() => setIsEditMode((e: boolean) => !e)}
-              theme={isEditMode ? 'danger' : 'primary'}
-              small
-            />
+            {tzagonId && (
+              <Button
+                title={isEditMode ? 'ביטול' : 'ערוך'}
+                onPress={() => setIsEditMode((e: boolean) => !e)}
+                theme={isEditMode ? 'danger' : 'primary'}
+                small
+              />
+            )}
           </View>
           <EditableData
             label="שם מטרה + תיאור הסרטון"

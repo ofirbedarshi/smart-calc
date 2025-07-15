@@ -92,21 +92,7 @@ const FieldSection: React.FC<FieldSectionProps> = ({ targetFields, isEditMode, o
       editMode={isEditMode}
       type="number"
       placeholder="הזן נ.צ מזרחי"
-      editComponent={
-        <>
-          <PrefixInput
-            value={targetFields.eastCoord}
-            onChange={value => onFieldChange('eastCoord', value)}
-            prefixLength={1}
-            type="number"
-            maxLength={6}
-            placeholder="הזן נ.צ מזרחי"
-          />
-          {isEditMode && errors.eastCoord ? (
-            <Text style={styles.errorText}>{errors.eastCoord}</Text>
-          ) : null}
-        </>
-      }
+      error={isEditMode ? errors.eastCoord : undefined}
     />
     <EditableData
       label="נ.צ צפוני"

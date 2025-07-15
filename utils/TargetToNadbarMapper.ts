@@ -10,9 +10,15 @@ export class TargetToNadbarMapper {
   static getValue(targetField: string, targetEntity: TargetEntity): string {
     // Handle special case for coordinates
     if (targetField === 'coords') {
-      const northCoord = targetEntity.northCoord || '';
-      const eastCoord = targetEntity.eastCoord || '';
-      return northCoord && eastCoord ? `${northCoord}/${eastCoord}` : '';
+      let northCoord = targetEntity.northCoord || '';
+      let eastCoord = targetEntity.eastCoord || '';
+
+      // For northCoord: if it has 7 digits, show only the last 6 digits
+      if (/^\d{7}$/.test(northCoord)) {
+        northCoord = northCoord.slice(-6);
+      }
+
+      return northCoord && eastCoord ? `${eastCoord}/${northCoord}` : '';
     }
 
     // Map targetField to entity property

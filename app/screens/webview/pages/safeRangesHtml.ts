@@ -27,7 +27,7 @@ const safeRangesHtml = `
 <p dir="rtl">תכלית גלויים: 350 מ</p>
 <p dir="rtl">תכלית משוריינים: 250 מ</p>
 </td>
-<td dir="ltr" style="border-color: #000000;">&nbsp;</td>
+<td dir="ltr" style="border-color: #000000;"><p dir="rtl">330 מ</p></td>
 </tr>
 <tr>
 <td dir="ltr" style="border-color: #000000;">
@@ -37,11 +37,11 @@ const safeRangesHtml = `
 <p dir="rtl">נפיץ/ תאורה/ עשן</p>
 </td>
 <td dir="ltr" style="border-color: #000000;">
-<p dir="rtl">טיווח: 1300 מ</p>
+<p dir="rtl">טיווח: 500 מ</p>
 <p dir="rtl">תכלית יום: 300 מ</p>
-<p dir="rtl">תכלית לילה: 450 מ</p>
+<p dir="rtl">תכלית לילה: 300 מ</p>
 </td>
-<td dir="ltr" style="border-color: #000000;">&nbsp;</td>
+<td dir="ltr" style="border-color: #000000;"><p dir="rtl">300 מ</p></td>
 </tr>
 <tr>
 <td dir="ltr" style="border-color: #000000;" rowspan="2"><br><br><br>
@@ -63,7 +63,7 @@ const safeRangesHtml = `
 <p dir="rtl">גיל, להט, עוקץ פלדה</p>
 </td>
 <td dir="ltr" style="border-color: #000000;">
-<p dir="rtl">כוח גלוי: 300 מ</p>
+<p dir="rtl">כוח גלוי: 100 מ</p>
 <p dir="rtl">כוח משוריין/ במבנה: 100 מ</p>
 </td>
 </tr>

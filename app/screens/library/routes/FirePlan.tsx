@@ -60,12 +60,12 @@ const FirePlan = () => {
           renderItemContent={(item: FirePlanData) => (
             <View style={styles.itemContent}>
               <View style={styles.fieldColumn}>
-                <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">שם מטרה</Text>
-                <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.targetName}</Text>
-              </View>
-              <View style={styles.fieldColumn}>
                 <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">זמן</Text>
                 <Text style={styles.time} numberOfLines={1} ellipsizeMode="tail">{item.time}</Text>
+              </View>
+              <View style={styles.fieldColumn}>
+                <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">שם מטרה</Text>
+                <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.targetName}</Text>
               </View>
               <View style={styles.fieldColumn}>
                 <Text style={styles.fieldLabel} numberOfLines={1} ellipsizeMode="tail">חימוש</Text>

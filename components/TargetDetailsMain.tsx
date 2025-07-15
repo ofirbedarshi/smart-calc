@@ -29,6 +29,7 @@ export default function TargetDetailsMain() {
   const [targetEntity, setTargetEntity] = useState<TargetEntity>(() => 
     TargetEntity.fromTargetData(target, selfLocation)
   );
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
 
   // Update target entity when self location changes
   useEffect(() => {
@@ -47,19 +48,49 @@ export default function TargetDetailsMain() {
     }
   }, [selfLocation, loadLocation]);
 
-  // Field change handler
+  const validateField = (field: keyof TargetFields, value: string | number | undefined): string => {
+    const strValue = value === undefined || value === null ? '' : String(value);
+    if (field === 'eastCoord') {
+      if (!strValue) return 'נ.צ מזרחי הוא שדה חובה';
+      if (!/^\d{6}$/.test(strValue)) return 'נ.צ מזרחי חייב להכיל 6 ספרות';
+    }
+    if (field === 'northCoord') {
+      if (!strValue) return 'נ.צ צפוני הוא שדה חובה';
+      if (!/^\d{7}$/.test(strValue)) return 'נ.צ צפוני חייב להכיל 7 ספרות';
+    }
+    if (field === 'name') {
+      if (!strValue) return 'שם המטרה הוא שדה חובה';
+    }
+    if (field === 'description') {
+      if (!strValue) return 'תיאור המטרה הוא שדה חובה';
+    }
+    return '';
+  };
+
   const handleFieldChange = (field: keyof TargetFields, value: string) => {
     setTargetEntity((prev: TargetEntity) => {
       const updated = new TargetEntity(prev.data, selfLocation);
       updated.updateField(field, value);
       return updated;
     });
+    setFieldErrors(prev => ({
+      ...prev,
+      [field]: validateField(field, value)
+    }));
   };
 
-  // Validation
   const validateFields = () => {
-    if (!targetEntity.name || !targetEntity.description) {
-      Alert.alert('שגיאה', 'שם המטרה והתיאור הם שדות חובה');
+    // Validate all fields we care about
+    const fieldsToValidate: (keyof TargetFields)[] = ['eastCoord', 'northCoord', 'name', 'description'];
+    let newErrors: { [key: string]: string } = { ...fieldErrors };
+    fieldsToValidate.forEach(field => {
+      const value = targetEntity.data[field];
+      newErrors[field] = validateField(field, value);
+    });
+    setFieldErrors(newErrors);
+    const hasError = Object.values(newErrors).some(msg => !!msg);
+    if (hasError) {
+      Alert.alert('שגיאה', 'יש למלא את כל השדות הנדרשים בצורה תקינה');
       return false;
     }
     return true;
@@ -119,6 +150,7 @@ export default function TargetDetailsMain() {
           onFieldChange={handleFieldChange}
           computed={computed}
           onToggleEdit={() => setIsEditMode(!isEditMode)}
+          errors={fieldErrors}
         />
         {targetEntity.id && (
           <TargetNadbarsSection targetId={targetEntity.id} />

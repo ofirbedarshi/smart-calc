@@ -12,6 +12,10 @@ interface EditableDataProps extends BaseInputProps {
   textArea?: boolean;
 }
 
+function isFragment(element: React.ReactNode) {
+  return React.isValidElement(element) && element.type === React.Fragment;
+}
+
 function cloneWithPropsIfSupported(element: React.ReactNode, props: any) {
   if (React.isValidElement(element)) {
     // Only pass props that the element supports
@@ -36,7 +40,9 @@ export const EditableData: React.FC<EditableDataProps> = ({
         <View style={styles.valueContainer}>
           {editMode ? (
             editComponent ? (
-              cloneWithPropsIfSupported(editComponent, { disabled, info })
+              isFragment(editComponent)
+                ? editComponent
+                : cloneWithPropsIfSupported(editComponent, { disabled, info })
             ) : (
               <BaseInput
                 label=""

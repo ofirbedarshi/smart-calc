@@ -76,7 +76,6 @@ const TabNavigator = () => (
         elevation: 0,
         shadowOpacity: 0,
         height: 80,
-        paddingBottom: 20,
       },
       headerShown: false,
     })}

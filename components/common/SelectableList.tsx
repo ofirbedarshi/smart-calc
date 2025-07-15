@@ -1,9 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRef, useState, type ReactNode } from 'react';
-import { Animated, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
+import { Animated, FlatList, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Button from './Button';
 import DeleteButtonWithConfirm from './DeleteButtonWithConfirm';
+// Conditional import for DraggableFlatList
+let DraggableFlatList: any = null;
+let RenderItemParams: any = null;
+if (Platform.OS !== 'web') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const mod = require('react-native-draggable-flatlist');
+  DraggableFlatList = mod.default;
+  RenderItemParams = mod.RenderItemParams;
+}
 
 interface SelectableListProps<T> {
   data: T[];
@@ -95,12 +103,15 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
   };
 
   // Choose list component
-  const ListComponent = allowToReorder ? DraggableFlatList : FlatList;
-  const listProps = allowToReorder
+  let ListComponent: any = FlatList;
+  if (allowToReorder && Platform.OS !== 'web' && DraggableFlatList) {
+    ListComponent = DraggableFlatList;
+  }
+  const listProps = allowToReorder && Platform.OS !== 'web' && DraggableFlatList
     ? {
         data,
         keyExtractor,
-        renderItem: ({ item, drag }: RenderItemParams<T>) => renderRow(item, drag),
+        renderItem: ({ item, drag }: any) => renderRow(item, drag),
         onDragEnd: ({ data: newData }: { data: T[] }) => {
           if (onReorder) onReorder(newData);
         },
@@ -114,6 +125,14 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
   return (
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
       <View style={{ flex: 1 }}>
+        {allowToReorder && Platform.OS === 'web' && (
+          <View style={{ padding: 16, backgroundColor: '#fff', alignItems: 'center' }}>
+            <Ionicons name="alert-circle" size={24} color="#f39c12" />
+            <Animated.Text style={{ color: '#f39c12', marginTop: 8 }}>
+              גרירת שורות אינה נתמכת בגרסת הדפדפן
+            </Animated.Text>
+          </View>
+        )}
         <ListComponent {...listProps} />
       </View>
       {showCheckboxes && (

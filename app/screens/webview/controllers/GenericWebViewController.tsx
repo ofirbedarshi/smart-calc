@@ -5,7 +5,7 @@ import { WebView } from 'react-native-webview';
 import LibraryContentService from '../../../services/LibraryContentService';
 
 const WEBAPP_URL = Platform.OS === 'android'
-  ? (__DEV__ ? 'http://192.168.1.134:5173' : 'file:///android_asset/web-content/index.html')
+  ? (__DEV__ ? 'http://localhost:5173' : 'file:///android_asset/web-content/index.html')
   : (__DEV__ ? 'http://localhost:5173' : 'file:///web-content/index.html');
 
 interface GenericWebViewControllerProps {

@@ -3,7 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
 import { I18nManager } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import AppNavigator from './navigation/AppNavigator';
 
@@ -32,11 +32,19 @@ export default function App() {
     return null;
   }
 
-  return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+  // Move useSafeAreaInsets to a child component inside SafeAreaProvider
+  const AppWithInsets = () => {
+    const insets = useSafeAreaInsets();
+    return (
+      <GestureHandlerRootView style={{ flex: 1, paddingBottom: insets.bottom }}>
         <AppNavigator />
       </GestureHandlerRootView>
+    );
+  };
+
+  return (
+    <SafeAreaProvider>
+      <AppWithInsets />
     </SafeAreaProvider>
   );
 } 

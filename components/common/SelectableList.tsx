@@ -63,7 +63,6 @@ function SelectableList<T>({ data, keyExtractor, renderItemContent, onDelete, it
     const shake = shakeAnim[id].interpolate({ inputRange: [-1, 1], outputRange: [-8, 8] });
     return (
       <View style={styles.outerRow}>
-        {/* @ts-expect-error Animated.View type issue */}
         <Animated.View style={[styles.card, { transform: [{ translateX: shake }] }]}> 
           <View style={styles.row}>
             {/* Drag handle only if reorder+checkboxes */}

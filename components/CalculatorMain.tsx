@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
   logo: {
     width: '100%',
     height: 100,
-    marginBottom: 24,
   },
   buttonContainer: {
     flex: 1,
     justifyContent: 'space-evenly',
+    marginTop: -32, // Remove only the first gap before the first button
   },
   button: {
     padding: 16,

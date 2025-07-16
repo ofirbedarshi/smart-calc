@@ -24,7 +24,7 @@ export const DEFAULT_MASKAR_LOAL_TEMPLATE: NadbarTemplate = {
           inputType: 'dropdown', 
           inputOptions: { dropdown: ['אורטופוטו', 'אורטופוטו שליטה'] } 
         },
-        { label: 'מיקום עצמי - נצ״א', fieldId: 'natza', inputType: 'text' },
+        { label: 'מיקום עצמי - נצ״א', fieldId: 'selfNatza', inputType: 'text' },
         { label: 'קו אחרון כוחותינו', fieldId: 'ourForces', inputType: 'text' },
         { label: 'מודיעין ואיומים', fieldId: 'threats', inputType: 'text' }
       ]

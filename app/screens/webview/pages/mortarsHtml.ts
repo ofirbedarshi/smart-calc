@@ -1,5 +1,4 @@
 const mortarsHtml = `
-<p><strong id="docs-internal-guid-e3496386-7fff-6de6-5ea3-0e2bdd777c64">מרגמות- 120 מ"מ</strong></p>
 <details style="max-width: 600px; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); padding: 1.5rem; margin: 1rem 0; transition: all 0.3s ease; position: relative;" open="">
 <summary style="font-size: 1.2rem; font-weight: 600; cursor: pointer; list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;"><strong id="docs-internal-guid-e1753a77-7fff-d418-8312-f968d7687c16">נתונים</strong><br><span class="arrow" style="display: inline-block; transition: transform 0.3s ease; font-size: 1.2rem;">▸</span></summary>
 <div style="margin-top: 1rem; color: #333; line-height: 1.6;">

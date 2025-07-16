@@ -1,5 +1,4 @@
 const artilleryHtml = `
-<p dir="rtl"><span style="text-decoration: underline;"><strong>ארטילריה - 155 מ"מ</strong></span></p>
 <details style="max-width: 600px; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); padding: 1.5rem; margin: 1rem 0; transition: all 0.3s ease; position: relative;" open="">
 <summary style="font-size: 1.2rem; font-weight: 600; cursor: pointer; list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;"><strong id="docs-internal-guid-be9b6568-7fff-9021-7956-99a857dd914e">נתונים</strong><br><span class="arrow" style="display: inline-block; transition: transform 0.3s ease; font-size: 1.2rem;">▸</span></summary>
 <div style="margin-top: 1rem; color: #333; line-height: 1.6;">

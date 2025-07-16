@@ -1,5 +1,4 @@
 export const spectroEquiListHtml = `
-<h2 dir="rtl" style="font-family: inherit; font-size: 1.1rem;">רשמ"צ ספקטרו</h2>
 <div dir="rtl" align="right">
 <table style="border-collapse: collapse; border-color: #000000; border-style: solid;" border="1"><colgroup><col width="102"><col width="134"><col width="278"><col width="135"></colgroup>
 <tbody>

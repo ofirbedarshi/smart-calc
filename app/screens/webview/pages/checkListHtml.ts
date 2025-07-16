@@ -1,5 +1,4 @@
 export const checkListHtml = `
-<h2><strong id="docs-internal-guid-06d31f0a-7fff-94d7-4c82-4b77029eac1f">סד"פים</strong></h2>
 <details style="max-width: 100%; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); padding: 1.5rem; margin: 1rem 0; transition: all 0.3s ease; position: relative;" open="">
 <summary style="font-size: 1.2rem; font-weight: 600; cursor: pointer; list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;">סד"פ הרכבה<strong id="docs-internal-guid-6c475001-7fff-fa26-2c4b-66dadf4e189b"></strong><br><span class="arrow" style="display: inline-block; transition: transform 0.3s ease; font-size: 1.2rem;">▸</span></summary>
 <div style="margin-top: 1rem; color: #333; line-height: 1.6;">

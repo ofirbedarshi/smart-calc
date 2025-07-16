@@ -1,5 +1,4 @@
 export const popErrorsHtml = `
-<h2><strong id="docs-internal-guid-d130f5a5-7fff-5782-ba8d-0e28b7a4bdc2">תקלות</strong></h2>
 <details style="max-width: 600px; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); padding: 1.5rem; margin: 1rem 0; transition: all 0.3s ease; position: relative;" open="">
 <summary style="font-size: 1.2rem; font-weight: 600; cursor: pointer; list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;">תפעול תקלות פופ<strong id="docs-internal-guid-81174427-7fff-78ab-1fbd-8f2514e3e639"></strong><br><span class="arrow" style="display: inline-block; transition: transform 0.3s ease; font-size: 1.2rem;">▸</span></summary>
 <div style="margin-top: 1rem; color: #333; line-height: 1.6; overflow-x: auto; max-width: 100%; direction: rtl;">

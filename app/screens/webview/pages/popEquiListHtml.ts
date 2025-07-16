@@ -1,5 +1,4 @@
 export const popEquiListHtml = `
-<h2><strong id="docs-internal-guid-78f55412-7fff-9236-726c-46aa19ab88f1">רשמ"צ</strong></h2>
 <details style="max-width: 600px; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); padding: 1.5rem; margin: 1rem 0; transition: all 0.3s ease; position: relative;" open="">
 <summary style="font-size: 1.2rem; font-weight: 600; cursor: pointer; list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;">רשמ"צ מערכת פופ קרקעי<strong id="docs-internal-guid-9fc3f46a-7fff-bd56-13aa-a8dc93c6ce9d"></strong><br><span class="arrow" style="display: inline-block; transition: transform 0.3s ease; font-size: 1.2rem;">▸</span></summary>
 <div style="margin-top: 1rem; color: #333; line-height: 1.6; overflow-x: auto; max-width: 100%; direction: rtl;">

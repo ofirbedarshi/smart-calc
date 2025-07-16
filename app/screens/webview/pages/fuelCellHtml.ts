@@ -1,4 +1,4 @@
-const fuelCellHtml = `<h3><strong id="docs-internal-guid-c3ad06e5-7fff-f328-b973-5efa524e5c37">תאי דלק</strong></h3>
+const fuelCellHtml = `
 <details style="max-width: 600px; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); padding: 1.5rem; margin: 1rem 0; transition: all 0.3s ease; position: relative;" open="">
 <summary style="font-size: 1.2rem; font-weight: 600; cursor: pointer; list-style: none; outline: none; display: flex; justify-content: space-between; align-items: center;">שימוש במקשי תא הדלק<strong id="docs-internal-guid-dca9f3c1-7fff-22ae-90b4-1c68b72ad697"></strong><br><span class="arrow" style="display: inline-block; transition: transform 0.3s ease; font-size: 1.2rem;">▸</span></summary>
 <div style="margin-top: 1rem; color: #333; line-height: 1.6;">

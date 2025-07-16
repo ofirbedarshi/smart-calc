@@ -5,6 +5,7 @@ import { aimHtml } from '../../webview/pages/aimHtml';
 const Aim = () => {
   return (
     <GenericWebViewController
+      header='פקלון כוונים'
       storageKey="aim"
       fallbackHtml={aimHtml}
     />

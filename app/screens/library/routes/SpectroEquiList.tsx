@@ -4,6 +4,7 @@ import { spectroEquiListHtml } from '../../webview/pages/spectroEquiListHtml';
 
 const SpectroEquiList = () => (
   <GenericWebViewController
+    header="ספקטרו - רשמ״צ"
     storageKey="spectroEquiList"
     fallbackHtml={spectroEquiListHtml}
   />

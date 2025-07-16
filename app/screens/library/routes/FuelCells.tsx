@@ -5,6 +5,7 @@ import { fuelCellHtml } from '../../webview/pages/fuelCellHtml';
 const FuelCells = () => {
   return (
     <GenericWebViewController
+      header="תאי דלק"
       storageKey="fuelCellContent"
       fallbackHtml={fuelCellHtml}
     />

@@ -4,6 +4,7 @@ import { popErrorsHtml } from '../../webview/pages/popErrorsHtml';
 
 const PopErrors = () => (
   <GenericWebViewController
+    header="פופ - תקלות"
     storageKey="popErrors"
     fallbackHtml={popErrorsHtml}
   />

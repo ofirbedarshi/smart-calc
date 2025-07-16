@@ -5,6 +5,7 @@ import { evenRatlerHtml } from '../../webview/pages/evenRatlerHtml';
 const EvenRatler = () => {
   return (
     <GenericWebViewController
+      header='איון ראטלר'
       storageKey="evenRatler"
       fallbackHtml={evenRatlerHtml}
     />

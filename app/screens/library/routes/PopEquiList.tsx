@@ -4,6 +4,7 @@ import { popEquiListHtml } from '../../webview/pages/popEquiListHtml';
 
 const PopEquiList = () => (
   <GenericWebViewController
+    header="פופ - רשמ״צ"
     storageKey="popEquiList"
     fallbackHtml={popEquiListHtml}
   />

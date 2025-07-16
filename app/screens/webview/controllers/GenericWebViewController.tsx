@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Platform, StyleSheet, View } from 'react-native';
 import type { WebView as WebViewType } from 'react-native-webview';
 import { WebView } from 'react-native-webview';
+import Header from '../../../../components/common/Header';
 import LibraryContentService from '../../../services/LibraryContentService';
 
 const WEBAPP_URL = Platform.OS === 'android'
@@ -13,9 +14,10 @@ interface GenericWebViewControllerProps {
   fallbackHtml: string;
   allowEdit?: boolean;
   editAccess?: string;
+  header?: string;
 }
 
-function GenericWebViewController({ storageKey, fallbackHtml, allowEdit = true, editAccess = 'Admin'}: GenericWebViewControllerProps) {
+function GenericWebViewController({ storageKey, fallbackHtml, allowEdit = true, editAccess = 'Admin', header }: GenericWebViewControllerProps) {
   const webViewRef = useRef<WebViewType>(null);
   const [logs, setLogs] = useState('');
   const [initialHtml, setInitialHtml] = useState<string | null>(null);
@@ -74,6 +76,7 @@ function GenericWebViewController({ storageKey, fallbackHtml, allowEdit = true, 
 
   return (
     <View style={{ flex: 1 }}>
+      {header && <Header title={header} style={{padding: 10}} />}
       {/* Logs for debugging, can be hidden in production */}
       {/* <Text style={{ padding: 8, color: '#333', fontSize: 12 }}>{logs}</Text> */}
       <WebView

@@ -27,7 +27,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קבל למטרה {{name}} מרעום {{eastCoord}}  צפע {{northCoord}} "
+          data: `קבל למטרה {{name}} {{br}}מרעום {{eastCoord}}{{br}}צפע {{northCoord}}`
         },
         {
           type: 'they',
@@ -47,7 +47,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קבל למטרה {{name}} נדרש מסלול קשתי {{flightPathType|dropdown:ללא,ימני,שמאלי}} היסט מהנקודה ל{{offsetDirection|dropdown:ללא,ימין,שמאל,למעלה,למטה}} השהייה מסוג {{delayType|dropdown:ללא,קצרה,ארוכה}}"
+          data: "קבל למטרה {{name}}{{br}} נדרש מסלול קשתי {{flightPathType|dropdown:ללא,ימני,שמאלי}} {{br}} היסט מהנקודה ל{{offsetDirection|dropdown:ללא,ימין,שמאל,למעלה,למטה}}{{br}} השהייה מסוג {{delayType|dropdown:ללא,קצרה,ארוכה}}"
         },
         {
           type: 'they',
@@ -59,7 +59,7 @@ export const DEFAULT_LEHAT_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קיבלתי למטרה {{name}} ניתן לבצע עם מסלול קשתי {{flightPathType2|dropdown:ללא,ימני,שמאלי}} היסט מהנקודה ל{{offsetDirection2|dropdown:ללא,ימין,שמאל,למעלה,למטה}} השהייה מסוג {{delayType2|dropdown:ללא,קצרה,ארוכה}}"
+          data: "קיבלתי למטרה {{name}}{{br}} ניתן לבצע עם מסלול קשתי {{flightPathType2|dropdown:ללא,ימני,שמאלי}}{{br}} היסט מהנקודה ל{{offsetDirection2|dropdown:ללא,ימין,שמאל,למעלה,למטה}}{{br}} השהייה מסוג {{delayType2|dropdown:ללא,קצרה,ארוכה}}"
         },
         {
           type: 'they',

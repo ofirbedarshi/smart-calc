@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   meBubble: {
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#e9fee6',
     borderTopRightRadius: 4,
     borderTopLeftRadius: 16,
     borderBottomLeftRadius: 16,

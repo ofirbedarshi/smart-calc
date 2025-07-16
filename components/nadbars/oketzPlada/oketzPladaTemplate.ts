@@ -27,7 +27,7 @@ export const DEFAULT_OKETZ_PLADA_TEMPLATE: NadbarTemplate = {
         },
         {
           type: 'me',
-          data: "קבל למטרה {{name}} מרעום {{eastCoord}}  צפע {{northCoord}} "
+          data: `קבל למטרה {{name}} {{br}}מרעום {{eastCoord}}{{br}}צפע {{northCoord}}`
         },
         {
           type: 'they',

@@ -15,9 +15,10 @@ export interface VariableStringInputProps {
 export type VariableStringPart =
   | { type: 'text'; value: string }
   | { type: 'var'; value: string; fieldId: string }
-  | { type: 'dropdown'; fieldId: string; options: string[] };
+  | { type: 'dropdown'; fieldId: string; options: string[] }
+  | { type: 'br' };
 
-// Utility to parse a string and return an array of { type: 'text' | 'var' | 'dropdown', ... }
+// Utility to parse a string and return an array of { type: 'text' | 'var' | 'dropdown' | 'br', ... }
 export function parseVariableString(template: string): VariableStringPart[] {
   const regex = /{{(.*?)}}/g;
   const result: VariableStringPart[] = [];
@@ -29,17 +30,21 @@ export function parseVariableString(template: string): VariableStringPart[] {
       result.push({ type: 'text', value: template.slice(lastIndex, match.index) });
     }
     const raw = match[1].trim();
-    // Check for dropdown syntax: varName|dropdown:opt1,opt2
-    const dropdownMatch = raw.match(/^([\w\d_]+)\|dropdown:(.+)$/);
-    if (dropdownMatch) {
-      const fieldId = dropdownMatch[1];
-      const options = dropdownMatch[2].split(',').map(opt => opt.trim());
-      result.push({ type: 'dropdown', fieldId, options });
+    if (raw === 'br') {
+      result.push({ type: 'br' });
     } else {
-      const varName = raw;
-      varCount[varName] = (varCount[varName] || 0) + 1;
-      const fieldId = varCount[varName] > 1 ? `${varName}_${varCount[varName]}` : varName;
-      result.push({ type: 'var', value: '', fieldId });
+      // Check for dropdown syntax: varName|dropdown:opt1,opt2
+      const dropdownMatch = raw.match(/^([\w\d_]+)\|dropdown:(.+)$/);
+      if (dropdownMatch) {
+        const fieldId = dropdownMatch[1];
+        const options = dropdownMatch[2].split(',').map(opt => opt.trim());
+        result.push({ type: 'dropdown', fieldId, options });
+      } else {
+        const varName = raw;
+        varCount[varName] = (varCount[varName] || 0) + 1;
+        const fieldId = varCount[varName] > 1 ? `${varName}_${varCount[varName]}` : varName;
+        result.push({ type: 'var', value: '', fieldId });
+      }
     }
     lastIndex = match.index + match[0].length;
   }
@@ -66,6 +71,8 @@ const VariableStringInput: React.FC<VariableStringInputProps> = ({ template, val
               small={true}
             />
           );
+        } else if (part.type === 'br') {
+          return <Text key={idx} style={styles.breakLine}>{'\n'}</Text>;
         } else {
           return (
             <AutoGrowingInput
@@ -99,6 +106,11 @@ const styles = StyleSheet.create({
   inlineInput: {
     marginHorizontal: 2,
     alignSelf: 'center',
+  },
+  breakLine: {
+    width: '100%',
+    height: 0,
+    marginVertical: 4,
   },
 });
 

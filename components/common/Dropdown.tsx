@@ -39,7 +39,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ options, value, onChange, sm
       selectedItemLabelStyle={styles.selectedItemLabel}
       placeholder="בחר..."
       placeholderStyle={styles.placeholder}
-      listMode="MODAL"
+      listMode="SCROLLVIEW"
     />
   );
 };
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 0,
     paddingHorizontal: 2,
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
     borderWidth: 0,
     borderBottomWidth: 1,
     borderColor: '#aaa',
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   smallDropdownOuter: {
     minHeight: 24,
     height: 24,
-    maxWidth: 100,
+    maxWidth: 200,
     alignSelf: 'center',
     marginHorizontal: 2,
     backgroundColor: 'transparent',
@@ -101,17 +101,18 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 6,
-    zIndex: 1000,
+    zIndex: 9000,
   },
   smallDropdownContainer: {
     borderRadius: 0,
     minHeight: 24,
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
     borderWidth: 0,
     borderBottomWidth: 1,
     borderColor: '#aaa',
     shadowColor: 'transparent',
     elevation: 0,
+    zIndex: 9000,
   },
   listItemContainer: {
     height: 40,

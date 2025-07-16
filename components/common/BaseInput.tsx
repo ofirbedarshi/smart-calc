@@ -36,7 +36,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
   onBlur,
   onFocus,
   textArea = false,
-  autoGrowVertically = false,
+  autoGrowVertically = true,
 }) => {
   const [inputHeight, setInputHeight] = React.useState(40);
 

@@ -193,7 +193,7 @@ export default function Editor({ content, onChange, readOnly = false, onSave }) 
       onSave && onSave(newHtml, true); // silent save
     };
     return (
-      <div style={{ width: '100%', margin: '40px auto' }}>
+      <div style={{ width: '100%', margin: '40px auto', marginTop: 0 }}>
         {/* Show button only if there is at least one checkbox */}
         {hasCheckbox && (
           <button
@@ -213,7 +213,7 @@ export default function Editor({ content, onChange, readOnly = false, onSave }) 
         )}
         <div
           ref={editorRef}
-          style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right', marginTop: 24 }}
+          style={{ minHeight: 300, background: '#fafafa', border: '1px solid #eee', borderRadius: 8, padding: 16, color: '#222', direction: 'rtl', textAlign: 'right'}}
           dangerouslySetInnerHTML={{ __html: safeContent }}
           onClick={handleReadOnlyCheckboxClick}
         />

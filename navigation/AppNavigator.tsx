@@ -53,7 +53,7 @@ const TabNavigator = () => (
         }
         const activeColor = '#1976D2';
         return (
-          <View style={{ alignItems: 'center' }}>
+          <View style={{ alignItems: 'center', justifyContent: 'center', height: '100%'}}>
             <FontAwesome name={iconName as any} size={size} color={focused ? activeColor : color} />
             <Text
               style={{
@@ -75,7 +75,14 @@ const TabNavigator = () => (
         borderTopWidth: 0,
         elevation: 0,
         shadowOpacity: 0,
-        height: 80,
+        height: 60,
+      },
+      tabBarItemStyle: {
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
+        margin: 0,
       },
       headerShown: false,
     })}

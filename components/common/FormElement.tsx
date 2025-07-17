@@ -24,6 +24,14 @@ const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => 
       }));
       return (
         <View style={styles.fullWidth}>
+          <View style={styles.labelRow}>
+            <Text style={styles.label}>{field.label}</Text>
+            {field.targetField && (
+              <Tooltip content={'המידע הנ״ל נטען מהמטרה'} direction='left'>
+                <FontAwesome name="info-circle" size={14} color="#007AFF" style={styles.infoIcon} />
+              </Tooltip>
+            )}
+          </View>
           <Dropdown
             options={options}
             value={field.value}

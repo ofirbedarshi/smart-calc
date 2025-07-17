@@ -93,6 +93,7 @@ const FieldSection: React.FC<FieldSectionProps> = ({ targetFields, isEditMode, o
       type="number"
       placeholder="הזן נ.צ מזרחי"
       error={isEditMode ? errors.eastCoord : undefined}
+      maxLength={6}
     />
     <EditableData
       label="נ.צ צפוני"

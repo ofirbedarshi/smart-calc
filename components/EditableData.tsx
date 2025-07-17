@@ -10,6 +10,7 @@ interface EditableDataProps extends BaseInputProps {
   disabled?: boolean;
   info?: string;
   textArea?: boolean;
+  maxLength?: number;
 }
 
 function isFragment(element: React.ReactNode) {
@@ -32,6 +33,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
   disabled = false,
   info,
   textArea = false,
+  maxLength,
   ...props
 }) => {
   return (
@@ -42,7 +44,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
             editComponent ? (
               isFragment(editComponent)
                 ? editComponent
-                : cloneWithPropsIfSupported(editComponent, { disabled, info })
+                : cloneWithPropsIfSupported(editComponent, { disabled, info, maxLength })
             ) : (
               <BaseInput
                 label=""
@@ -50,6 +52,7 @@ export const EditableData: React.FC<EditableDataProps> = ({
                 {...props}
                 disabled={disabled}
                 textArea={textArea}
+                maxLength={maxLength}
               />
             )
           ) : (

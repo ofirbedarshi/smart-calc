@@ -15,7 +15,19 @@ interface FormElementProps {
 const FormElement: React.FC<FormElementProps> = ({ element, onFieldChange }) => {
   const renderInput = (field: MergedNadbarField) => {
     if (field.inputType === 'none' && field.constantText) {
-      return <Text style={styles.constantText}>{field.constantText}</Text>;
+      return (
+        <View style={styles.fullWidth}>
+          <View style={styles.labelRow}>
+            <Text style={[styles.label, { fontWeight: 'bold', color: '#000' }]}>{field.label}</Text>
+            {field.targetField && (
+              <Tooltip content={'המידע הנ״ל נטען מהמטרה'} direction='left'>
+                <FontAwesome name="info-circle" size={14} color="#007AFF" style={styles.infoIcon} />
+              </Tooltip>
+            )}
+          </View>
+          <Text style={styles.constantText}>{field.constantText}</Text>
+        </View>
+      );
     }
     if (field.inputType === 'dropdown' && field.inputOptions?.dropdown) {
       const options = field.inputOptions.dropdown.map(option => ({

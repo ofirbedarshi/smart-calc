@@ -2,9 +2,13 @@ import { NadbarTemplate } from '../../common/nadbarTypes';
 
 export const DEFAULT_KRAV_LINE6_TEMPLATE: NadbarTemplate = {
   id: 'krav_line6_v1',
-  name: 'קרב line 6',
+  name: `קרב 6 ליין`,
   version: '1.0',
   elements: [
+    {
+      type: 'header',
+      data: `פורמט העברת מטרת קרב בנוהל ״הבזק״`,
+    },
     {
       type: 'form',
       data: [
@@ -22,7 +26,7 @@ export const DEFAULT_KRAV_LINE6_TEMPLATE: NadbarTemplate = {
       <br><b>התאמת חימוש לסוג ומהות המטרה<br /></b>1. אויב בזמן חיות מטרה גדול - לפחות 30 דק׳ לתקיפת המטרה<br />2. הישג נדרש = השמדת המבנה</br>
 <br><b>איסוף נתונים</b></br>
 <br>1. מילוי טבלה ה 6 LINE</br>
-<br>2. יש לוודא כי הכוחות מרוחקיםלפחות 250/500 מטר בשטח פתוח/בנוי</br>
+<br>2. יש לוודא כי הכוחות מרוחקים לפחות 250/500 מטר בשטח פתוח/בנוי</br>
 <br>3. יש לתאם עם הכוחות בסביבה לשמור על מרחקם מהמטרה בהתאם לטווחי הבטיחות עד לאחר תקיפת המטרה</br>
 <br><b>אישור מפקד יחידה לתקיפה</b></br>
 <br>1. עלייה מול מפקד היחידה ואישור של כל נתוני המטרה</br>
